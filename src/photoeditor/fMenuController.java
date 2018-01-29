@@ -24,7 +24,7 @@ public class fMenuController implements Initializable {
     @FXML
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
-        label.setText("Hello World!");
+        label.setText("Hello");
     }
     
     @Override
