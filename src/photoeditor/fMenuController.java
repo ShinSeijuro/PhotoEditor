@@ -5,31 +5,60 @@
  */
 package photoeditor;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 
 /**
  *
  * @author Yuuki
  */
 public class fMenuController implements Initializable {
-    
+
     @FXML
-    private Label label;
-    
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello");
+    private ImageView img;
+    private Stage stage;
+
+    public void start(Stage stage) throws Exception {
+        this.stage = stage;
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+
+    }
+
+    public void loadFile(File file) {
+        //File file = new File("D:\\calendar.png");
+        Image image = new Image(file.toURI().toString());
+        // simple displays ImageView the image as is
+        img.setImage(image);
+    }
+
+    @FXML
+    public void onOpen(ActionEvent event) {
+        // Doesn't go into this method on click of the menu
+        System.out.println("Inside On Action!!!");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+                new ExtensionFilter("All Files", "*.*"));
+
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        if (selectedFile != null) {
+            loadFile(selectedFile);
+        }
+        
+    }
 }
