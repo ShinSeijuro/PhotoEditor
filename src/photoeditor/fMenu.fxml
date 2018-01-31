@@ -10,96 +10,60 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="photoeditor.fMenuController">
+    <center>
+        <TabPane prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <tabs>
+                <Tab text="Untitled Tab 1">
+                    <content>
+                        <AnchorPane minHeight="527.0" minWidth="300.0" prefHeight="527.0" prefWidth="781.0">
+                            <children>
+                                <ImageView fx:id="img" fitHeight="549.0" fitWidth="780.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Untitled Tab 2">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+    <right>
+        <BorderPane prefHeight="575.0" prefWidth="119.0" BorderPane.alignment="CENTER" />
+    </right>
    <top>
-      <MenuBar prefHeight="25.0" BorderPane.alignment="CENTER">
-         <menus>
-            <Menu text="File">
-               <items>
-                  <MenuItem text="New Image..." />
-                  <MenuItem onAction="#onOpen" text="Open Image..." />
-                  <MenuItem text="Save" />
-                  <MenuItem text="Print" />
-                  <MenuItem text="Close" />
-                  <MenuItem text="Exit" />
-               </items>
-            </Menu>
-            <Menu text="Edit">
-               <items>
-                  <MenuItem text="Undo" />
-                  <MenuItem text="Redo" />
-                  <MenuItem text="Cut" />
-                  <MenuItem text="Copy" />
-                  <MenuItem text="Paste" />
-                  <MenuItem text="Clear" />
-                  <MenuItem text="Free Transform" />
-                  <MenuItem text="Select All" />
-                  <MenuItem text="Deselect all" />
-               </items>
-            </Menu>
-            <Menu text="Image">
-               <items>
-                  <MenuItem text="Image size..." />
-                  <MenuItem text="Canvas size..." />
-                  <MenuItem text="Rotate 180" />
-                  <MenuItem text="Rotate 90 CW" />
-                  <MenuItem text="Rotate 90 CCW" />
-                  <MenuItem text="Flip vertical" />
-                  <MenuItem text="Flip horizontal" />
-                  <MenuItem text="Crop" />
-               </items>
-            </Menu>
-            <Menu text="Layer">
-               <items>
-                  <MenuItem text="New layer" />
-                  <MenuItem text="Duplicate layer" />
-                  <MenuItem text="Delete layer" />
-                  <MenuItem text="Open image as layer" />
-                  <MenuItem text="Merge down" />
-                  <MenuItem text="Merge visible" />
-                  <MenuItem text="Flip horizontal" />
-                  <MenuItem text="Crop" />
-               </items>
-            </Menu>
-            <Menu text="Filter" />
-            <Menu text="View" />
-            <Menu text="Tools">
-               <items>
-                  <MenuItem text="Options..." />
-               </items>
-            </Menu>
-            <Menu text="Help" />
-         </menus>
-      </MenuBar>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+                <MenuBar>
+                    <menus>
+                        <Menu mnemonicParsing="false" text="File">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Close" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Edit">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Delete" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="About" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+                <ToolBar>
+                    <items>
+                        <Button mnemonicParsing="false" text="Button" />
+                    </items>
+                </ToolBar>
+         </children>
+      </VBox>
    </top>
-   <center>
-      <TabPane prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-         <tabs>
-            <Tab text="Untitled Tab 1">
-               <content>
-                  <AnchorPane minHeight="527.0" minWidth="300.0" prefHeight="527.0" prefWidth="781.0">
-                     <children>
-                        <ImageView fx:id="img" fitHeight="549.0" fitWidth="780.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children></AnchorPane>
-               </content>
-            </Tab>
-            <Tab text="Untitled Tab 2">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-            </Tab>
-         </tabs>
-      </TabPane>
-   </center>
-   <left>
-      <ToolBar prefHeight="625.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-        <items>
-          <Button mnemonicParsing="false" text="Button" />
-        </items>
-      </ToolBar>
-   </left>
-   <right>
-      <BorderPane prefHeight="575.0" prefWidth="119.0" BorderPane.alignment="CENTER" />
-   </right>
 </BorderPane>
