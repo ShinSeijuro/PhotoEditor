@@ -36,13 +36,16 @@
     <right>
         <BorderPane prefHeight="575.0" prefWidth="119.0" BorderPane.alignment="CENTER" />
     </right>
-   <top>
-      <VBox BorderPane.alignment="CENTER">
-         <children>
+    <top>
+        <VBox BorderPane.alignment="CENTER">
+            <children>
                 <MenuBar>
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
+                                <MenuItem mnemonicParsing="false" text="Open" />
+                                <MenuItem mnemonicParsing="false" text="Save" />
+                                <MenuItem mnemonicParsing="false" text="Save As..." />
                                 <MenuItem mnemonicParsing="false" text="Close" />
                             </items>
                         </Menu>
@@ -63,36 +66,37 @@
                         <Button mnemonicParsing="false" text="Button" />
                     </items>
                 </ToolBar>
-         </children>
-      </VBox>
-   </top>
-   <center>
-      <TabPane fx:id ="tabPane" prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-         <tabs>
-            <Tab text="Untitled Tab 1">
-               <content>
-                  <AnchorPane minHeight="527.0" minWidth="300.0" prefHeight="527.0" prefWidth="781.0">
-                     <children>
-                        <ImageView fx:id="img" fitHeight="549.0" fitWidth="780.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children></AnchorPane>
-               </content>
-            </Tab>
-            <Tab text="Untitled Tab 2">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-            </Tab>
-         </tabs>
-      </TabPane>
-   </center>
-   <left>
-      <ToolBar prefHeight="625.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-        <items>
-          <Button mnemonicParsing="false" text="Button" />
-        </items>
-      </ToolBar>
-   </left>
-   <right>
-      <BorderPane prefHeight="575.0" prefWidth="119.0" BorderPane.alignment="CENTER" />
-   </right>
+            </children>
+        </VBox>
+    </top>
+    <center>
+        <TabPane fx:id="tabPane" prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <tabs>
+                <Tab text="Untitled Tab 1">
+                    <content>
+                        <AnchorPane minHeight="527.0" minWidth="300.0" prefHeight="527.0" prefWidth="781.0">
+                            <children>
+                                <ImageView fx:id="img" fitHeight="549.0" fitWidth="780.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Untitled Tab 2">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+    <left>
+        <ToolBar prefHeight="625.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <items>
+                <Button mnemonicParsing="false" text="Button" />
+            </items>
+        </ToolBar>
+    </left>
+    <right>
+        <BorderPane prefHeight="575.0" prefWidth="119.0" BorderPane.alignment="CENTER" />
+    </right>
 </BorderPane>

@@ -17,14 +17,27 @@ import javafx.stage.StageStyle;
  * @author Yuuki
  */
 public class PhotoEditor extends Application {
-    
+
+    private static Stage primaryStage;
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    private static void setPrimaryStage(Stage stage) {
+        primaryStage = stage;
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
+        setPrimaryStage(stage);
+
         Parent root = FXMLLoader.load(getClass().getResource("Workspace.fxml"));
-        
         Scene scene = new Scene(root);
+
         stage.setScene(scene);
         stage.centerOnScreen();
+        stage.setTitle("PhotoEditor");
         stage.show();
     }
 
@@ -34,5 +47,5 @@ public class PhotoEditor extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

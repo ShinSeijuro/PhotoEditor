@@ -26,11 +26,6 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private ImageView img;
-    private Stage stage;
-
-    public void start(Stage stage) throws Exception {
-        this.stage = stage;
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -55,10 +50,10 @@ public class WorkspaceController implements Initializable {
                 new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
                 new ExtensionFilter("All Files", "*.*"));
 
-        File selectedFile = fileChooser.showOpenDialog(stage);
+        File selectedFile = fileChooser.showOpenDialog(PhotoEditor.getPrimaryStage());
         if (selectedFile != null) {
             loadFile(selectedFile);
         }
-        
+
     }
 }
