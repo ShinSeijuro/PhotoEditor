@@ -41,9 +41,7 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onOpen(ActionEvent event) {
-        // Doesn't go into this method on click of the menu
-        System.out.println("Inside On Action!!!");
+    public void onFileOpen(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.getExtensionFilters().addAll(
@@ -54,6 +52,12 @@ public class WorkspaceController implements Initializable {
         if (selectedFile != null) {
             loadFile(selectedFile);
         }
+    }
 
+    @FXML
+    public void onFileClose(ActionEvent event) {
+        PhotoEditor.getPrimaryStage().close();
+
+        //TO-DO: You have unsaved documents. Do you want to exit?
     }
 }
