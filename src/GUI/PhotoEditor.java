@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package photoeditor;
+package GUI;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +20,7 @@ public class PhotoEditor extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("fMenu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("Workspace.fxml"));
         
         Scene scene = new Scene(root);
         stage.setScene(scene);

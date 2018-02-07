@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package photoeditor;
+package GUI;
 
 import java.io.File;
 import java.net.URL;
@@ -22,7 +22,7 @@ import javafx.stage.Stage;
  *
  * @author Yuuki
  */
-public class fMenuController implements Initializable {
+public class WorkspaceController implements Initializable {
 
     @FXML
     private ImageView img;
