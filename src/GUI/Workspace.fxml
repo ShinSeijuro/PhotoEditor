@@ -4,34 +4,14 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
     <center>
-        <TabPane prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-            <tabs>
-                <Tab text="Untitled Tab 1">
-                    <content>
-                        <AnchorPane minHeight="527.0" minWidth="300.0" prefHeight="527.0" prefWidth="781.0">
-                            <children>
-                                <ImageView fx:id="img" fitHeight="549.0" fitWidth="780.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </Tab>
-                <Tab text="Untitled Tab 2">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-            </tabs>
-        </TabPane>
+        <TabPane fx:id="tabPane" prefHeight="575.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
     </center>
     <right>
         <BorderPane prefHeight="575.0" prefWidth="119.0" BorderPane.alignment="CENTER" />
@@ -69,26 +49,6 @@
             </children>
         </VBox>
     </top>
-    <center>
-        <TabPane fx:id="tabPane" prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-            <tabs>
-                <Tab text="Untitled Tab 1">
-                    <content>
-                        <AnchorPane minHeight="527.0" minWidth="300.0" prefHeight="527.0" prefWidth="781.0">
-                            <children>
-                                <ImageView fx:id="img" fitHeight="549.0" fitWidth="780.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </Tab>
-                <Tab text="Untitled Tab 2">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-            </tabs>
-        </TabPane>
-    </center>
     <left>
         <ToolBar prefHeight="625.0" prefWidth="100.0" BorderPane.alignment="CENTER">
             <items>
@@ -96,7 +56,4 @@
             </items>
         </ToolBar>
     </left>
-    <right>
-        <BorderPane prefHeight="575.0" prefWidth="119.0" BorderPane.alignment="CENTER" />
-    </right>
 </BorderPane>

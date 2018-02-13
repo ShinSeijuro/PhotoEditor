@@ -6,14 +6,19 @@
 package GUI;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -25,7 +30,7 @@ import javafx.stage.Stage;
 public class WorkspaceController implements Initializable {
 
     @FXML
-    private ImageView img;
+    private TabPane tabPane;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -33,15 +38,18 @@ public class WorkspaceController implements Initializable {
 
     }
 
-    public void loadFile(File file) {
-        //File file = new File("D:\\calendar.png");
-        Image image = new Image(file.toURI().toString());
-        // simple displays ImageView the image as is
-        img.setImage(image);
+    public void loadFile(File file) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ImageTab.fxml"));
+        AnchorPane tabPage = (AnchorPane) loader.load();
+        ImageTabController controller = (ImageTabController) loader.getController();
+        Tab tab = new Tab(file.getName(), tabPage);
+
+        tabPane.getTabs().add(tab);
+        controller.loadFile(file);
     }
 
     @FXML
-    public void onFileOpen(ActionEvent event) {
+    public void onFileOpen(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.getExtensionFilters().addAll(
@@ -58,6 +66,6 @@ public class WorkspaceController implements Initializable {
     public void onFileClose(ActionEvent event) {
         PhotoEditor.getPrimaryStage().close();
 
-        //TO-DO: You have unsaved documents. Do you want to exit?
+        //TODO: You have unsaved documents. Do you want to exit?
     }
 }
