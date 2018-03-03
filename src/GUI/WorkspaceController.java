@@ -6,28 +6,27 @@
 package GUI;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
 
 /**
  *
  * @author Yuuki
  */
 public class WorkspaceController implements Initializable {
+
+    private HashMap<String, ImageTab> tabs = new HashMap<>();
+
+    public HashMap<String, ImageTab> getTabs() {
+        return tabs;
+    }
 
     @FXML
     private TabPane tabPane;
@@ -38,18 +37,23 @@ public class WorkspaceController implements Initializable {
 
     }
 
-    public void loadFile(File file) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ImageTab.fxml"));
-        AnchorPane tabPage = (AnchorPane) loader.load();
-        ImageTabController controller = (ImageTabController) loader.getController();
-        Tab tab = new Tab(file.getName(), tabPage);
+    public void loadFile(File file) {
+        String tabName = file.getName();
 
-        tabPane.getTabs().add(tab);
-        controller.loadFile(file);
+        if (tabs.containsKey(tabName)) {
+            tabPane.getSelectionModel().select(tabs.get(tabName));
+        } else {
+            ImageTab tab = new ImageTab(file);
+            tab.setOnClosed(e -> tabs.remove(tabName));
+            tabPane.getTabs().add(tab);
+            tabs.put(tabName, tab);
+
+            tabPane.getSelectionModel().selectLast();
+        }
     }
 
     @FXML
-    public void onFileOpen(ActionEvent event) throws IOException {
+    public void onFileOpen(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.getExtensionFilters().addAll(
