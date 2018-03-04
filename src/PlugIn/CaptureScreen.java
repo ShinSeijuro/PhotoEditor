@@ -19,7 +19,7 @@ public class CaptureScreen {
     public static void main(String[] args) throws Exception {
 
         try {
-            System.out.println("Doi 1 giay nao…");
+            System.out.println("...");
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             System.exit(1);
