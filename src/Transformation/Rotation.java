@@ -30,7 +30,7 @@ public class Rotation extends AbstractImageAction {
         super(originalImage);
         this.radian = radian;
 
-        setName("Rotation");
+        setName("Rotation " + getAngle());
     }
 
     @Override
@@ -41,6 +41,10 @@ public class Rotation extends AbstractImageAction {
         image = op.filter(image, null);
 
         return image;
+    }
+
+    public int getAngle() {
+        return (int) Math.toDegrees(radian);
     }
 
 }
