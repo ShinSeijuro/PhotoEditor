@@ -36,8 +36,8 @@ public abstract class AbstractImageAction extends NamedAction implements IUndoab
     @Override
     public final void actionPerformed(ActionEvent e) {
         History.add(this);
-        modifiedImage = transform(originalImage);
+        modifiedImage = applyTransform(originalImage);
     }
 
-    public abstract BufferedImage transform(BufferedImage image);
+    public abstract BufferedImage applyTransform(BufferedImage image);
 }
