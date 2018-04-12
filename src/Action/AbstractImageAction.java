@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
  *
  * @author CMQ
  */
-public abstract class AbstractImageAction extends NamedAction implements IUndoable {
+public abstract class AbstractImageAction implements IUndoable {
 
     public BufferedImage originalImage;
 
@@ -30,14 +30,17 @@ public abstract class AbstractImageAction extends NamedAction implements IUndoab
 
     @Override
     public final void Undo() {
-        originalImage = getModifiedImage();
+        originalImage = modifiedImage;
     }
 
-    @Override
-    public final void actionPerformed(ActionEvent e) {
+    public final BufferedImage applyTransform() {
         History.add(this);
-        modifiedImage = applyTransform(originalImage);
+        if (modifiedImage == null) {
+            modifiedImage = applyTransform(originalImage);
+        }
+
+        return modifiedImage;
     }
 
-    public abstract BufferedImage applyTransform(BufferedImage image);
+    protected abstract BufferedImage applyTransform(BufferedImage image);
 }

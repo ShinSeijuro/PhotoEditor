@@ -29,8 +29,6 @@ public class Rotation extends AbstractImageAction {
     public Rotation(BufferedImage originalImage, double radian) {
         super(originalImage);
         this.radian = radian;
-
-        setName("Rotation " + getAngle());
     }
 
     @Override

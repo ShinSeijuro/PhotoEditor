@@ -44,7 +44,7 @@
                 </MenuBar>
                 <ToolBar>
                     <items>
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Button fx:id="buttonRotate" mnemonicParsing="false" onAction="#onRotate" text="buttonRotate" />
                     </items>
                 </ToolBar>
             </children>

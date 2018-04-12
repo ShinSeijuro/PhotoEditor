@@ -5,6 +5,8 @@
  */
 package GUI;
 
+import Transformation.Rotation;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -31,10 +34,12 @@ public class WorkspaceController implements Initializable {
     @FXML
     private TabPane tabPane;
 
+    @FXML
+    private Button buttonRotate;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-
     }
 
     public void loadFile(File file) {
@@ -50,6 +55,14 @@ public class WorkspaceController implements Initializable {
 
             tabPane.getSelectionModel().selectLast();
         }
+    }
+
+    public ImageTab getCurrentTab() {
+        return (ImageTab) tabPane.getSelectionModel().getSelectedItem();
+    }
+
+    public ImageTabController getCurrentController() {
+        return getCurrentTab().getController();
     }
 
     @FXML
@@ -71,5 +84,13 @@ public class WorkspaceController implements Initializable {
         PhotoEditor.getPrimaryStage().close();
 
         //TODO: You have unsaved documents. Do you want to exit?
+    }
+
+    @FXML
+    public void onRotate(ActionEvent event) {
+        BufferedImage image = getCurrentController().getBufferedImage();
+        Rotation rotate = new Rotation(image, Math.toRadians(90));
+        image = rotate.applyTransform();
+        getCurrentController().setBufferdImage(image);
     }
 }

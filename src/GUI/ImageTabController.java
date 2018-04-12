@@ -5,8 +5,10 @@
  */
 package GUI;
 
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
@@ -24,6 +26,14 @@ public class ImageTabController extends Tab implements Initializable {
 
     public ImageView getImageView() {
         return imageView;
+    }
+
+    public BufferedImage getBufferedImage() {
+        return SwingFXUtils.fromFXImage(imageView.getImage(), null);
+    }
+
+    public void setBufferdImage(BufferedImage image) {
+        imageView.setImage(SwingFXUtils.toFXImage(image, null));
     }
 
     /**
