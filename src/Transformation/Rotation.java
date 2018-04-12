@@ -22,10 +22,6 @@ public class Rotation extends AbstractImageAction {
         return radian;
     }
 
-    public void setRadian(double radian) {
-        this.radian = radian;
-    }
-
     public Rotation(BufferedImage originalImage, double radian) {
         super(originalImage);
         this.radian = radian;

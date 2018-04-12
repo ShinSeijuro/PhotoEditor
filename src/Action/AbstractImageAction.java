@@ -18,6 +18,10 @@ public abstract class AbstractImageAction implements IUndoable {
 
     public BufferedImage originalImage;
 
+    public BufferedImage getOriginalImage() {
+        return originalImage;
+    }
+
     private BufferedImage modifiedImage;
 
     public BufferedImage getModifiedImage() {

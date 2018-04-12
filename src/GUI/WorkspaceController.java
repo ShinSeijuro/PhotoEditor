@@ -90,7 +90,7 @@ public class WorkspaceController implements Initializable {
     public void onRotate(ActionEvent event) {
         BufferedImage image = getCurrentController().getBufferedImage();
         Rotation rotate = new Rotation(image, Math.toRadians(90));
-        image = rotate.applyTransform();
+        rotate.applyTransform();
         getCurrentController().setBufferdImage(image);
     }
 }
