@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -53,6 +54,12 @@ public class WorkspaceController implements Initializable {
         }
     }
 
+    public void loadFile(List<File> files) {
+        for (File file : files) {
+            loadFile(file);
+        }
+    }
+
     public ImageTab getCurrentTab() {
         return (ImageTab) tabPane.getSelectionModel().getSelectedItem();
     }
@@ -60,6 +67,8 @@ public class WorkspaceController implements Initializable {
     public ImageTabController getCurrentController() {
         return getCurrentTab().getController();
     }
+
+    private File lastDirectory;
 
     @FXML
     public void onFileOpen(ActionEvent event) {
@@ -69,9 +78,15 @@ public class WorkspaceController implements Initializable {
                 new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
                 new ExtensionFilter("All Files", "*.*"));
 
-        File selectedFile = fileChooser.showOpenDialog(PhotoEditor.getPrimaryStage());
-        if (selectedFile != null) {
-            loadFile(selectedFile);
+        if (lastDirectory != null) {
+            fileChooser.setInitialDirectory(lastDirectory);
+        }
+
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(PhotoEditor.getPrimaryStage());
+
+        if (selectedFiles.size() > 0) {
+            loadFile(selectedFiles);
+            lastDirectory = selectedFiles.get(0).getParentFile();
         }
     }
 
