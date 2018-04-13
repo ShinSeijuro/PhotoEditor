@@ -32,7 +32,7 @@ public class ImageTabController extends Tab implements Initializable {
         return SwingFXUtils.fromFXImage(imageView.getImage(), null);
     }
 
-    public void setBufferdImage(BufferedImage image) {
+    public void setBufferedImage(BufferedImage image) {
         imageView.setImage(SwingFXUtils.toFXImage(image, null));
     }
 

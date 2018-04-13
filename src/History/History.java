@@ -5,6 +5,8 @@
  */
 package History;
 
+import Action.AbstractImageAction;
+import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 
 /**
@@ -15,16 +17,26 @@ public class History {
 
     public static final int maximumAction = 20;
 
-    private static final ArrayDeque<IUndoable> undoDeque = new ArrayDeque<>();
+    private static final ArrayDeque<AbstractImageAction> undoDeque = new ArrayDeque<>();
 
-    public static ArrayDeque<IUndoable> getUndoDeque() {
+    public static ArrayDeque<AbstractImageAction> getUndoDeque() {
         return undoDeque;
     }
 
-    private static final ArrayDeque<IUndoable> redoDeque = new ArrayDeque<>();
+    private static final ArrayDeque<AbstractImageAction> redoDeque = new ArrayDeque<>();
 
-    public static ArrayDeque<IUndoable> getRedoDeque() {
+    public static ArrayDeque<AbstractImageAction> getRedoDeque() {
         return redoDeque;
+    }
+
+    public static BufferedImage getCurrentImage() {
+        if (undoDeque.size() > 0) {
+            return undoDeque.getFirst().getModifiedImage();
+        } else if (redoDeque.size() > 0) {
+            return redoDeque.getFirst().getOriginalImage();
+        }
+
+        return null;
     }
 
     public static int getActionCount() {
@@ -34,7 +46,7 @@ public class History {
     public History() {
     }
 
-    public static void add(IUndoable action) {
+    public static void add(AbstractImageAction action) {
         if (redoDeque.size() > 0) {
             redoDeque.clear();
         }
@@ -56,14 +68,12 @@ public class History {
 
     public static void redo() {
         if (isRedoable()) {
-            redoDeque.getLast().Undo();
-            undoDeque.addLast(redoDeque.getLast());
+            undoDeque.push(redoDeque.pop());
         }
     }
 
     public static void undo() {
         if (isUndoable()) {
-            undoDeque.getFirst().Undo();
             redoDeque.push(undoDeque.pop());
         }
     }

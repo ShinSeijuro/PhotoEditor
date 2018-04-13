@@ -5,7 +5,8 @@
  */
 package GUI;
 
-import Transformation.Rotation;
+import Transformation.*;
+import History.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
@@ -15,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -33,9 +35,12 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private TabPane tabPane;
-
     @FXML
     private Button buttonRotate;
+    @FXML
+    private MenuItem menuUndo;
+    @FXML
+    private MenuItem menuRedo;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -90,7 +95,21 @@ public class WorkspaceController implements Initializable {
     public void onRotate(ActionEvent event) {
         BufferedImage image = getCurrentController().getBufferedImage();
         Rotation rotate = new Rotation(image, Math.toRadians(90));
-        rotate.applyTransform();
-        getCurrentController().setBufferdImage(image);
+        image = rotate.applyTransform();
+        getCurrentController().setBufferedImage(image);
+    }
+
+    @FXML
+    public void onUndo(ActionEvent event) {
+        History.undo();
+        BufferedImage image = History.getCurrentImage();
+        getCurrentController().setBufferedImage(image);
+    }
+
+    @FXML
+    public void onRedo(ActionEvent event) {
+        History.redo();
+        BufferedImage image = History.getCurrentImage();
+        getCurrentController().setBufferedImage(image);
     }
 }

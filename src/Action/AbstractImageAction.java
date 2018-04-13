@@ -14,7 +14,19 @@ import java.awt.image.BufferedImage;
  *
  * @author CMQ
  */
-public abstract class AbstractImageAction implements IUndoable {
+public abstract class AbstractImageAction implements INameable {
+
+    public String name;
+
+    @Override
+    public final String getName() {
+        return this.name;
+    }
+
+    @Override
+    public final void setName(String newName) {
+        this.name = newName;
+    }
 
     public BufferedImage originalImage;
 
@@ -32,14 +44,9 @@ public abstract class AbstractImageAction implements IUndoable {
         this.originalImage = originalImage;
     }
 
-    @Override
-    public final void Undo() {
-        originalImage = modifiedImage;
-    }
-
     public final BufferedImage applyTransform() {
-        History.add(this);
         if (modifiedImage == null) {
+            History.add(this);
             modifiedImage = applyTransform(originalImage);
         }
 
