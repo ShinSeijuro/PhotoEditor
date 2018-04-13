@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
@@ -34,9 +35,28 @@
                             <items>
                                 <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#onUndo" text="Undo" />
                         <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#onRedo" text="Redo" />
-                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
                             </items>
                         </Menu>
+                  <Menu mnemonicParsing="false" text="Transformation">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Rotation">
+                           <items>
+                            <MenuItem mnemonicParsing="false" onAction="#onRotateRight90" text="Rotate right 90°" />
+                              <MenuItem mnemonicParsing="false" onAction="#onRotateLeft90" text="Rotate left 90°" />
+                              <MenuItem mnemonicParsing="false" onAction="#onRotateRight180" text="Rotate right 180°" />
+                              <MenuItem mnemonicParsing="false" onAction="#onRotateLeft180" text="Rotate left 180°" />
+                           </items>
+                        </Menu>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <Menu mnemonicParsing="false" text="Flip">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Flip vertical" />
+                              <MenuItem mnemonicParsing="false" text="Flip horizontal" />
+                           </items>
+                        </Menu>
+                    </items>
+                  </Menu>
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
                                 <MenuItem mnemonicParsing="false" text="About" />
@@ -46,7 +66,7 @@
                 </MenuBar>
                 <ToolBar>
                     <items>
-                        <Button fx:id="buttonRotate" mnemonicParsing="false" onAction="#onRotate" text="buttonRotate" />
+                        <Button fx:id="buttonRotate" mnemonicParsing="false" onAction="#onRotateRight90" text="Rotate right 90°" />
                     </items>
                 </ToolBar>
             </children>

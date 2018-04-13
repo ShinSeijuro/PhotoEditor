@@ -33,15 +33,6 @@ public class WorkspaceController implements Initializable {
         return tabs;
     }
 
-    @FXML
-    private TabPane tabPane;
-    @FXML
-    private Button buttonRotate;
-    @FXML
-    private MenuItem menuUndo;
-    @FXML
-    private MenuItem menuRedo;
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -92,9 +83,33 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onRotate(ActionEvent event) {
+    public void onRotateRight90(ActionEvent event) {
         BufferedImage image = getCurrentController().getBufferedImage();
         Rotation rotate = new Rotation(image, Math.toRadians(90));
+        image = rotate.applyTransform();
+        getCurrentController().setBufferedImage(image);
+    }
+
+    @FXML
+    public void onRotateLeft90(ActionEvent event) {
+        BufferedImage image = getCurrentController().getBufferedImage();
+        Rotation rotate = new Rotation(image, Math.toRadians(-90));
+        image = rotate.applyTransform();
+        getCurrentController().setBufferedImage(image);
+    }
+
+    @FXML
+    public void onRotateRight180(ActionEvent event) {
+        BufferedImage image = getCurrentController().getBufferedImage();
+        Rotation rotate = new Rotation(image, Math.toRadians(180));
+        image = rotate.applyTransform();
+        getCurrentController().setBufferedImage(image);
+    }
+
+    @FXML
+    public void onRotateLeft180(ActionEvent event) {
+        BufferedImage image = getCurrentController().getBufferedImage();
+        Rotation rotate = new Rotation(image, Math.toRadians(-180));
         image = rotate.applyTransform();
         getCurrentController().setBufferedImage(image);
     }
@@ -112,4 +127,14 @@ public class WorkspaceController implements Initializable {
         BufferedImage image = History.getCurrentImage();
         getCurrentController().setBufferedImage(image);
     }
+
+    /* Controls */
+    @FXML
+    private TabPane tabPane;
+    @FXML
+    private Button buttonRotate;
+    @FXML
+    private MenuItem menuUndo;
+    @FXML
+    private MenuItem menuRedo;
 }
