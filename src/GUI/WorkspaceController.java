@@ -21,6 +21,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.event.*;
 
 /**
  *
@@ -161,6 +162,25 @@ public class WorkspaceController implements Initializable {
     @FXML
     public void onFileSave(ActionEvent event) {
 
+    }
+
+    @FXML
+    void onMenuEditShowing(Event event) {
+        if (History.isUndoable()) {
+            menuUndo.setDisable(false);
+            menuUndo.setText("Undo " + History.getUndoDeque().getFirst().getName());
+        } else {
+            menuUndo.setDisable(true);
+            menuUndo.setText("Undo");
+        }
+
+        if (History.isRedoable()) {
+            menuRedo.setDisable(false);
+            menuRedo.setText("Redo " + History.getRedoDeque().getFirst().getName());
+        } else {
+            menuRedo.setDisable(true);
+            menuRedo.setText("Redo");
+        }
     }
 
     /* Controls */

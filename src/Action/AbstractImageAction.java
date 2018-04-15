@@ -16,7 +16,7 @@ import java.awt.image.BufferedImage;
  */
 public abstract class AbstractImageAction implements INameable {
 
-    public String name;
+    private String name;
 
     @Override
     public final String getName() {
