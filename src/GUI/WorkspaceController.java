@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import Adjustment.GrayScale;
 import Transformation.*;
 import History.*;
 import java.awt.image.BufferedImage;
@@ -142,6 +143,14 @@ public class WorkspaceController implements Initializable {
         BufferedImage image = getCurrentController().getBufferedImage();
         Flip flip = new Flip(image, Flip.Orientation.Vertical);
         image = flip.applyTransform();
+        getCurrentController().setBufferedImage(image);
+    }
+
+    @FXML
+    public void onBlackAndWhite(ActionEvent event) {
+        BufferedImage image = getCurrentController().getBufferedImage();
+        GrayScale grayScale = new GrayScale(image);
+        image = grayScale.applyTransform();
         getCurrentController().setBufferedImage(image);
     }
 
