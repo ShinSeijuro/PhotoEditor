@@ -51,8 +51,8 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <Menu mnemonicParsing="false" text="Flip">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Flip vertical" />
-                              <MenuItem mnemonicParsing="false" text="Flip horizontal" />
+                              <MenuItem mnemonicParsing="false" onAction="#onFlipVertical" text="Flip vertical" />
+                              <MenuItem mnemonicParsing="false" onAction="#onFlipHorizontal" text="Flip horizontal" />
                            </items>
                         </Menu>
                     </items>

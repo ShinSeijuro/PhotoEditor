@@ -130,6 +130,21 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    public void onFlipHorizontal(ActionEvent event) {
+        BufferedImage image = getCurrentController().getBufferedImage();
+        Flip flip = new Flip(image, Flip.Orientation.Horizontal);
+        image = flip.applyTransform();
+        getCurrentController().setBufferedImage(image);
+    }
+
+    public void onFlipVertical(ActionEvent event) {
+        BufferedImage image = getCurrentController().getBufferedImage();
+        Flip flip = new Flip(image, Flip.Orientation.Vertical);
+        image = flip.applyTransform();
+        getCurrentController().setBufferedImage(image);
+    }
+
+    @FXML
     public void onUndo(ActionEvent event) {
         History.undo();
         BufferedImage image = History.getCurrentImage();
@@ -141,6 +156,11 @@ public class WorkspaceController implements Initializable {
         History.redo();
         BufferedImage image = History.getCurrentImage();
         getCurrentController().setBufferedImage(image);
+    }
+
+    @FXML
+    public void onFileSave(ActionEvent event) {
+
     }
 
     /* Controls */
