@@ -62,6 +62,7 @@
                         <Menu mnemonicParsing="false" text="Adjustments">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
+                              <MenuItem mnemonicParsing="false" onAction="#onBlur" text="Box Blur" />
                           </items>
                         </Menu>
                      </items>

@@ -144,6 +144,14 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    public void onBlur(ActionEvent event) {
+        BufferedImage image = getCurrentController().getBufferedImage();
+        BoxBlur blur = new BoxBlur(image);
+        image = blur.applyTransform();
+        getCurrentController().setBufferedImage(image);
+    }
+
+    @FXML
     public void onRotateLeft90(ActionEvent event) {
         applyAction(new Rotation(getCurrentImage(), Math.toRadians(-90)));
     }
