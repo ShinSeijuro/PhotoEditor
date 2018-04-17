@@ -145,11 +145,6 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onBlur(ActionEvent event) {
-        applyAction(new BoxBlur(getCurrentImage()));
-    }
-
-    @FXML
     public void onRotateLeft90(ActionEvent event) {
         applyAction(new Rotation(getCurrentImage(), Math.toRadians(-90)));
     }
@@ -176,6 +171,11 @@ public class WorkspaceController implements Initializable {
     @FXML
     public void onBlackAndWhite(ActionEvent event) {
         applyAction(new GrayScale(getCurrentImage()));
+    }
+
+    @FXML
+    public void onBlur(ActionEvent event) {
+        applyAction(new BoxBlur(getCurrentImage()));
     }
 
     @FXML
