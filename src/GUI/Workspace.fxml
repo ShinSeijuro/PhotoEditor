@@ -31,7 +31,7 @@
                                 <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close" />
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
+                        <Menu fx:id="menuEdit" mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
                             <items>
                                 <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#onUndo" text="Undo" />
                         <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#onRedo" text="Redo" />
@@ -57,7 +57,7 @@
                         </Menu>
                             </items>
                         </Menu>
-                  <Menu mnemonicParsing="false" text="Image">
+                  <Menu fx:id="menuImage" mnemonicParsing="false" text="Image">
                      <items>
                         <Menu mnemonicParsing="false" text="Adjustments">
                           <items>

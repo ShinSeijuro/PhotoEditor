@@ -5,9 +5,9 @@
  */
 package GUI;
 
-import ImageProcessing.BoxBlur;
-import Action.AbstractImageAction;
-import Adjustment.GrayScale;
+import ImageProcessing.*;
+import Action.*;
+import Adjustment.*;
 import Transformation.*;
 import History.*;
 import java.awt.image.BufferedImage;
@@ -18,16 +18,12 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.event.*;
-import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 
 /**
@@ -36,7 +32,7 @@ import javafx.scene.control.Tab;
  */
 public class WorkspaceController implements Initializable {
 
-    private HashMap<String, ImageTab> tabs = new HashMap<>();
+    private final HashMap<String, ImageTab> tabs = new HashMap<>();
 
     public HashMap<String, ImageTab> getTabs() {
         return tabs;
@@ -81,12 +77,20 @@ public class WorkspaceController implements Initializable {
                 setCurrentTab((ImageTab) newValue);
             }
         });
+
+        refreshMenuBar();
     }
 
     public void applyAction(AbstractImageAction action) {
         BufferedImage image = action.applyTransform();
         currentController.setBufferedImage(image);
         getCurrentHistory().add(action);
+    }
+
+    public void refreshMenuBar() {
+        boolean isDisable = tabs.size() == 0;
+        menuEdit.setDisable(isDisable);
+        menuImage.setDisable(isDisable);
     }
 
     public void loadFile(File file) {
@@ -96,10 +100,13 @@ public class WorkspaceController implements Initializable {
             tabPane.getSelectionModel().select(tabs.get(tabName));
         } else {
             ImageTab tab = new ImageTab(file);
-            tab.setOnClosed(e -> tabs.remove(tabName));
+            tab.setOnClosed((e) -> {
+                tabs.remove(tabName);
+                refreshMenuBar();
+            });
+
             tabPane.getTabs().add(tab);
             tabs.put(tabName, tab);
-
             tabPane.getSelectionModel().selectLast();
         }
     }
@@ -223,6 +230,10 @@ public class WorkspaceController implements Initializable {
     /* Controls */
     @FXML
     private TabPane tabPane;
+    @FXML
+    private Menu menuEdit;
+    @FXML
+    private Menu menuImage;
     @FXML
     private Button buttonRotate;
     @FXML
