@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import Action.AbstractImageAction;
 import Adjustment.GrayScale;
 import Transformation.*;
 import History.*;
@@ -14,6 +15,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,6 +26,8 @@ import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.event.*;
+import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.Tab;
 
 /**
  *
@@ -36,9 +41,51 @@ public class WorkspaceController implements Initializable {
         return tabs;
     }
 
+    private ImageTab currentTab;
+
+    public ImageTab getCurrentTab() {
+        return currentTab;
+    }
+
+    private void setCurrentTab(ImageTab currentTab) {
+        this.currentTab = currentTab;
+        setCurrentController(currentTab.getController());
+    }
+
+    private ImageTabController currentController;
+
+    public ImageTabController getCurrentController() {
+        return currentController;
+    }
+
+    private void setCurrentController(ImageTabController currentController) {
+        this.currentController = currentController;
+    }
+
+    public History getCurrentHistory() {
+        return currentController.getHistory();
+    }
+
+    public BufferedImage getCurrentImage() {
+        return currentController.getBufferedImage();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+                setCurrentTab((ImageTab) newValue);
+            }
+        });
+    }
+
+    public void applyAction(AbstractImageAction action) {
+        BufferedImage image = action.applyTransform();
+        currentController.setBufferedImage(image);
+        getCurrentHistory().add(action);
     }
 
     public void loadFile(File file) {
@@ -60,14 +107,6 @@ public class WorkspaceController implements Initializable {
         for (File file : files) {
             loadFile(file);
         }
-    }
-
-    public ImageTab getCurrentTab() {
-        return (ImageTab) tabPane.getSelectionModel().getSelectedItem();
-    }
-
-    public ImageTabController getCurrentController() {
-        return getCurrentTab().getController();
     }
 
     private File lastDirectory;
@@ -101,71 +140,52 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onRotateRight90(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Rotation rotate = new Rotation(image, Math.toRadians(90));
-        image = rotate.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new Rotation(getCurrentImage(), Math.toRadians(90)));
     }
 
     @FXML
     public void onRotateLeft90(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Rotation rotate = new Rotation(image, Math.toRadians(-90));
-        image = rotate.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new Rotation(getCurrentImage(), Math.toRadians(-90)));
     }
 
     @FXML
     public void onRotateRight180(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Rotation rotate = new Rotation(image, Math.toRadians(180));
-        image = rotate.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new Rotation(getCurrentImage(), Math.toRadians(180)));
     }
 
     @FXML
     public void onRotateLeft180(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Rotation rotate = new Rotation(image, Math.toRadians(-180));
-        image = rotate.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new Rotation(getCurrentImage(), Math.toRadians(-180)));
     }
 
     @FXML
     public void onFlipHorizontal(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Flip flip = new Flip(image, Flip.Orientation.Horizontal);
-        image = flip.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new Flip(getCurrentImage(), Flip.Orientation.Horizontal));
     }
 
     public void onFlipVertical(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Flip flip = new Flip(image, Flip.Orientation.Vertical);
-        image = flip.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new Flip(getCurrentImage(), Flip.Orientation.Vertical));
     }
 
     @FXML
     public void onBlackAndWhite(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        GrayScale grayScale = new GrayScale(image);
-        image = grayScale.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new GrayScale(getCurrentImage()));
     }
 
     @FXML
     public void onUndo(ActionEvent event) {
-        History.undo();
-        BufferedImage image = History.getCurrentImage();
-        getCurrentController().setBufferedImage(image);
+        History currentHistory = getCurrentHistory();
+        currentHistory.undo();
+        BufferedImage image = currentHistory.getCurrentImage();
+        currentController.setBufferedImage(image);
     }
 
     @FXML
     public void onRedo(ActionEvent event) {
-        History.redo();
-        BufferedImage image = History.getCurrentImage();
-        getCurrentController().setBufferedImage(image);
+        History currentHistory = getCurrentHistory();
+        currentHistory.redo();
+        BufferedImage image = currentHistory.getCurrentImage();
+        currentController.setBufferedImage(image);
     }
 
     @FXML
@@ -175,17 +195,19 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     void onMenuEditShowing(Event event) {
-        if (History.isUndoable()) {
+        History currentHistory = getCurrentHistory();
+
+        if (currentHistory.isUndoable()) {
             menuUndo.setDisable(false);
-            menuUndo.setText("Undo " + History.getUndoDeque().getFirst().getName());
+            menuUndo.setText("Undo " + currentHistory.getUndoDeque().getFirst().getName());
         } else {
             menuUndo.setDisable(true);
             menuUndo.setText("Undo");
         }
 
-        if (History.isRedoable()) {
+        if (currentHistory.isRedoable()) {
             menuRedo.setDisable(false);
-            menuRedo.setText("Redo " + History.getRedoDeque().getFirst().getName());
+            menuRedo.setText("Redo " + currentHistory.getRedoDeque().getFirst().getName());
         } else {
             menuRedo.setDisable(true);
             menuRedo.setText("Redo");

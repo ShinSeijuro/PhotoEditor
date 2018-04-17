@@ -17,19 +17,19 @@ public class History {
 
     public static final int maximumAction = 20;
 
-    private static final ArrayDeque<AbstractImageAction> undoDeque = new ArrayDeque<>();
+    private final ArrayDeque<AbstractImageAction> undoDeque = new ArrayDeque<>();
 
-    public static ArrayDeque<AbstractImageAction> getUndoDeque() {
+    public ArrayDeque<AbstractImageAction> getUndoDeque() {
         return undoDeque;
     }
 
-    private static final ArrayDeque<AbstractImageAction> redoDeque = new ArrayDeque<>();
+    private final ArrayDeque<AbstractImageAction> redoDeque = new ArrayDeque<>();
 
-    public static ArrayDeque<AbstractImageAction> getRedoDeque() {
+    public ArrayDeque<AbstractImageAction> getRedoDeque() {
         return redoDeque;
     }
 
-    public static BufferedImage getCurrentImage() {
+    public BufferedImage getCurrentImage() {
         if (undoDeque.size() > 0) {
             return undoDeque.getFirst().getModifiedImage();
         } else if (redoDeque.size() > 0) {
@@ -39,14 +39,14 @@ public class History {
         return null;
     }
 
-    public static int getActionCount() {
+    public int getActionCount() {
         return undoDeque.size() + redoDeque.size();
     }
 
     public History() {
     }
 
-    public static void add(AbstractImageAction action) {
+    public void add(AbstractImageAction action) {
         if (redoDeque.size() > 0) {
             redoDeque.clear();
         }
@@ -58,27 +58,27 @@ public class History {
         }
     }
 
-    public static boolean isRedoable() {
+    public boolean isRedoable() {
         return redoDeque.size() > 0;
     }
 
-    public static boolean isUndoable() {
+    public boolean isUndoable() {
         return undoDeque.size() > 0;
     }
 
-    public static void redo() {
+    public void redo() {
         if (isRedoable()) {
             undoDeque.push(redoDeque.pop());
         }
     }
 
-    public static void undo() {
+    public void undo() {
         if (isUndoable()) {
             redoDeque.push(undoDeque.pop());
         }
     }
 
-    public static void clear() {
+    public void clear() {
         undoDeque.clear();
         redoDeque.clear();
     }

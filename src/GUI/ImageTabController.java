@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import History.History;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,6 +21,12 @@ import javafx.scene.image.ImageView;
  * @author CMQ
  */
 public class ImageTabController extends Tab implements Initializable {
+
+    private History history;
+
+    public History getHistory() {
+        return history;
+    }
 
     @FXML
     private ImageView imageView;
@@ -42,5 +49,6 @@ public class ImageTabController extends Tab implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        history = new History();
     }
 }
