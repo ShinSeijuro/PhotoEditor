@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import ImageProcessing.BoxBlur;
 import Action.AbstractImageAction;
 import Adjustment.GrayScale;
 import Transformation.*;
@@ -145,10 +146,7 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onBlur(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        BoxBlur blur = new BoxBlur(image);
-        image = blur.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new BoxBlur(getCurrentImage()));
     }
 
     @FXML
