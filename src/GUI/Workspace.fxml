@@ -26,12 +26,12 @@
                             <items>
                         <MenuItem mnemonicParsing="false" text="New Image..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image..." />
-                                <MenuItem mnemonicParsing="false" text="Save" />
+                                <MenuItem mnemonicParsing="false" onAction="#onFileSave" text="Save" />
                                 <MenuItem mnemonicParsing="false" text="Save As..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close" />
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
+                        <Menu fx:id="menuEdit" mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
                             <items>
                                 <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#onUndo" text="Undo" />
                         <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#onRedo" text="Redo" />
@@ -57,13 +57,21 @@
                         </Menu>
                             </items>
                         </Menu>
-                  <Menu mnemonicParsing="false" text="Image">
+                  <Menu fx:id="menuImage" mnemonicParsing="false" text="Image">
                      <items>
                         <Menu mnemonicParsing="false" text="Adjustments">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
                           </items>
                         </Menu>
+                        <Menu mnemonicParsing="false" text="Blur">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#onBlur" text="Box Blur" />
+                              <MenuItem mnemonicParsing="false" onAction="#onGaussianBlur" text="Gaussian Blur" />
+                           </items>
+                        </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#onSharp" text="Sharpen" />
+                        <MenuItem mnemonicParsing="false" onAction="#onCrop" text="Crop" />
                      </items>
                   </Menu>
                         <Menu mnemonicParsing="false" text="Help">

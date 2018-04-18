@@ -46,7 +46,6 @@ public abstract class AbstractImageAction implements INameable {
 
     public final BufferedImage applyTransform() {
         if (modifiedImage == null) {
-            History.add(this);
             modifiedImage = applyTransform(originalImage);
         }
 

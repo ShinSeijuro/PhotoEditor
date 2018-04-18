@@ -26,7 +26,7 @@ public class Rotation extends AbstractImageAction {
         super(originalImage);
         this.radian = radian;
 
-        setName("Rotate " + Math.toDegrees(radian) + "°");
+        setName("Rotate " + (radian < 0 ? "left" : "right") + " " + Math.abs(Math.toDegrees(radian)) + "°");
     }
 
     @Override

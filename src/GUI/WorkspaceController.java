@@ -5,26 +5,31 @@
  */
 package GUI;
 
-import Adjustment.GrayScale;
+import ImageProcessing.*;
+import Action.*;
+import Adjustment.*;
 import Transformation.*;
 import History.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.event.*;
-import javafx.geometry.Bounds;
+import javafx.scene.control.Tab;
 import javafx.scene.shape.Rectangle;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
 
 /**
  *
@@ -32,15 +37,68 @@ import javafx.scene.shape.Rectangle;
  */
 public class WorkspaceController implements Initializable {
 
-    private HashMap<String, ImageTab> tabs = new HashMap<>();
+    private final HashMap<String, ImageTab> tabs = new HashMap<>();
 
     public HashMap<String, ImageTab> getTabs() {
         return tabs;
     }
 
+    private ImageTab currentTab;
+
+    public ImageTab getCurrentTab() {
+        return currentTab;
+    }
+
+    private void setCurrentTab(ImageTab currentTab) {
+        this.currentTab = currentTab;
+
+        if (currentTab != null) {
+            setCurrentController(currentTab.getController());
+        }
+    }
+
+    private ImageTabController currentController;
+
+    public ImageTabController getCurrentController() {
+        return currentController;
+    }
+
+    private void setCurrentController(ImageTabController currentController) {
+        this.currentController = currentController;
+    }
+
+    public History getCurrentHistory() {
+        return currentController.getHistory();
+    }
+
+    public BufferedImage getCurrentImage() {
+        return currentController.getBufferedImage();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+                setCurrentTab((ImageTab) newValue);
+            }
+        });
+
+        refreshMenuBar();
+    }
+
+    public void applyAction(AbstractImageAction action) {
+        BufferedImage image = action.applyTransform();
+        currentController.setBufferedImage(image);
+        getCurrentHistory().add(action);
+    }
+
+    public void refreshMenuBar() {
+        boolean isDisable = tabs.isEmpty();
+        menuEdit.setDisable(isDisable);
+        menuImage.setDisable(isDisable);
     }
 
     public void loadFile(File file) {
@@ -50,11 +108,15 @@ public class WorkspaceController implements Initializable {
             tabPane.getSelectionModel().select(tabs.get(tabName));
         } else {
             ImageTab tab = new ImageTab(file);
-            tab.setOnClosed(e -> tabs.remove(tabName));
+            tab.setOnClosed((e) -> {
+                tabs.remove(tabName);
+                refreshMenuBar();
+            });
+
             tabPane.getTabs().add(tab);
             tabs.put(tabName, tab);
-
             tabPane.getSelectionModel().selectLast();
+            refreshMenuBar();
         }
     }
 
@@ -62,14 +124,6 @@ public class WorkspaceController implements Initializable {
         for (File file : files) {
             loadFile(file);
         }
-    }
-
-    public ImageTab getCurrentTab() {
-        return (ImageTab) tabPane.getSelectionModel().getSelectedItem();
-    }
-
-    public ImageTabController getCurrentController() {
-        return getCurrentTab().getController();
     }
 
     private File lastDirectory;
@@ -95,6 +149,12 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    public void onFileSave(ActionEvent event) throws IOException {
+        File outputfile = new File(this.currentTab.getFile().getPath());
+        ImageIO.write(this.getCurrentImage(), "png", outputfile);
+    }
+
+    @FXML
     public void onFileClose(ActionEvent event) {
         PhotoEditor.getPrimaryStage().close();
 
@@ -103,79 +163,65 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onRotateRight90(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Rotation rotate = new Rotation(image, Math.toRadians(90));
-        image = rotate.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new Rotation(getCurrentImage(), Math.toRadians(90)));
     }
 
     @FXML
     public void onRotateLeft90(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Rotation rotate = new Rotation(image, Math.toRadians(-90));
-        image = rotate.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new Rotation(getCurrentImage(), Math.toRadians(-90)));
     }
 
     @FXML
     public void onRotateRight180(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Rotation rotate = new Rotation(image, Math.toRadians(180));
-        image = rotate.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new Rotation(getCurrentImage(), Math.toRadians(180)));
     }
 
     @FXML
     public void onRotateLeft180(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Rotation rotate = new Rotation(image, Math.toRadians(-180));
-        image = rotate.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new Rotation(getCurrentImage(), Math.toRadians(-180)));
     }
 
     @FXML
     public void onFlipHorizontal(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Flip flip = new Flip(image, Flip.Orientation.Horizontal);
-        image = flip.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new Flip(getCurrentImage(), Flip.Orientation.Horizontal));
     }
 
     public void onFlipVertical(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Flip flip = new Flip(image, Flip.Orientation.Vertical);
-        image = flip.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new Flip(getCurrentImage(), Flip.Orientation.Vertical));
     }
 
     @FXML
     public void onBlackAndWhite(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        GrayScale grayScale = new GrayScale(image);
-        image = grayScale.applyTransform();
-        getCurrentController().setBufferedImage(image);
-    }
-
-    @FXML
-    public void onUndo(ActionEvent event) {
-        History.undo();
-        BufferedImage image = History.getCurrentImage();
-        getCurrentController().setBufferedImage(image);
-    }
-
-    @FXML
-    public void onRedo(ActionEvent event) {
-        History.redo();
-        BufferedImage image = History.getCurrentImage();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new GrayScale(getCurrentImage()));
     }
 
     @FXML
     public void onBlur(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        GrayScale grayScale = new GrayScale(image);
-        image = grayScale.applyTransform();
-        getCurrentController().setBufferedImage(image);
+        applyAction(new BoxBlur(getCurrentImage()));
+    }
+
+    public void onSharp(ActionEvent event) {
+        applyAction(new Sharpen(getCurrentImage()));
+    }
+
+    @FXML
+    public void onGaussianBlur(ActionEvent event) {
+        applyAction(new GaussianBlur(getCurrentImage(), 2, 49));
+    }
+
+    @FXML
+    public void onUndo(ActionEvent event) {
+        History currentHistory = getCurrentHistory();
+        currentHistory.undo();
+        BufferedImage image = currentHistory.getCurrentImage();
+        currentController.setBufferedImage(image);
+    }
+
+    @FXML
+    public void onRedo(ActionEvent event) {
+//        History.redo();
+//        BufferedImage image = History.getCurrentImage();
+//        getCurrentController().setBufferedImage(image);
     }
 
     @FXML
@@ -192,23 +238,20 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onFileSave(ActionEvent event) {
-
-    }
-
-    @FXML
     void onMenuEditShowing(Event event) {
-        if (History.isUndoable()) {
+        History currentHistory = getCurrentHistory();
+
+        if (currentHistory.isUndoable()) {
             menuUndo.setDisable(false);
-            menuUndo.setText("Undo " + History.getUndoDeque().getFirst().getName());
+            menuUndo.setText("Undo " + currentHistory.getUndoDeque().getFirst().getName());
         } else {
             menuUndo.setDisable(true);
             menuUndo.setText("Undo");
         }
 
-        if (History.isRedoable()) {
+        if (currentHistory.isRedoable()) {
             menuRedo.setDisable(false);
-            menuRedo.setText("Redo " + History.getRedoDeque().getFirst().getName());
+            menuRedo.setText("Redo " + currentHistory.getRedoDeque().getFirst().getName());
         } else {
             menuRedo.setDisable(true);
             menuRedo.setText("Redo");
@@ -218,6 +261,10 @@ public class WorkspaceController implements Initializable {
     /* Controls */
     @FXML
     private TabPane tabPane;
+    @FXML
+    private Menu menuEdit;
+    @FXML
+    private Menu menuImage;
     @FXML
     private Button buttonRotate;
     @FXML

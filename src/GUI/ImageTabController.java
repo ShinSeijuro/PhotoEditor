@@ -5,9 +5,9 @@
  */
 package GUI;
 
+import History.History;
 import Transformation.Crop;
 import Transformation.RubberBandSelection;
-import com.sun.deploy.uitoolkit.DragContext;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,6 +17,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
@@ -27,6 +28,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.layout.StackPane;
 
 /**
  * FXML Controller class
@@ -40,13 +42,13 @@ public class ImageTabController extends Tab implements Initializable {
 
     Rectangle rect = new Rectangle();
 
-    @FXML
-    private ImageView imageView;
-    @FXML
-    private Pane pane;
-
     public Pane getPane() {
         return pane;
+    }
+    private History history;
+
+    public History getHistory() {
+        return history;
     }
 
     public ImageView getImageView() {
@@ -140,7 +142,16 @@ public class ImageTabController extends Tab implements Initializable {
         rect.setFill(Color.LIGHTBLUE.deriveColor(0, 1.2, 1, 0.6));
     }
 
-    private static final class DragContext {
+    @FXML
+    private ImageView imageView;
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private StackPane stackPane;
+    @FXML
+    private Pane pane;
+
+    private final class DragContext {
 
         public double mouseAnchorX;
         public double mouseAnchorY;
