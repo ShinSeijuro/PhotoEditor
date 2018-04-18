@@ -52,7 +52,6 @@ public class Flip extends AbstractImageAction {
     public Flip(BufferedImage originalImage, Orientation orientation) {
         super(originalImage);
         this.orientation = orientation;
-
         setName("Flip " + orientation.getName());
     }
 
