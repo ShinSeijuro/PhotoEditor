@@ -12,6 +12,7 @@ import Transformation.*;
 import History.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.event.*;
 import javafx.scene.control.Tab;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
 
 /**
  *
@@ -141,6 +145,12 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    public void onFileSave(ActionEvent event) throws IOException {
+        File outputfile = new File(this.currentTab.getFile().getPath());
+        ImageIO.write(this.getCurrentImage(), "png", outputfile);
+    }
+
+    @FXML
     public void onFileClose(ActionEvent event) {
         PhotoEditor.getPrimaryStage().close();
 
@@ -215,11 +225,6 @@ public class WorkspaceController implements Initializable {
         currentHistory.redo();
         BufferedImage image = currentHistory.getCurrentImage();
         currentController.setBufferedImage(image);
-    }
-
-    @FXML
-    public void onFileSave(ActionEvent event) {
-
     }
 
     @FXML
