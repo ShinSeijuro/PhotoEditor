@@ -11,7 +11,7 @@
             <content>
                 <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0">
                     <children>
-                        <ImageView fx:id="imageView" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMousseReleased" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="imageView" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" pickOnBounds="true" preserveRatio="true" />
                     </children>
                 </Pane>
             </content>

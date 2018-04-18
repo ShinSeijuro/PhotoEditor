@@ -205,7 +205,7 @@ public class WorkspaceController implements Initializable {
         applyAction(new BoxBlur(getCurrentImage()));
     }
 
-    public void onSharp(ActionEvent event) {
+    public void onSharpen(ActionEvent event) {
         applyAction(new Sharpen(getCurrentImage()));
     }
 

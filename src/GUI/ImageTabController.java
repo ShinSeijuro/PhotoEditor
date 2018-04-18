@@ -123,7 +123,7 @@ public class ImageTabController extends Tab implements Initializable {
     }
 
     @FXML
-    public void onMousseReleased(MouseEvent event) {
+    public void onMouseReleased(MouseEvent event) {
         if (event.isSecondaryButtonDown()) {
             return;
         }

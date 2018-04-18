@@ -70,7 +70,7 @@
                                         <MenuItem mnemonicParsing="false" onAction="#onGaussianBlur" text="Gaussian Blur" />
                                     </items>
                                 </Menu>
-                                <MenuItem mnemonicParsing="false" onAction="#onSharp" text="Sharpen" />
+                                <MenuItem mnemonicParsing="false" onAction="#onSharpen" text="Sharpen" />
                                 <MenuItem mnemonicParsing="false" onAction="#onCrop" text="Crop" />
                             </items>
                         </Menu>
