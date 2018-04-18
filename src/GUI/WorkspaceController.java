@@ -196,6 +196,12 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    public void onCrop(ActionEvent event) {
+        applyAction(new Crop(getCurrentImage(), 0, 0, 300, 300));
+        //(x,y,width,height) Vị trí (x,y) kích thước (width, height)
+    }
+
+    @FXML
     public void onUndo(ActionEvent event) {
         History currentHistory = getCurrentHistory();
         currentHistory.undo();
