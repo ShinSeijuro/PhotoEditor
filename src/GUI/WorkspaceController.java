@@ -88,7 +88,7 @@ public class WorkspaceController implements Initializable {
     }
 
     public void refreshMenuBar() {
-        boolean isDisable = tabs.size() == 0;
+        boolean isDisable = tabs.isEmpty();
         menuEdit.setDisable(isDisable);
         menuImage.setDisable(isDisable);
     }
@@ -108,6 +108,7 @@ public class WorkspaceController implements Initializable {
             tabPane.getTabs().add(tab);
             tabs.put(tabName, tab);
             tabPane.getSelectionModel().selectLast();
+            refreshMenuBar();
         }
     }
 
