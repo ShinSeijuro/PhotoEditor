@@ -26,6 +26,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.event.*;
 import javafx.scene.control.Tab;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.shape.Rectangle;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -88,6 +90,38 @@ public class WorkspaceController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
                 setCurrentTab((ImageTab) newValue);
+            }
+        });
+        brSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                    Number old_val, Number new_val) {
+                ColorAdjust colorAdjust = new ColorAdjust();
+                colorAdjust.setBrightness((double) new_val);
+                getCurrentController().getImageView().setEffect(colorAdjust);
+            }
+        });
+        hueSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                    Number old_val, Number new_val) {
+                ColorAdjust colorAdjust = new ColorAdjust();
+                colorAdjust.setHue((double) new_val);
+                getCurrentController().getImageView().setEffect(colorAdjust);
+            }
+        });
+        sarSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                    Number old_val, Number new_val) {
+                ColorAdjust colorAdjust = new ColorAdjust();
+                colorAdjust.setSaturation((double) new_val);
+                getCurrentController().getImageView().setEffect(colorAdjust);
+            }
+        });
+        contSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                    Number old_val, Number new_val) {
+                ColorAdjust colorAdjust = new ColorAdjust();
+                colorAdjust.setContrast((double) new_val);
+                getCurrentController().getImageView().setEffect(colorAdjust);
             }
         });
 
@@ -266,6 +300,13 @@ public class WorkspaceController implements Initializable {
         }
     }
 
+    @FXML
+    void onBrigtnessChange(ScrollEvent event) {
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(event.getDeltaX());
+        getCurrentController().getImageView().setEffect(colorAdjust);
+    }
+
     /* Controls */
     @FXML
     private TabPane tabPane;
@@ -283,4 +324,12 @@ public class WorkspaceController implements Initializable {
     private MenuItem menuSave;
     @FXML
     private MenuItem menuSaveAs;
+    @FXML
+    private Slider brSlider;
+    @FXML
+    private Slider hueSlider;
+    @FXML
+    private Slider sarSlider;
+    @FXML
+    private Slider contSlider;
 }
