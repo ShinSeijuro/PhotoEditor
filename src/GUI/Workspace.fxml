@@ -80,7 +80,7 @@
         </HBox>
     </bottom>
     <right>
-        <Accordion fx:id="accordionEdit" disable="${controller.isEditable}" visible="${toggleEdit.selected}" prefWidth="250.0" BorderPane.alignment="CENTER">
+        <Accordion fx:id="accordionEdit" disable="${controller.isEditable}" prefWidth="250.0" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
             <panes>
                 <TitledPane animated="false" text="Crop &amp; Rotate">
                     <content>
@@ -120,6 +120,9 @@
                                         <Label text="Saturation" />
                                         <Slider fx:id="sliderSaturation" showTickLabels="true" value="50.0" />
                                     </children>
+                           <padding>
+                              <Insets left="10.0" right="10.0" />
+                           </padding>
                                 </VBox>
                             </content>
                         </ScrollPane>
