@@ -26,8 +26,8 @@
                             <items>
                                 <MenuItem mnemonicParsing="false" text="New Image..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image..." />
-                                <MenuItem mnemonicParsing="false" onAction="#onFileSave" text="Save" />
-                                <MenuItem mnemonicParsing="false" text="Save As..." />
+                                <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
+                                <MenuItem fx:id="menuSaveAs" mnemonicParsing="false" text="Save As..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close" />
                             </items>
                         </Menu>

@@ -102,6 +102,8 @@ public class WorkspaceController implements Initializable {
 
     public void refreshMenuBar() {
         boolean isDisable = tabs.isEmpty();
+        menuSave.setDisable(isDisable);
+        menuSaveAs.setDisable(isDisable);
         menuEdit.setDisable(isDisable);
         menuImage.setDisable(isDisable);
     }
@@ -277,4 +279,8 @@ public class WorkspaceController implements Initializable {
     private MenuItem menuUndo;
     @FXML
     private MenuItem menuRedo;
+    @FXML
+    private MenuItem menuSave;
+    @FXML
+    private MenuItem menuSaveAs;
 }
