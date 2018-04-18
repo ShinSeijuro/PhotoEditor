@@ -32,11 +32,29 @@ public class Rotation extends AbstractImageAction {
     @Override
     public BufferedImage applyTransform(BufferedImage image) {
         AffineTransform transform = new AffineTransform();
-        transform.rotate(radian, image.getWidth() / 2, image.getHeight() / 2);
+        transform.rotate(radian, (double) image.getWidth() / 2.0, (double) image.getHeight() / 2.0);
+        double offset
+                = (radian >= 0
+                        ? (image.getWidth() - image.getHeight())
+                        : (image.getHeight() - image.getWidth()))
+                / 2;
+        transform.translate(offset, offset);
         AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
-        image = op.filter(image, null);
 
-        return image;
+        BufferedImage newImage = null;
+        switch (getAngle()) {
+            case -90:
+            case 90:
+                newImage = new BufferedImage(image.getHeight(), image.getWidth(), image.getType());
+                break;
+            case -180:
+            case 180:
+                newImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+                break;
+        }
+
+        op.filter(image, newImage);
+        return newImage;
     }
 
     public int getAngle() {
