@@ -24,9 +24,9 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
-                        <MenuItem mnemonicParsing="false" text="New Image..." />
+                                <MenuItem mnemonicParsing="false" text="New Image..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image..." />
-                                <MenuItem mnemonicParsing="false" text="Save" />
+                                <MenuItem mnemonicParsing="false" onAction="#onFileSave" text="Save" />
                                 <MenuItem mnemonicParsing="false" text="Save As..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close" />
                             </items>
@@ -34,46 +34,46 @@
                         <Menu fx:id="menuEdit" mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
                             <items>
                                 <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#onUndo" text="Undo" />
-                        <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#onRedo" text="Redo" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <Menu mnemonicParsing="false" text="Transformation">
-                          <items>
-                              <Menu mnemonicParsing="false" text="Rotation">
-                                 <items>
-                                  <MenuItem mnemonicParsing="false" onAction="#onRotateRight90" text="Rotate right 90°" />
-                                    <MenuItem mnemonicParsing="false" onAction="#onRotateLeft90" text="Rotate left 90°" />
-                                    <MenuItem mnemonicParsing="false" onAction="#onRotateRight180" text="Rotate right 180°" />
-                                    <MenuItem mnemonicParsing="false" onAction="#onRotateLeft180" text="Rotate left 180°" />
-                                 </items>
-                              </Menu>
-                              <SeparatorMenuItem mnemonicParsing="false" />
-                              <Menu mnemonicParsing="false" text="Flip">
-                                 <items>
-                                    <MenuItem mnemonicParsing="false" onAction="#onFlipVertical" text="Flip vertical" />
-                                    <MenuItem mnemonicParsing="false" onAction="#onFlipHorizontal" text="Flip horizontal" />
-                                 </items>
-                              </Menu>
-                          </items>
-                        </Menu>
+                                <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#onRedo" text="Redo" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <Menu mnemonicParsing="false" text="Transformation">
+                                    <items>
+                                        <Menu mnemonicParsing="false" text="Rotation">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" onAction="#onRotateRight90" text="Rotate right 90°" />
+                                                <MenuItem mnemonicParsing="false" onAction="#onRotateLeft90" text="Rotate left 90°" />
+                                                <MenuItem mnemonicParsing="false" onAction="#onRotateRight180" text="Rotate right 180°" />
+                                                <MenuItem mnemonicParsing="false" onAction="#onRotateLeft180" text="Rotate left 180°" />
+                                            </items>
+                                        </Menu>
+                                        <SeparatorMenuItem mnemonicParsing="false" />
+                                        <Menu mnemonicParsing="false" text="Flip">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" onAction="#onFlipVertical" text="Flip vertical" />
+                                                <MenuItem mnemonicParsing="false" onAction="#onFlipHorizontal" text="Flip horizontal" />
+                                            </items>
+                                        </Menu>
+                                    </items>
+                                </Menu>
                             </items>
                         </Menu>
-                  <Menu fx:id="menuImage" mnemonicParsing="false" text="Image">
-                     <items>
-                        <Menu mnemonicParsing="false" text="Adjustments">
-                          <items>
-                            <MenuItem mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
-                          </items>
+                        <Menu fx:id="menuImage" mnemonicParsing="false" text="Image">
+                            <items>
+                                <Menu mnemonicParsing="false" text="Adjustments">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Blur">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#onBlur" text="Box Blur" />
+                                        <MenuItem mnemonicParsing="false" onAction="#onGaussianBlur" text="Gaussian Blur" />
+                                    </items>
+                                </Menu>
+                                <MenuItem mnemonicParsing="false" onAction="#onSharp" text="Sharpen" />
+                                <MenuItem mnemonicParsing="false" onAction="#onCrop" text="Crop" />
+                            </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Blur">
-                           <items>
-                              <MenuItem mnemonicParsing="false" onAction="#onBlur" text="Box Blur" />
-                              <MenuItem mnemonicParsing="false" onAction="#onGaussianBlur" text="Gaussian Blur" />
-                           </items>
-                        </Menu>
-                        <MenuItem mnemonicParsing="false" onAction="#onSharp" text="Sharpen" />
-                        <MenuItem mnemonicParsing="false" onAction="#onCrop" text="Crop" />
-                     </items>
-                  </Menu>
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
                                 <MenuItem mnemonicParsing="false" text="About" />
@@ -84,6 +84,7 @@
                 <ToolBar>
                     <items>
                         <Button fx:id="buttonRotate" mnemonicParsing="false" onAction="#onRotateRight90" text="Rotate right 90°" />
+                        <Button fx:id="buttonRotate1" mnemonicParsing="false" onAction="#onCrop" text="Crop" />
                     </items>
                 </ToolBar>
             </children>

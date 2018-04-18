@@ -12,6 +12,7 @@ import Transformation.*;
 import History.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.event.*;
 import javafx.scene.control.Tab;
+import javafx.scene.shape.Rectangle;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
 
 /**
  *
@@ -49,6 +54,8 @@ public class WorkspaceController implements Initializable {
 
         if (currentTab != null) {
             setCurrentController(currentTab.getController());
+        } else {
+            setCurrentController(null);
         }
     }
 
@@ -63,6 +70,9 @@ public class WorkspaceController implements Initializable {
     }
 
     public History getCurrentHistory() {
+        if (currentController == null) {
+            return null;
+        }
         return currentController.getHistory();
     }
 
@@ -144,6 +154,12 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    public void onFileSave(ActionEvent event) throws IOException {
+        File outputfile = new File(this.currentTab.getFile().getPath());
+        ImageIO.write(this.getCurrentImage(), "png", outputfile);
+    }
+
+    @FXML
     public void onFileClose(ActionEvent event) {
         PhotoEditor.getPrimaryStage().close();
 
@@ -199,12 +215,6 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onCrop(ActionEvent event) {
-        applyAction(new Crop(getCurrentImage(), 0, 0, 300, 300));
-        //(x,y,width,height) Vị trí (x,y) kích thước (width, height)
-    }
-
-    @FXML
     public void onUndo(ActionEvent event) {
         History currentHistory = getCurrentHistory();
         currentHistory.undo();
@@ -221,8 +231,16 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onFileSave(ActionEvent event) {
-
+    public void onCrop(ActionEvent event) {
+        BufferedImage image = getCurrentController().getBufferedImage();
+        Rectangle rect = getCurrentController().getRect();
+        if (rect == null) {
+            return;
+        }
+        Crop crop = new Crop(image, rect);
+        image = crop.applyTransform();
+        getCurrentController().setBufferedImage(image);
+        getCurrentController().getPane().getChildren().remove(rect);
     }
 
     @FXML

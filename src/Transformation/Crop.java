@@ -1,5 +1,4 @@
 /*
-/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -7,61 +6,49 @@
 package Transformation;
 
 import Action.AbstractImageAction;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Bounds;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
+import javax.imageio.ImageIO;
 
 /**
  *
- * @author CMQ
+ * @author Admin
  */
 public class Crop extends AbstractImageAction {
 
-    private int X, Y, WIDTH, HEIGHT;
+    RubberBandSelection rubberBandSelection;
+    Bounds bounds;
+    BufferedImage image;
+    Rectangle rect;
 
-    public int getX() {
-        return X;
+    public RubberBandSelection getRubberBandSelection() {
+        return rubberBandSelection;
     }
 
-    public void setX(int X) {
-        this.X = X;
+    public Bounds getBounds() {
+        return bounds;
     }
 
-    public int getY() {
-        return Y;
-    }
-
-    public void setY(int Y) {
-        this.Y = Y;
-    }
-
-    public int getWIDTH() {
-        return WIDTH;
-    }
-
-    public void setWIDTH(int WIDTH) {
-        this.WIDTH = WIDTH;
-    }
-
-    public int getHEIGHT() {
-        return HEIGHT;
-    }
-
-    public void setHEIGHT(int HEIGHT) {
-        this.HEIGHT = HEIGHT;
-    }
-
-    public Crop(BufferedImage originalImage, int x, int y, int width, int height) {
+    public Crop(BufferedImage originalImage, Rectangle rect) {
         super(originalImage);
-        this.X = x;
-        this.Y = y;
-        this.WIDTH = width;
-        this.HEIGHT = height;
-        setName("Crop");
+        this.rect = rect;
+        this.originalImage = originalImage;
     }
 
     @Override
     protected BufferedImage applyTransform(BufferedImage image) {
-        image = image.getSubimage(X, Y, WIDTH, HEIGHT);
-        return image;
+        this.image = image;
+        BufferedImage dest = image.getSubimage((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
+        return dest;
     }
-
 }
