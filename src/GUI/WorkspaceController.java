@@ -23,6 +23,8 @@ import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.event.*;
+import javafx.geometry.Bounds;
+import javafx.scene.shape.Rectangle;
 
 /**
  *
@@ -166,6 +168,28 @@ public class WorkspaceController implements Initializable {
         History.redo();
         BufferedImage image = History.getCurrentImage();
         getCurrentController().setBufferedImage(image);
+    }
+
+    @FXML
+    public void onBlur(ActionEvent event) {
+        BufferedImage image = getCurrentController().getBufferedImage();
+        GrayScale grayScale = new GrayScale(image);
+        image = grayScale.applyTransform();
+        getCurrentController().setBufferedImage(image);
+    }
+
+    @FXML
+    public void onCrop(ActionEvent event) {
+        BufferedImage image = getCurrentController().getBufferedImage();
+        Rectangle rect = getCurrentController().getRect();
+        if (rect == null) {
+            return;
+        }
+        Crop crop = new Crop(image, rect);
+
+        image = crop.applyTransform();
+        getCurrentController().setBufferedImage(image);
+        getCurrentController().getPane().getChildren().remove(rect);
     }
 
     @FXML
