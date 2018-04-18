@@ -12,8 +12,9 @@ import java.util.ResourceBundle;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 
 /**
  * FXML Controller class
@@ -27,9 +28,6 @@ public class ImageTabController extends Tab implements Initializable {
     public History getHistory() {
         return history;
     }
-
-    @FXML
-    private ImageView imageView;
 
     public ImageView getImageView() {
         return imageView;
@@ -51,4 +49,11 @@ public class ImageTabController extends Tab implements Initializable {
         // TODO
         history = new History();
     }
+
+    @FXML
+    private ImageView imageView;
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private StackPane stackPane;
 }

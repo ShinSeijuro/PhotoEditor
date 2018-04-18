@@ -50,7 +50,10 @@ public class WorkspaceController implements Initializable {
 
     private void setCurrentTab(ImageTab currentTab) {
         this.currentTab = currentTab;
-        setCurrentController(currentTab.getController());
+
+        if (currentTab != null) {
+            setCurrentController(currentTab.getController());
+        }
     }
 
     private ImageTabController currentController;
