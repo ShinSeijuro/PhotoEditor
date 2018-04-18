@@ -189,6 +189,15 @@ public class WorkspaceController implements Initializable {
         applyAction(new BoxBlur(getCurrentImage()));
     }
 
+    public void onSharp(ActionEvent event) {
+        applyAction(new Sharpen(getCurrentImage()));
+    }
+
+    @FXML
+    public void onGaussianBlur(ActionEvent event) {
+        applyAction(new GaussianBlur(getCurrentImage(), 2, 49));
+    }
+
     @FXML
     public void onUndo(ActionEvent event) {
         History currentHistory = getCurrentHistory();
