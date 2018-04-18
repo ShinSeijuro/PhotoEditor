@@ -71,6 +71,7 @@
                            </items>
                         </Menu>
                         <MenuItem mnemonicParsing="false" onAction="#onSharp" text="Sharpen" />
+                        <MenuItem mnemonicParsing="false" onAction="#onCrop" text="Crop" />
                      </items>
                   </Menu>
                         <Menu mnemonicParsing="false" text="Help">
