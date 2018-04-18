@@ -186,7 +186,6 @@ public class WorkspaceController implements Initializable {
             return;
         }
         Crop crop = new Crop(image, rect);
-
         image = crop.applyTransform();
         getCurrentController().setBufferedImage(image);
         getCurrentController().getPane().getChildren().remove(rect);
