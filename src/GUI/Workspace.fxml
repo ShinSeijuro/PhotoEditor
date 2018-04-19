@@ -34,7 +34,7 @@
                                 <MenuItem mnemonicParsing="false" text="New Image..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image..." />
                                 <MenuItem disable="${controller.isEditable}" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
-                                <MenuItem disable="${controller.isEditable}" mnemonicParsing="false" text="Save As..." />
+                                <MenuItem disable="${controller.isEditable}" mnemonicParsing="false" onAction="#onFileSaveAs" text="Save As..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close" />
                             </items>
                         </Menu>

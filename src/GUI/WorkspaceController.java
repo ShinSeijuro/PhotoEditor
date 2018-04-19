@@ -12,6 +12,7 @@ import Transformation.*;
 import History.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -34,6 +36,7 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.shape.Rectangle;
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
@@ -224,6 +227,28 @@ public class WorkspaceController implements Initializable {
     public void onFileSave(ActionEvent event) throws IOException {
         File outputfile = new File(this.currentTab.getFile().getPath());
         ImageIO.write(this.getCurrentImage(), "png", outputfile);
+    }
+
+    private static final String defaultFileName = "NewFile.jpg";
+
+    @FXML
+    public void onFileSaveAs(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+                new ExtensionFilter("All Files", "*.*"));
+        fileChooser.setTitle("Save file");
+        fileChooser.setInitialFileName(defaultFileName);
+        File savedFile = fileChooser.showSaveDialog(PhotoEditor.getPrimaryStage());
+
+        if (savedFile != null) {
+
+            try {
+                ImageIO.write(this.getCurrentImage(), "png", savedFile);
+            } catch (IOException e) {
+            }
+        }
+
     }
 
     @FXML
