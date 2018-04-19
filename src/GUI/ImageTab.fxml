@@ -14,7 +14,7 @@
                     <children>
                         <Group fx:id="groupImage">
                             <children>
-                                <ImageView fx:id="imageView" pickOnBounds="true" preserveRatio="true" />
+                                <ImageView fx:id="imageView" pickOnBounds="true" preserveRatio="true" scaleX="${controller.zoomRatio}" scaleY="${controller.zoomRatio}" />
                             </children>
                         </Group>
                     </children>

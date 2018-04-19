@@ -112,6 +112,7 @@ public class WorkspaceController implements Initializable {
         accordionEdit.setManaged(false);
 
         sliderBrightness.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 ColorAdjust colorAdjust = new ColorAdjust();
@@ -120,6 +121,7 @@ public class WorkspaceController implements Initializable {
             }
         });
         sliderHue.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 ColorAdjust colorAdjust = new ColorAdjust();
@@ -128,6 +130,7 @@ public class WorkspaceController implements Initializable {
             }
         });
         sliderSaturation.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 ColorAdjust colorAdjust = new ColorAdjust();
@@ -136,6 +139,7 @@ public class WorkspaceController implements Initializable {
             }
         });
         sliderContrast.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 ColorAdjust colorAdjust = new ColorAdjust();
@@ -143,6 +147,17 @@ public class WorkspaceController implements Initializable {
                 getCurrentController().getImageView().setEffect(colorAdjust);
             }
         });
+
+        sliderZoom.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable,
+                    Number oldValue, Number newValue) {
+
+                currentController.setZoomRatio(newValue.doubleValue() / 100.0);
+                labelZoom.setText(newValue.intValue() + "%");
+            }
+        }
+        );
     }
 
     public void applyAction(AbstractImageAction action) {
@@ -329,7 +344,7 @@ public class WorkspaceController implements Initializable {
     @FXML
     private MenuItem menuRedo;
     @FXML
-    private Slider zoomSlider;
+    private Slider sliderZoom;
     @FXML
     private Label labelZoom;
     @FXML
