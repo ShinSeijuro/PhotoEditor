@@ -25,7 +25,7 @@ public class Selection {
         return dragContext;
     }
 
-    private Rectangle rect = new Rectangle();
+    private Rectangle rect;
 
     public Rectangle getRect() {
         return rect;
@@ -90,6 +90,12 @@ public class Selection {
         group.removeEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
         group.removeEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
         group.removeEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
+    }
+
+    public final boolean isNothing() {
+        return rect == null
+                || (rect.getWidth() == 0
+                && rect.getHeight() == 0);
     }
 
     EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {

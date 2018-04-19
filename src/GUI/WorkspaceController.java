@@ -286,12 +286,12 @@ public class WorkspaceController implements Initializable {
             return;
         }
 
-        Rectangle rect = currentController.getSelection().getRect();
-        if (rect == null) {
+        Selection selection = currentController.getSelection();
+        if (selection.isNothing()) {
             return;
         }
 
-        applyAction(new Crop(getCurrentImage(), rect));
+        applyAction(new Crop(getCurrentImage(), selection.getRect()));
         currentController.setIsSelecting(false);
     }
 
