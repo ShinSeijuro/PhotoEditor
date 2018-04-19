@@ -76,7 +76,7 @@
                         <Insets right="5.0" />
                     </HBox.margin>
                 </Label>
-                <Slider fx:id="sliderZoom" disable="${controller.isEditable}" majorTickUnit="50.0" max="200.0" min="10.0" minorTickCount="1" snapToTicks="true" value="100.0" />
+                <Slider fx:id="sliderZoom" disable="${controller.isEditable}" majorTickUnit="50.0" max="200.0" min="10.0" minorTickCount="1" value="100.0" />
             </children>
             <padding>
                 <Insets bottom="5.0" top="5.0" />

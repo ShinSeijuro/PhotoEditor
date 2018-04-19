@@ -18,7 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -74,14 +76,14 @@ public class WorkspaceController implements Initializable {
     }
 
     public History getCurrentHistory() {
-        if (currentController == null) {
+        if (getCurrentController() == null) {
             return null;
         }
-        return currentController.getHistory();
+        return getCurrentController().getHistory();
     }
 
     public BufferedImage getCurrentImage() {
-        return currentController.getBufferedImage();
+        return getCurrentController().getBufferedImage();
     }
 
     private BooleanProperty isEditable = new SimpleBooleanProperty(true);
@@ -106,6 +108,7 @@ public class WorkspaceController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
                 setCurrentTab((ImageTab) newValue);
+                sliderZoom.setValue(getCurrentController().getZoomRatio() * 100.0);
             }
         });
 
@@ -153,7 +156,7 @@ public class WorkspaceController implements Initializable {
             public void changed(ObservableValue<? extends Number> observable,
                     Number oldValue, Number newValue) {
 
-                currentController.setZoomRatio(newValue.doubleValue() / 100.0);
+                getCurrentController().setZoomRatio(newValue.doubleValue() / 100.0);
                 labelZoom.setText(newValue.intValue() + "%");
             }
         }
@@ -162,7 +165,7 @@ public class WorkspaceController implements Initializable {
 
     public void applyAction(AbstractImageAction action) {
         BufferedImage image = action.applyTransform();
-        currentController.setBufferedImage(image);
+        getCurrentController().setBufferedImage(image);
         getCurrentHistory().add(action);
     }
 
@@ -283,7 +286,7 @@ public class WorkspaceController implements Initializable {
         History currentHistory = getCurrentHistory();
         currentHistory.undo();
         BufferedImage image = currentHistory.getCurrentImage();
-        currentController.setBufferedImage(image);
+        getCurrentController().setBufferedImage(image);
     }
 
     @FXML
@@ -291,23 +294,23 @@ public class WorkspaceController implements Initializable {
         History currentHistory = getCurrentHistory();
         currentHistory.redo();
         BufferedImage image = currentHistory.getCurrentImage();
-        currentController.setBufferedImage(image);
+        getCurrentController().setBufferedImage(image);
     }
 
     @FXML
     public void onToggleCrop(ActionEvent event) {
         if (toggleCrop.isSelected()) {
-            currentController.setIsSelecting(true);
+            getCurrentController().setIsSelecting(true);
             return;
         }
 
-        Selection selection = currentController.getSelection();
+        Selection selection = getCurrentController().getSelection();
         if (selection.isNothing()) {
             return;
         }
 
         applyAction(new Crop(getCurrentImage(), selection.getRect()));
-        currentController.setIsSelecting(false);
+        getCurrentController().setIsSelecting(false);
     }
 
     @FXML
