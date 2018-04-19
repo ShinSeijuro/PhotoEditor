@@ -6,7 +6,6 @@
 package GUI;
 
 import History.History;
-import Transformation.RubberBandSelection;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;

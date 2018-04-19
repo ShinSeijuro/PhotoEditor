@@ -5,6 +5,7 @@
  */
 package Transformation;
 
+import GUI.RubberBandSelection;
 import Action.AbstractImageAction;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
