@@ -32,7 +32,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.event.*;
 import javafx.scene.control.Tab;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.shape.Rectangle;
 import javax.imageio.ImageIO;
@@ -164,6 +166,25 @@ public class WorkspaceController implements Initializable {
             }
         }
         );
+        bblurSLider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                    Number old_val, Number new_val) {
+                BoxBlur bb = new BoxBlur();
+                bb.setWidth((double) new_val);
+                bb.setHeight((double) new_val);
+                bb.setIterations(3);
+                getCurrentController().getImageView().setEffect(bb);
+            }
+        });
+        gsSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                    Number old_val, Number new_val) {
+                GaussianBlur gs = new GaussianBlur();
+                gs.setRadius((double) new_val);
+                getCurrentController().getImageView().setEffect(gs);
+            }
+        });
+
     }
 
     public void applyAction(AbstractImageAction action) {
@@ -226,7 +247,8 @@ public class WorkspaceController implements Initializable {
     @FXML
     public void onFileSave(ActionEvent event) throws IOException {
         File outputfile = new File(this.currentTab.getFile().getPath());
-        ImageIO.write(this.getCurrentImage(), "png", outputfile);
+        BufferedImage bImage = SwingFXUtils.fromFXImage(getCurrentController().getImageView().snapshot(null, null), null);
+        ImageIO.write(bImage, "png", outputfile);
     }
 
     private static final String defaultFileName = "NewFile.jpg";
@@ -294,16 +316,22 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onBlur(ActionEvent event) {
-        applyAction(new BoxBlur(getCurrentImage()));
+        //applyAction(new BoxBlur(getCurrentImage()));
+        BoxBlur bb = new BoxBlur();
+        bb.setWidth(5);
+        bb.setHeight(5);
+        bb.setIterations(3);
+        currentController.getImageView().setEffect(bb);
     }
 
     public void onSharpen(ActionEvent event) {
         applyAction(new Sharpen(getCurrentImage()));
+        //Sharpen s = new Sharp();
     }
 
     @FXML
     public void onGaussianBlur(ActionEvent event) {
-        applyAction(new GaussianBlur(getCurrentImage(), 2, 49));
+        //applyAction(new GaussianBlur(getCurrentImage(), 2, 49));
     }
 
     @FXML
@@ -389,4 +417,12 @@ public class WorkspaceController implements Initializable {
     private ToggleButton toggleEdit;
     @FXML
     private ToggleButton toggleCrop;
+    @FXML
+    private Slider bawSlider;
+    @FXML
+    private Slider bblurSLider;
+    @FXML
+    private Slider gsSlider;
+    @FXML
+    private Slider sharpSlider;
 }
