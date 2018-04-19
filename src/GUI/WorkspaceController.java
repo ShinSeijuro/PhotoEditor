@@ -115,7 +115,7 @@ public class WorkspaceController implements Initializable {
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setBrightness((double) (new_val.intValue() - 50) / 100.0);
+                colorAdjust.setBrightness(new_val.doubleValue() / 100.0);
                 getCurrentController().getImageView().setEffect(colorAdjust);
             }
         });
@@ -123,7 +123,7 @@ public class WorkspaceController implements Initializable {
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setHue((double) (new_val.intValue() - 50) / 100.0);
+                colorAdjust.setHue(new_val.doubleValue() / 100.0);
                 getCurrentController().getImageView().setEffect(colorAdjust);
             }
         });
@@ -131,7 +131,7 @@ public class WorkspaceController implements Initializable {
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setSaturation((double) (new_val.intValue() - 50) / 100.0);
+                colorAdjust.setSaturation(new_val.doubleValue() / 100.0);
                 getCurrentController().getImageView().setEffect(colorAdjust);
             }
         });
@@ -139,7 +139,7 @@ public class WorkspaceController implements Initializable {
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setContrast((double) (new_val.intValue() - 50) / 100.0);
+                colorAdjust.setContrast(new_val.doubleValue() / 100.0);
                 getCurrentController().getImageView().setEffect(colorAdjust);
             }
         });
@@ -328,6 +328,10 @@ public class WorkspaceController implements Initializable {
     private MenuItem menuUndo;
     @FXML
     private MenuItem menuRedo;
+    @FXML
+    private Slider zoomSlider;
+    @FXML
+    private Label labelZoom;
     @FXML
     private Slider sliderBrightness;
     @FXML
