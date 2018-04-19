@@ -17,7 +17,7 @@ import javafx.scene.shape.Rectangle;
  *
  * @author Admin
  */
-public class RubberBandSelection {
+public class Selection {
 
     private final DragContext dragContext = new DragContext();
 
@@ -41,7 +41,7 @@ public class RubberBandSelection {
         return rect.getBoundsInParent();
     }
 
-    public RubberBandSelection(Group group) {
+    public Selection(Group group) {
 
         this.group = group;
 

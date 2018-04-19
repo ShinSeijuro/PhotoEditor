@@ -5,7 +5,7 @@
  */
 package Transformation;
 
-import GUI.RubberBandSelection;
+import GUI.Selection;
 import Action.AbstractImageAction;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -27,12 +27,12 @@ import javax.imageio.ImageIO;
  */
 public class Crop extends AbstractImageAction {
 
-    RubberBandSelection rubberBandSelection;
+    Selection rubberBandSelection;
     Bounds bounds;
     BufferedImage image;
     Rectangle rect;
 
-    public RubberBandSelection getRubberBandSelection() {
+    public Selection getRubberBandSelection() {
         return rubberBandSelection;
     }
 

@@ -282,18 +282,17 @@ public class WorkspaceController implements Initializable {
     @FXML
     public void onToggleCrop(ActionEvent event) {
         if (toggleCrop.isSelected()) {
-            currentController.initializeRubberBandSelection();
+            currentController.setIsSelecting(true);
             return;
         }
 
-        RubberBandSelection selection = currentController.getRubberBandSelection();
-        Rectangle rect = selection.getRect();
+        Rectangle rect = currentController.getSelection().getRect();
         if (rect == null) {
             return;
         }
 
         applyAction(new Crop(getCurrentImage(), rect));
-        selection.removeRect();
+        currentController.setIsSelecting(false);
     }
 
     @FXML

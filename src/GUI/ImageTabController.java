@@ -44,10 +44,10 @@ public class ImageTabController extends Tab implements Initializable {
         imageView.setImage(SwingFXUtils.toFXImage(image, null));
     }
 
-    private RubberBandSelection rubberBandSelection;
+    private Selection selection;
 
-    public RubberBandSelection getRubberBandSelection() {
-        return rubberBandSelection;
+    public Selection getSelection() {
+        return selection;
     }
 
     private boolean isSelecting;
@@ -58,13 +58,16 @@ public class ImageTabController extends Tab implements Initializable {
 
     public void setIsSelecting(boolean isSelecting) {
         this.isSelecting = isSelecting;
-    }
 
-    public void initializeRubberBandSelection() {
-        if (rubberBandSelection == null) {
-            rubberBandSelection = new RubberBandSelection(groupImage);
+        if (isSelecting) {
+            if (selection == null) {
+                selection = new Selection(groupImage);
+            }
+        } else {
+            if (selection != null) {
+                selection.removeRect();
+            }
         }
-
     }
 
     /**
