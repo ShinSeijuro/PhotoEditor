@@ -25,7 +25,7 @@ public class Selection {
         return dragContext;
     }
 
-    private Rectangle rect = new Rectangle();
+    private Rectangle rect;
 
     public Rectangle getRect() {
         return rect;
@@ -41,6 +41,23 @@ public class Selection {
         return rect.getBoundsInParent();
     }
 
+    private boolean isDisable;
+
+    public boolean isIsDisable() {
+        return isDisable;
+    }
+
+    public void setIsDisable(boolean isDisable) {
+        this.isDisable = isDisable;
+
+        if (isDisable) {
+            removeEventHandler();
+            removeRect();
+        } else {
+            addEventHandler();
+        }
+    }
+
     public Selection(Group group) {
 
         this.group = group;
@@ -51,13 +68,10 @@ public class Selection {
         rect.setStrokeLineCap(StrokeLineCap.ROUND);
         rect.setFill(Color.LIGHTBLUE.deriveColor(0, 1.2, 1, 0.6));
 
-        group.addEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
-        group.addEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
-        group.addEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
-
+        setIsDisable(false);
     }
 
-    public void removeRect() {
+    private void removeRect() {
         rect.setX(0);
         rect.setY(0);
         rect.setWidth(0);
@@ -66,8 +80,22 @@ public class Selection {
         group.getChildren().remove(rect);
     }
 
-    public void prepareRect() {
+    private final void addEventHandler() {
+        group.addEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
+        group.addEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
+        group.addEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
+    }
 
+    private final void removeEventHandler() {
+        group.removeEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
+        group.removeEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
+        group.removeEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
+    }
+
+    public final boolean isNothing() {
+        return rect == null
+                || (rect.getWidth() == 0
+                && rect.getHeight() == 0);
     }
 
     EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {

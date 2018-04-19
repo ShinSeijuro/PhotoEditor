@@ -18,7 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
@@ -77,14 +79,14 @@ public class WorkspaceController implements Initializable {
     }
 
     public History getCurrentHistory() {
-        if (currentController == null) {
+        if (getCurrentController() == null) {
             return null;
         }
-        return currentController.getHistory();
+        return getCurrentController().getHistory();
     }
 
     public BufferedImage getCurrentImage() {
-        return currentController.getBufferedImage();
+        return getCurrentController().getBufferedImage();
     }
 
     private BooleanProperty isEditable = new SimpleBooleanProperty(true);
@@ -109,43 +111,59 @@ public class WorkspaceController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
                 setCurrentTab((ImageTab) newValue);
+                sliderZoom.setValue(getCurrentController().getZoomRatio() * 100.0);
             }
         });
 
         accordionEdit.setManaged(false);
 
         sliderBrightness.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setBrightness((double) (new_val.intValue() - 50) / 100.0);
+                colorAdjust.setBrightness(new_val.doubleValue() / 100.0);
                 getCurrentController().getImageView().setEffect(colorAdjust);
             }
         });
         sliderHue.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setHue((double) (new_val.intValue() - 50) / 100.0);
+                colorAdjust.setHue(new_val.doubleValue() / 100.0);
                 getCurrentController().getImageView().setEffect(colorAdjust);
             }
         });
         sliderSaturation.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setSaturation((double) (new_val.intValue() - 50) / 100.0);
+                colorAdjust.setSaturation(new_val.doubleValue() / 100.0);
                 getCurrentController().getImageView().setEffect(colorAdjust);
             }
         });
         sliderContrast.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setContrast((double) (new_val.intValue() - 50) / 100.0);
+                colorAdjust.setContrast(new_val.doubleValue() / 100.0);
                 getCurrentController().getImageView().setEffect(colorAdjust);
             }
         });
+
+        sliderZoom.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable,
+                    Number oldValue, Number newValue) {
+
+                getCurrentController().setZoomRatio(newValue.doubleValue() / 100.0);
+                labelZoom.setText(newValue.intValue() + "%");
+            }
+        }
+        );
         bblurSLider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
@@ -169,7 +187,7 @@ public class WorkspaceController implements Initializable {
 
     public void applyAction(AbstractImageAction action) {
         BufferedImage image = action.applyTransform();
-        currentController.setBufferedImage(image);
+        getCurrentController().setBufferedImage(image);
         getCurrentHistory().add(action);
     }
 
@@ -297,7 +315,7 @@ public class WorkspaceController implements Initializable {
         History currentHistory = getCurrentHistory();
         currentHistory.undo();
         BufferedImage image = currentHistory.getCurrentImage();
-        currentController.setBufferedImage(image);
+        getCurrentController().setBufferedImage(image);
     }
 
     @FXML
@@ -305,23 +323,23 @@ public class WorkspaceController implements Initializable {
         History currentHistory = getCurrentHistory();
         currentHistory.redo();
         BufferedImage image = currentHistory.getCurrentImage();
-        currentController.setBufferedImage(image);
+        getCurrentController().setBufferedImage(image);
     }
 
     @FXML
     public void onToggleCrop(ActionEvent event) {
         if (toggleCrop.isSelected()) {
-            currentController.setIsSelecting(true);
+            getCurrentController().setIsSelecting(true);
             return;
         }
 
-        Rectangle rect = currentController.getSelection().getRect();
-        if (rect == null) {
+        Selection selection = getCurrentController().getSelection();
+        if (selection.isNothing()) {
             return;
         }
 
-        applyAction(new Crop(getCurrentImage(), rect));
-        currentController.setIsSelecting(false);
+        applyAction(new Crop(getCurrentImage(), selection.getRect()));
+        getCurrentController().setIsSelecting(false);
     }
 
     @FXML
@@ -357,6 +375,10 @@ public class WorkspaceController implements Initializable {
     private MenuItem menuUndo;
     @FXML
     private MenuItem menuRedo;
+    @FXML
+    private Slider sliderZoom;
+    @FXML
+    private Label labelZoom;
     @FXML
     private Slider sliderBrightness;
     @FXML
