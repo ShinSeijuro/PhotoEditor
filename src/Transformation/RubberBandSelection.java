@@ -5,11 +5,9 @@
  */
 package Transformation;
 
-import java.awt.image.BufferedImage;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
@@ -21,18 +19,32 @@ import javafx.scene.shape.Rectangle;
  */
 public class RubberBandSelection {
 
-    final DragContext dragContext = new DragContext();
-    Rectangle rect = new Rectangle();
+    private final DragContext dragContext = new DragContext();
 
-    ImageView imageView;
+    public DragContext getDragContext() {
+        return dragContext;
+    }
+
+    private Rectangle rect = new Rectangle();
+
+    public Rectangle getRect() {
+        return rect;
+    }
+
+    private Group group;
+
+    public Group getGroup() {
+        return group;
+    }
 
     public Bounds getBounds() {
         return rect.getBoundsInParent();
     }
 
-    public RubberBandSelection(ImageView group) {
+    public RubberBandSelection(Group group) {
 
-        this.imageView = group;
+        this.group = group;
+
         rect = new Rectangle(0, 0, 0, 0);
         rect.setStroke(Color.BLUE);
         rect.setStrokeWidth(1);
@@ -42,6 +54,19 @@ public class RubberBandSelection {
         group.addEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
         group.addEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
         group.addEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
+
+    }
+
+    public void removeRect() {
+        rect.setX(0);
+        rect.setY(0);
+        rect.setWidth(0);
+        rect.setHeight(0);
+
+        group.getChildren().remove(rect);
+    }
+
+    public void prepareRect() {
 
     }
 
@@ -55,12 +80,8 @@ public class RubberBandSelection {
             }
 
             // remove old rect
-            rect.setX(0);
-            rect.setY(0);
-            rect.setWidth(0);
-            rect.setHeight(0);
+            removeRect();
 
-            //imageView.remove(rect);
             // prepare new drag operation
             dragContext.mouseAnchorX = event.getX();
             dragContext.mouseAnchorY = event.getY();
@@ -70,7 +91,8 @@ public class RubberBandSelection {
             rect.setWidth(0);
             rect.setHeight(0);
 
-            //imageView.getChildren().add(rect);
+            group.getChildren().add(rect);
+
         }
     };
 
@@ -114,12 +136,11 @@ public class RubberBandSelection {
             // remove rectangle
             // note: we want to keep the ruuberband selection for the cropping => code is just commented out
             /*
-                rect.setX(0);
-                rect.setY(0);
-                rect.setWidth(0);
-                rect.setHeight(0);
-
-                group.getChildren().remove( rect);
+            rect.setX(0);
+            rect.setY(0);
+            rect.setWidth(0);
+            rect.setHeight(0);
+            group.getChildren().remove( rect);
              */
         }
     };

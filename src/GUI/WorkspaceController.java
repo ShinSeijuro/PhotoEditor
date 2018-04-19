@@ -280,16 +280,20 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onCrop(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Rectangle rect = getCurrentController().getRect();
+    public void onToggleCrop(ActionEvent event) {
+        if (toggleCrop.isSelected()) {
+            currentController.initializeRubberBandSelection();
+            return;
+        }
+
+        RubberBandSelection selection = currentController.getRubberBandSelection();
+        Rectangle rect = selection.getRect();
         if (rect == null) {
             return;
         }
-        Crop crop = new Crop(image, rect);
-        image = crop.applyTransform();
-        getCurrentController().setBufferedImage(image);
-        getCurrentController().getPane().getChildren().remove(rect);
+
+        applyAction(new Crop(getCurrentImage(), rect));
+        selection.removeRect();
     }
 
     @FXML
@@ -337,4 +341,6 @@ public class WorkspaceController implements Initializable {
     private Accordion accordionEdit;
     @FXML
     private ToggleButton toggleEdit;
+    @FXML
+    private ToggleButton toggleCrop;
 }

@@ -100,7 +100,7 @@
                                 <Button mnemonicParsing="false" onAction="#onRotateRight90" text="Rotate right 90°" GridPane.rowIndex="1" />
                                 <Button mnemonicParsing="false" onAction="#onFlipHorizontal" text="Flip horizontal" GridPane.rowIndex="3" />
                                 <Button mnemonicParsing="false" onAction="#onFlipVertical" text="Flip vertical" GridPane.rowIndex="4" />
-                                <ToggleButton mnemonicParsing="false" text="Crop" />
+                                <ToggleButton fx:id="toggleCrop" mnemonicParsing="false" onAction="#onToggleCrop" text="Crop" />
                             </children>
                         </GridPane>
                     </content>
