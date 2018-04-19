@@ -33,12 +33,12 @@
                             <items>
                                 <MenuItem mnemonicParsing="false" text="New Image..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image..." />
-                                <MenuItem disable="${controller.isEditable}" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
-                                <MenuItem disable="${controller.isEditable}" mnemonicParsing="false" text="Save As..." />
+                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
+                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSaveAs" text="Save As..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close" />
                             </items>
                         </Menu>
-                        <Menu disable="${controller.isEditable}" mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
+                        <Menu disable="${controller.isEmpty}" mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
                             <items>
                                 <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#onUndo" text="Undo" />
                                 <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#onRedo" text="Redo" />
@@ -52,7 +52,7 @@
                         </Menu>
                     </menus>
                 </MenuBar>
-                <HBox alignment="CENTER" disable="${controller.isEditable}" spacing="5.0" style="-fx-background-color: lightgray;">
+                <HBox alignment="CENTER" disable="${controller.isEmpty}" spacing="5.0" style="-fx-background-color: lightgray;">
                     <children>
                         <ToggleButton fx:id="toggleEdit" mnemonicParsing="false" onAction="#onToggleEdit" text="Edit..." />
                         <Button mnemonicParsing="false" onAction="#onRotateLeft90" text="Rotate left" />
@@ -71,12 +71,12 @@
     <bottom>
         <HBox alignment="CENTER_RIGHT" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="labelZoom" disable="${controller.isEditable}" text="100%">
+                <Label fx:id="labelZoom" disable="${controller.isEmpty}" text="100%">
                     <HBox.margin>
                         <Insets right="5.0" />
                     </HBox.margin>
                 </Label>
-                <Slider fx:id="sliderZoom" disable="${controller.isEditable}" majorTickUnit="50.0" max="200.0" min="10.0" minorTickCount="1" value="100.0" />
+                <Slider fx:id="sliderZoom" disable="${controller.isEmpty}" majorTickUnit="50.0" max="200.0" min="10.0" minorTickCount="1" value="100.0" />
             </children>
             <padding>
                 <Insets bottom="5.0" top="5.0" />
@@ -84,7 +84,7 @@
         </HBox>
     </bottom>
     <right>
-        <Accordion fx:id="accordionEdit" disable="${controller.isEditable}" prefWidth="250.0" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
+        <Accordion fx:id="accordionEdit" disable="${controller.isEmpty}" prefWidth="250.0" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
             <panes>
                 <TitledPane animated="false" text="Crop &amp; Rotate">
                     <content>
@@ -123,6 +123,15 @@
                                         <Slider fx:id="sliderHue" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
                                         <Label text="Saturation" />
                                         <Slider fx:id="sliderSaturation" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
+                                        <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                            <children>
+                                                <Button mnemonicParsing="false" onAction="#onColorAdjustApply" text="Apply" />
+                                                <Button mnemonicParsing="false" onAction="#onColorAdjustUndoAll" text="Undo all" />
+                                            </children>
+                                            <padding>
+                                                <Insets top="10.0" />
+                                            </padding>
+                                        </HBox>
                                     </children>
                                     <padding>
                                         <Insets left="10.0" right="10.0" />
@@ -139,9 +148,12 @@
                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                                     <children>
                                         <Button mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
-                                        <Button mnemonicParsing="false" onAction="#onBlur" text="Box Blur" />
-                                        <Button mnemonicParsing="false" onAction="#onBlur" text="Gaussian Blur" />
-                                        <Button mnemonicParsing="false" onAction="#onSharpen" text="Sharpen" />
+                                        <Label text="Box Blur" />
+                                        <Slider fx:id="bblurSLider" max="255.0" />
+                                        <Label text="Gaussian Blur" />
+                                        <Slider fx:id="gsSlider" />
+                                        <Label text="Sharpen" />
+                                        <Slider fx:id="sharpSlider" />
                                     </children>
                                 </VBox>
                             </content>
