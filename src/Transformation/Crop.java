@@ -27,28 +27,21 @@ import javax.imageio.ImageIO;
  */
 public class Crop extends AbstractImageAction {
 
-    Selection rubberBandSelection;
-    Bounds bounds;
-    BufferedImage image;
-    Rectangle rect;
+    private Rectangle rect;
 
-    public Selection getRubberBandSelection() {
-        return rubberBandSelection;
-    }
-
-    public Bounds getBounds() {
-        return bounds;
+    public Rectangle getRect() {
+        return rect;
     }
 
     public Crop(BufferedImage originalImage, Rectangle rect) {
         super(originalImage);
         this.rect = rect;
-        this.originalImage = originalImage;
+
+        setName("Crop");
     }
 
     @Override
     protected BufferedImage applyTransform(BufferedImage image) {
-        this.image = image;
         BufferedImage dest = image.getSubimage((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
         return dest;
     }
