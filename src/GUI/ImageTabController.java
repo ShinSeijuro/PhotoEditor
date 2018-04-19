@@ -9,6 +9,8 @@ import History.History;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -50,22 +52,27 @@ public class ImageTabController extends Tab implements Initializable {
         return selection;
     }
 
-    private boolean isSelecting;
+    private BooleanProperty isSelecting = new SimpleBooleanProperty(false);
 
-    public boolean isIsSelecting() {
+    public BooleanProperty isSelectingProperty() {
         return isSelecting;
     }
 
+    public boolean isIsSelecting() {
+        return isSelecting.get();
+    }
+
     public void setIsSelecting(boolean isSelecting) {
-        this.isSelecting = isSelecting;
+        this.isSelecting.set(isSelecting);
 
         if (isSelecting) {
             if (selection == null) {
                 selection = new Selection(groupImage);
             }
+            selection.setIsDisable(false);
         } else {
             if (selection != null) {
-                selection.removeRect();
+                selection.setIsDisable(true);
             }
         }
     }
