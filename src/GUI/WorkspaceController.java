@@ -17,6 +17,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -82,6 +84,20 @@ public class WorkspaceController implements Initializable {
         return currentController.getBufferedImage();
     }
 
+    private BooleanProperty isEditable = new SimpleBooleanProperty(true);
+
+    public BooleanProperty isEditableProperty() {
+        return this.isEditable;
+    }
+
+    public boolean getIsEditable() {
+        return isEditable.get();
+    }
+
+    private void setIsEditable(boolean value) {
+        isEditable.set(value);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -92,40 +108,41 @@ public class WorkspaceController implements Initializable {
                 setCurrentTab((ImageTab) newValue);
             }
         });
-        brSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                    Number old_val, Number new_val) {
-                ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setBrightness((double) new_val);
-                getCurrentController().getImageView().setEffect(colorAdjust);
-            }
-        });
-        hueSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                    Number old_val, Number new_val) {
-                ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setHue((double) new_val);
-                getCurrentController().getImageView().setEffect(colorAdjust);
-            }
-        });
-        sarSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                    Number old_val, Number new_val) {
-                ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setSaturation((double) new_val);
-                getCurrentController().getImageView().setEffect(colorAdjust);
-            }
-        });
-        contSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                    Number old_val, Number new_val) {
-                ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setContrast((double) new_val);
-                getCurrentController().getImageView().setEffect(colorAdjust);
-            }
-        });
 
-        refreshMenuBar();
+        accordionEdit.setManaged(false);
+
+        sliderBrightness.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                    Number old_val, Number new_val) {
+                ColorAdjust colorAdjust = new ColorAdjust();
+                colorAdjust.setBrightness((double) (new_val.intValue() - 50) / 100.0);
+                getCurrentController().getImageView().setEffect(colorAdjust);
+            }
+        });
+        sliderHue.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                    Number old_val, Number new_val) {
+                ColorAdjust colorAdjust = new ColorAdjust();
+                colorAdjust.setHue((double) (new_val.intValue() - 50) / 100.0);
+                getCurrentController().getImageView().setEffect(colorAdjust);
+            }
+        });
+        sliderSaturation.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                    Number old_val, Number new_val) {
+                ColorAdjust colorAdjust = new ColorAdjust();
+                colorAdjust.setSaturation((double) (new_val.intValue() - 50) / 100.0);
+                getCurrentController().getImageView().setEffect(colorAdjust);
+            }
+        });
+        sliderContrast.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                    Number old_val, Number new_val) {
+                ColorAdjust colorAdjust = new ColorAdjust();
+                colorAdjust.setContrast((double) (new_val.intValue() - 50) / 100.0);
+                getCurrentController().getImageView().setEffect(colorAdjust);
+            }
+        });
     }
 
     public void applyAction(AbstractImageAction action) {
@@ -135,11 +152,7 @@ public class WorkspaceController implements Initializable {
     }
 
     public void refreshMenuBar() {
-        boolean isDisable = tabs.isEmpty();
-        menuSave.setDisable(isDisable);
-        menuSaveAs.setDisable(isDisable);
-        menuEdit.setDisable(isDisable);
-        menuImage.setDisable(isDisable);
+        setIsEditable(tabs.isEmpty());
     }
 
     public void loadFile(File file) {
@@ -267,16 +280,19 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onCrop(ActionEvent event) {
-        BufferedImage image = getCurrentController().getBufferedImage();
-        Rectangle rect = getCurrentController().getRect();
+    public void onToggleCrop(ActionEvent event) {
+        if (toggleCrop.isSelected()) {
+            currentController.setIsSelecting(true);
+            return;
+        }
+
+        Rectangle rect = currentController.getSelection().getRect();
         if (rect == null) {
             return;
         }
-        Crop crop = new Crop(image, rect);
-        image = crop.applyTransform();
-        getCurrentController().setBufferedImage(image);
-        getCurrentController().getPane().getChildren().remove(rect);
+
+        applyAction(new Crop(getCurrentImage(), rect));
+        currentController.setIsSelecting(false);
     }
 
     @FXML
@@ -301,35 +317,29 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    void onBrigtnessChange(ScrollEvent event) {
-        ColorAdjust colorAdjust = new ColorAdjust();
-        colorAdjust.setBrightness(event.getDeltaX());
-        getCurrentController().getImageView().setEffect(colorAdjust);
+    void onToggleEdit(ActionEvent event) {
+        accordionEdit.setManaged(toggleEdit.isSelected());
     }
 
     /* Controls */
     @FXML
     private TabPane tabPane;
     @FXML
-    private Menu menuEdit;
-    @FXML
-    private Menu menuImage;
-    @FXML
-    private Button buttonRotate;
-    @FXML
     private MenuItem menuUndo;
     @FXML
     private MenuItem menuRedo;
     @FXML
-    private MenuItem menuSave;
+    private Slider sliderBrightness;
     @FXML
-    private MenuItem menuSaveAs;
+    private Slider sliderHue;
     @FXML
-    private Slider brSlider;
+    private Slider sliderSaturation;
     @FXML
-    private Slider hueSlider;
+    private Slider sliderContrast;
     @FXML
-    private Slider sarSlider;
+    private Accordion accordionEdit;
     @FXML
-    private Slider contSlider;
+    private ToggleButton toggleEdit;
+    @FXML
+    private ToggleButton toggleCrop;
 }

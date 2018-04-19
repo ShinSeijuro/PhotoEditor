@@ -5,6 +5,7 @@
  */
 package Transformation;
 
+import GUI.Selection;
 import Action.AbstractImageAction;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -26,28 +27,21 @@ import javax.imageio.ImageIO;
  */
 public class Crop extends AbstractImageAction {
 
-    RubberBandSelection rubberBandSelection;
-    Bounds bounds;
-    BufferedImage image;
-    Rectangle rect;
+    private Rectangle rect;
 
-    public RubberBandSelection getRubberBandSelection() {
-        return rubberBandSelection;
-    }
-
-    public Bounds getBounds() {
-        return bounds;
+    public Rectangle getRect() {
+        return rect;
     }
 
     public Crop(BufferedImage originalImage, Rectangle rect) {
         super(originalImage);
         this.rect = rect;
-        this.originalImage = originalImage;
+
+        setName("Crop");
     }
 
     @Override
     protected BufferedImage applyTransform(BufferedImage image) {
-        this.image = image;
         BufferedImage dest = image.getSubimage((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
         return dest;
     }

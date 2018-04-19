@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
+<BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
     <center>
         <TabPane fx:id="tabPane" prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
     </center>
-    <right>
-        <BorderPane prefHeight="575.0" prefWidth="119.0" BorderPane.alignment="CENTER" />
-    </right>
     <top>
         <VBox BorderPane.alignment="CENTER">
             <children>
@@ -28,52 +33,16 @@
                             <items>
                                 <MenuItem mnemonicParsing="false" text="New Image..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image..." />
-                                <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
-                                <MenuItem fx:id="menuSaveAs" mnemonicParsing="false" text="Save As..." />
+                                <MenuItem disable="${controller.isEditable}" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
+                                <MenuItem disable="${controller.isEditable}" mnemonicParsing="false" text="Save As..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close" />
                             </items>
                         </Menu>
-                        <Menu fx:id="menuEdit" mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
+                        <Menu disable="${controller.isEditable}" mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
                             <items>
                                 <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#onUndo" text="Undo" />
                                 <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#onRedo" text="Redo" />
                                 <SeparatorMenuItem mnemonicParsing="false" />
-                                <Menu mnemonicParsing="false" text="Transformation">
-                                    <items>
-                                        <Menu mnemonicParsing="false" text="Rotation">
-                                            <items>
-                                                <MenuItem mnemonicParsing="false" onAction="#onRotateRight90" text="Rotate right 90°" />
-                                                <MenuItem mnemonicParsing="false" onAction="#onRotateLeft90" text="Rotate left 90°" />
-                                                <MenuItem mnemonicParsing="false" onAction="#onRotateRight180" text="Rotate right 180°" />
-                                                <MenuItem mnemonicParsing="false" onAction="#onRotateLeft180" text="Rotate left 180°" />
-                                            </items>
-                                        </Menu>
-                                        <SeparatorMenuItem mnemonicParsing="false" />
-                                        <Menu mnemonicParsing="false" text="Flip">
-                                            <items>
-                                                <MenuItem mnemonicParsing="false" onAction="#onFlipVertical" text="Flip vertical" />
-                                                <MenuItem mnemonicParsing="false" onAction="#onFlipHorizontal" text="Flip horizontal" />
-                                            </items>
-                                        </Menu>
-                                    </items>
-                                </Menu>
-                            </items>
-                        </Menu>
-                        <Menu fx:id="menuImage" mnemonicParsing="false" text="Image">
-                            <items>
-                                <Menu mnemonicParsing="false" text="Adjustments">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="false" text="Blur">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#onBlur" text="Box Blur" />
-                                        <MenuItem mnemonicParsing="false" onAction="#onGaussianBlur" text="Gaussian Blur" />
-                                    </items>
-                                </Menu>
-                                <MenuItem mnemonicParsing="false" onAction="#onSharpen" text="Sharpen" />
-                                <MenuItem mnemonicParsing="false" onAction="#onCrop" text="Crop" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
@@ -83,47 +52,99 @@
                         </Menu>
                     </menus>
                 </MenuBar>
-                <ToolBar>
-                    <items>
-                        <Button fx:id="buttonRotate" mnemonicParsing="false" onAction="#onRotateRight90" text="Rotate right 90°" />
-                        <Button fx:id="buttonRotate1" mnemonicParsing="false" onAction="#onCrop" text="Crop" />
-                    </items>
-                </ToolBar>
+                <HBox alignment="CENTER" disable="${controller.isEditable}" spacing="5.0" style="-fx-background-color: lightgray;">
+                    <children>
+                        <ToggleButton fx:id="toggleEdit" mnemonicParsing="false" onAction="#onToggleEdit" text="Edit..." />
+                        <Button mnemonicParsing="false" onAction="#onRotateLeft90" text="Rotate left" />
+                        <Button mnemonicParsing="false" onAction="#onRotateRight90" text="Rotate right" />
+                        <Button mnemonicParsing="false" onAction="#onFlipHorizontal" text="Flip horizontal" />
+                        <Button mnemonicParsing="false" onAction="#onFlipVertical" text="Flip vertical" />
+                        <Button mnemonicParsing="false" text="Delete" />
+                    </children>
+                    <padding>
+                        <Insets bottom="5.0" top="5.0" />
+                    </padding>
+                </HBox>
             </children>
         </VBox>
     </top>
-    <left>
-        <ToolBar orientation="VERTICAL" prefHeight="500.0" prefWidth="97.0" BorderPane.alignment="CENTER">
-            <items>
-                <Button mnemonicParsing="false" text="Button" />
-            <Button mnemonicParsing="false" onScroll="#onBrigtnessChange" text="Adjust" />
-            </items>
-        </ToolBar>
-    </left>
-   <bottom>
-      <ToolBar orientation="VERTICAL" prefHeight="260.0" prefWidth="997.0" BorderPane.alignment="CENTER">
-        <items>
-            <TitledPane animated="false" text="Brightness">
-               <content>
-                  <Slider fx:id="brSlider" majorTickUnit="0.25" max="1.0" min="-1.0" onScrollFinished="#onBrigtnessChange" prefHeight="33.0" prefWidth="184.0" showTickLabels="true" />
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" text="Hue">
-               <content>
-                  <Slider fx:id="hueSlider" majorTickUnit="0.25" max="1.0" min="-1.0" prefHeight="0.0" prefWidth="983.0" showTickLabels="true" />
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" text="Sarturation">
-               <content>
-                  <Slider fx:id="sarSlider" majorTickUnit="0.25" max="1.0" min="-1.0" prefHeight="33.0" showTickLabels="true" />
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" text="Contrast">
-               <content>
-                  <Slider fx:id="contSlider" majorTickUnit="0.25" max="1.0" min="-1.0" prefHeight="0.0" prefWidth="985.0" showTickLabels="true" />
-               </content>
-            </TitledPane>
-        </items>
-      </ToolBar>
-   </bottom>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER">
+            <children>
+                <Label text="0%" />
+                <Slider />
+            </children>
+            <padding>
+                <Insets bottom="5.0" top="5.0" />
+            </padding>
+        </HBox>
+    </bottom>
+    <right>
+        <Accordion fx:id="accordionEdit" disable="${controller.isEditable}" prefWidth="250.0" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
+            <panes>
+                <TitledPane animated="false" text="Crop &amp; Rotate">
+                    <content>
+                        <GridPane>
+                            <columnConstraints>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#onRotateLeft90" text="Rotate left 90°" GridPane.rowIndex="2" />
+                                <Button mnemonicParsing="false" onAction="#onRotateRight90" text="Rotate right 90°" GridPane.rowIndex="1" />
+                                <Button mnemonicParsing="false" onAction="#onFlipHorizontal" text="Flip horizontal" GridPane.rowIndex="3" />
+                                <Button mnemonicParsing="false" onAction="#onFlipVertical" text="Flip vertical" GridPane.rowIndex="4" />
+                                <ToggleButton fx:id="toggleCrop" mnemonicParsing="false" onAction="#onToggleCrop" text="Crop" />
+                            </children>
+                        </GridPane>
+                    </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Adjustments">
+                    <content>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
+                            <content>
+                                <VBox alignment="CENTER">
+                                    <children>
+                                        <Label text="Brightness" />
+                                        <Slider fx:id="sliderBrightness" showTickLabels="true" value="50.0" />
+                                        <Label text="Contrast" />
+                                        <Slider fx:id="sliderContrast" showTickLabels="true" value="50.0" />
+                                        <Label text="Hue" />
+                                        <Slider fx:id="sliderHue" showTickLabels="true" value="50.0" />
+                                        <Label text="Saturation" />
+                                        <Slider fx:id="sliderSaturation" showTickLabels="true" value="50.0" />
+                                    </children>
+                           <padding>
+                              <Insets left="10.0" right="10.0" />
+                           </padding>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                    </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Effects">
+                    <content>
+                        <ScrollPane fitToHeight="true" fitToWidth="true">
+                            <content>
+                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                    <children>
+                                        <Button mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
+                                        <Button mnemonicParsing="false" onAction="#onBlur" text="Box Blur" />
+                                        <Button mnemonicParsing="false" onAction="#onBlur" text="Gaussian Blur" />
+                                        <Button mnemonicParsing="false" onAction="#onSharpen" text="Sharpen" />
+                                    </children>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                    </content>
+                </TitledPane>
+            </panes>
+        </Accordion>
+    </right>
 </BorderPane>
