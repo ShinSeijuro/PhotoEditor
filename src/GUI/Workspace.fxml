@@ -33,9 +33,12 @@
                             <items>
                                 <MenuItem mnemonicParsing="false" text="New Image..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image..." />
+                                <MenuItem disable="${controller.isEmpty}" onAction="#onFileInfo" mnemonicParsing="false" text="File info" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSaveAs" text="Save As..." />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onPrint" text="Print" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close" />
                             </items>
                         </Menu>
@@ -152,15 +155,15 @@
                                             <children>
                                                 <Label text="Radius" />
                                                 <Slider fx:id="sliderGaussianRadius" max="63.0" showTickLabels="true" />
-                                    <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
-                                       <children>
-                                          <Button mnemonicParsing="false" onAction="#onApplyGaussianBlur" text="Apply" />
-                                          <Button mnemonicParsing="false" onAction="#onUndoAllGaussianBlur" text="Undo all" />
-                                       </children>
-                                       <padding>
-                                          <Insets top="10.0" />
-                                       </padding>
-                                    </HBox>
+                                                <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                                    <children>
+                                                        <Button mnemonicParsing="false" onAction="#onApplyGaussianBlur" text="Apply" />
+                                                        <Button mnemonicParsing="false" onAction="#onUndoAllGaussianBlur" text="Undo all" />
+                                                    </children>
+                                                    <padding>
+                                                        <Insets top="10.0" />
+                                                    </padding>
+                                                </HBox>
                                             </children>
                                         </VBox>
                                     </content>

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Dimension2D;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -39,6 +40,7 @@ public class ImageTab extends Tab {
                 throw new IllegalArgumentException("Unsupported file type.");
             }
 
+            originalDimension2D = new Dimension2D(image.getWidth(), image.getHeight());
             controller.setBufferedImage(image);
         } catch (IOException ex) {
             Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
@@ -52,6 +54,12 @@ public class ImageTab extends Tab {
 
     public File getFile() {
         return file;
+    }
+
+    private Dimension2D originalDimension2D;
+
+    public Dimension2D getOriginalDimension2D() {
+        return originalDimension2D;
     }
 
     private ImageTabController controller;

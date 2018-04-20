@@ -13,56 +13,37 @@ import History.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
-import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.event.*;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Tab;
 import javafx.scene.effect.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileSystemView;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
 import javax.print.PrintException;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.Copies;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.geometry.Dimension2D;
 
 /**
  *
@@ -430,11 +411,6 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onGaussianBlur(ActionEvent event) {
-        //applyAction(new GaussianBlur(getCurrentImage(), 2, 49));
-    }
-
-    @FXML
     public void onUndo(ActionEvent event) {
         History currentHistory = getCurrentHistory();
         currentHistory.undo();
@@ -507,7 +483,7 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onToggleCrop(ActionEvent event) {
+    private void onToggleCrop(ActionEvent event) {
         if (toggleCrop.isSelected()) {
             getCurrentController().setIsSelecting(true);
             return;
@@ -523,7 +499,7 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    void onMenuEditShowing(Event event) {
+    private void onMenuEditShowing(Event event) {
         History currentHistory = getCurrentHistory();
 
         if (currentHistory.isUndoable()) {
@@ -544,8 +520,44 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    void onToggleEdit(ActionEvent event) {
+    private void onToggleEdit(ActionEvent event) {
         accordionEdit.setManaged(toggleEdit.isSelected());
+    }
+
+    @FXML
+    private void onFileInfo(ActionEvent event) {
+        File currentFile = currentTab.getFile();
+        Dimension2D dimension = currentTab.getOriginalDimension2D();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd/MM/yyyy HH:mm");
+
+        Alert info = new Alert(Alert.AlertType.INFORMATION);
+        info.setTitle("File info");
+        info.setHeaderText(null);
+
+        String content
+                = "File name: " + currentFile.getName()
+                + "\nDate: " + dateFormat.format(currentFile.lastModified())
+                + "\nSize: " + (currentFile.length() / 1024) + " KB"
+                + "\nDimension: " + (int) dimension.getWidth() + " x " + (int) dimension.getHeight()
+                + "\nFolder: " + currentFile.getParent();
+        info.setContentText(content);
+
+        ButtonType buttonTypeOpen = new ButtonType("Open file location");
+        ButtonType buttonTypeCancel = new ButtonType("OK", ButtonBar.ButtonData.CANCEL_CLOSE);
+        info.getButtonTypes().setAll(buttonTypeOpen, buttonTypeCancel);
+
+        Optional<ButtonType> result = info.showAndWait();
+        if (result.get() == buttonTypeOpen) {
+            try {
+                Runtime.getRuntime().exec("explorer.exe /select," + currentFile.getPath());
+            } catch (IOException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Folder not found!");
+                alert.setTitle("Open file location");
+                alert.show();
+            }
+        } else {
+            // ... user chose CANCEL or closed the dialog
+        }
     }
 
     /* Controls */
