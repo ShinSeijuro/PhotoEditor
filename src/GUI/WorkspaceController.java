@@ -151,11 +151,46 @@ public class WorkspaceController implements Initializable {
         sliderSaturation.valueProperty().addListener(colorAdjustChangeListener);
         sliderContrast.valueProperty().addListener(colorAdjustChangeListener);
 
-        tiledPaneAdjustment.expandedProperty().addListener(new ChangeListener<Boolean>() {
+        titledPaneAdjustment.expandedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue == false) {
-                    onColorAdjustUndoAll(null);
+                    onUndoAllColorAdjust(null);
+                }
+            }
+        });
+
+        sliderGaussianRadius.valueProperty().addListener(gaussianBlurChangeListener);
+
+        titledPaneGaussianBlur.expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == false) {
+                    onUndoAllGaussianBlur(null);
+                }
+            }
+        });
+
+        sliderBoxBlurHeight.valueProperty().addListener(boxBlurChangeListener);
+        sliderBoxBlurWidth.valueProperty().addListener(boxBlurChangeListener);
+        sliderBoxBlurIteration.valueProperty().addListener(boxBlurChangeListener);
+
+        titledPaneBoxBlur.expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == false) {
+                    onUndoAllBoxBlur(null);
+                }
+            }
+        });
+
+        sliderGlowLevel.valueProperty().addListener(glowChangeListener);
+
+        titledPaneGlow.expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == false) {
+                    onUndoAllGlow(null);
                 }
             }
         });
@@ -168,36 +203,7 @@ public class WorkspaceController implements Initializable {
                 getCurrentController().setZoomRatio(newValue.doubleValue() / 100.0);
                 labelZoom.setText(newValue.intValue() + "%");
             }
-        }
-        );
-        sliderBoxBlurWidth.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                    Number old_val, Number new_val) {
-                BoxBlur bb = new BoxBlur();
-                bb.setWidth((double) new_val);
-                bb.setHeight((double) new_val);
-                bb.setIterations(3);
-                getCurrentController().getImageView().setEffect(bb);
-            }
         });
-
-        sliderGlowLevel.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                    Number old_val, Number new_val) {
-                Glow bb = new Glow((double) new_val);
-                getCurrentController().getImageView().setEffect(bb);
-            }
-        });
-
-        sliderGaussianRadius.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                    Number old_val, Number new_val) {
-                GaussianBlur gs = new GaussianBlur();
-                gs.setRadius((double) new_val);
-                getCurrentController().getImageView().setEffect(gs);
-            }
-        });
-
     }
 
     public void applyAction(AbstractImageAction action) {
@@ -333,6 +339,36 @@ public class WorkspaceController implements Initializable {
         }
     };
 
+    private ChangeListener<Number> gaussianBlurChangeListener = new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            GaussianBlur gaussianBlur = new GaussianBlur(
+                    sliderGaussianRadius.getValue());
+            getCurrentController().getImageView().setEffect(gaussianBlur);
+        }
+
+    };
+
+    private ChangeListener<Number> boxBlurChangeListener = new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            BoxBlur boxBlur = new BoxBlur(
+                    sliderBoxBlurWidth.getValue(),
+                    sliderBoxBlurHeight.getValue(),
+                    (int) sliderBoxBlurIteration.getValue());
+            getCurrentController().getImageView().setEffect(boxBlur);
+        }
+    };
+
+    private ChangeListener<Number> glowChangeListener = new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            Glow glow = new Glow(
+                    sliderGlowLevel.getValue() / 100.0);
+            getCurrentController().getImageView().setEffect(glow);
+        }
+    };
+
     @FXML
     public void onBlur(ActionEvent event) {
         //applyAction(new BoxBlur(getCurrentImage()));
@@ -400,19 +436,59 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    private void onColorAdjustApply(ActionEvent event) {
+    private void onApplyColorAdjust(ActionEvent event) {
         ImageView imageView = getCurrentController().getImageView();
         applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
-        onColorAdjustUndoAll(null);
+        onUndoAllColorAdjust(null);
         imageView.setEffect(null);
     }
 
     @FXML
-    private void onColorAdjustUndoAll(ActionEvent event) {
+    private void onUndoAllColorAdjust(ActionEvent event) {
         sliderBrightness.setValue(0);
         sliderContrast.setValue(0);
         sliderHue.setValue(0);
         sliderSaturation.setValue(0);
+    }
+
+    @FXML
+    private void onApplyGaussianBlur(ActionEvent event) {
+        ImageView imageView = getCurrentController().getImageView();
+        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+        onUndoAllGaussianBlur(null);
+        imageView.setEffect(null);
+    }
+
+    @FXML
+    private void onUndoAllGaussianBlur(ActionEvent event) {
+        sliderGaussianRadius.setValue(0);
+    }
+
+    @FXML
+    private void onApplyBoxBlur(ActionEvent event) {
+        ImageView imageView = getCurrentController().getImageView();
+        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+        onUndoAllBoxBlur(null);
+        imageView.setEffect(null);
+    }
+
+    @FXML
+    private void onUndoAllBoxBlur(ActionEvent event) {
+        sliderBoxBlurWidth.setValue(0);
+        sliderBoxBlurHeight.setValue(0);
+    }
+
+    @FXML
+    private void onApplyGlow(ActionEvent event) {
+        ImageView imageView = getCurrentController().getImageView();
+        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+        onUndoAllGlow(null);
+        imageView.setEffect(null);
+    }
+
+    @FXML
+    private void onUndoAllGlow(ActionEvent event) {
+        sliderGlowLevel.setValue(0);
     }
 
     @FXML
@@ -469,7 +545,13 @@ public class WorkspaceController implements Initializable {
     @FXML
     private Label labelZoom;
     @FXML
-    private TitledPane tiledPaneAdjustment;
+    private TitledPane titledPaneAdjustment;
+    @FXML
+    private TitledPane titledPaneGaussianBlur;
+    @FXML
+    private TitledPane titledPaneBoxBlur;
+    @FXML
+    private TitledPane titledPaneGlow;
     @FXML
     private Slider sliderBrightness;
     @FXML
@@ -484,8 +566,6 @@ public class WorkspaceController implements Initializable {
     private ToggleButton toggleEdit;
     @FXML
     private ToggleButton toggleCrop;
-    @FXML
-    private Slider bawSlider;
     @FXML
     private Slider sliderBoxBlurWidth;
     @FXML
