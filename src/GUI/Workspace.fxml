@@ -35,6 +35,7 @@
                                 <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image..." />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSaveAs" text="Save As..." />
+                        <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onPrint" text="Print" />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close" />
                             </items>
                         </Menu>
@@ -155,7 +156,7 @@
                                         <Label text="Sharpen" />
                                         <Slider fx:id="sharpSlider" />
                               <Label text="Glow" />
-                              <Slider fx:id="GlowSlider" blockIncrement="0.1" max="1.0" />
+                              <Slider fx:id="GlowSlider" blockIncrement="0.01" max="1.0" />
                                     </children>
                                 </VBox>
                             </content>

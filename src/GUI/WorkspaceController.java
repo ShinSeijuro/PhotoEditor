@@ -10,7 +10,14 @@ import Action.*;
 import Adjustment.*;
 import Transformation.*;
 import History.*;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import static java.awt.print.Printable.NO_SUCH_PAGE;
+import static java.awt.print.Printable.PAGE_EXISTS;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -43,6 +50,19 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintException;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Copies;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  *
@@ -312,6 +332,29 @@ public class WorkspaceController implements Initializable {
         bb.setHeight(5);
         bb.setIterations(3);
         currentController.getImageView().setEffect(bb);
+    }
+
+    @FXML
+    public void onPrint(ActionEvent event) throws FileNotFoundException, PrintException, IOException {
+        printImage(this.getCurrentImage());
+    }
+
+    private void printImage(BufferedImage image) {
+        PrinterJob printJob = PrinterJob.getPrinterJob();
+        printJob.setPrintable((Graphics graphics, PageFormat pageFormat, int pageIndex) -> {
+            // Get the upper left corner that it printable
+            int x = (int) Math.ceil(pageFormat.getImageableX());
+            int y = (int) Math.ceil(pageFormat.getImageableY());
+            if (pageIndex != 0) {
+                return NO_SUCH_PAGE;
+            }
+            graphics.drawImage(image, x, y, image.getWidth(), image.getHeight(), null);
+            return PAGE_EXISTS;
+        });
+        try {
+            printJob.print();
+        } catch (PrinterException e1) {
+        }
     }
 
     @FXML
