@@ -218,7 +218,21 @@ public class WorkspaceController implements Initializable {
         if (tabs.containsKey(tabName)) {
             tabPane.getSelectionModel().select(tabs.get(tabName));
         } else {
-            ImageTab tab = new ImageTab(file);
+            ImageTab tab = null;
+            try {
+                tab = new ImageTab(file);
+            } catch (IOException | IllegalArgumentException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("ERROR: Unable to open file");
+                alert.setTitle("Open image...");
+                alert.setContentText("Unable to open file: " + file.getPath() + "\n\nDetails:\n" + ex.getMessage());
+                alert.show();
+            }
+
+            if (tab == null) {
+                return;
+            }
+
             tab.setOnClosed((e) -> {
                 tabs.remove(tabName);
                 setIsEmpty(tabs.isEmpty());
@@ -253,7 +267,7 @@ public class WorkspaceController implements Initializable {
 
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(PhotoEditor.getPrimaryStage());
 
-        if (selectedFiles.size() > 0) {
+        if (selectedFiles != null) {
             loadFile(selectedFiles);
             lastDirectory = selectedFiles.get(0).getParentFile();
         }
@@ -262,7 +276,8 @@ public class WorkspaceController implements Initializable {
     @FXML
     public void onFileSave(ActionEvent event) throws IOException {
         File outputfile = new File(this.currentTab.getFile().getPath());
-        ImageIO.write(this.getCurrentImage(), "png", outputfile);
+        String name = outputfile.getName();
+        ImageIO.write(getCurrentImage(), name.substring(name.lastIndexOf('.') + 1), outputfile);
     }
 
     @FXML

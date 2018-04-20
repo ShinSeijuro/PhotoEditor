@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -13,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -20,7 +22,7 @@ import javafx.scene.layout.AnchorPane;
  */
 public class ImageTab extends Tab {
 
-    public ImageTab(File file) {
+    public ImageTab(File file) throws IOException, IllegalArgumentException {
         super();
 
         this.file = file;
@@ -32,10 +34,17 @@ public class ImageTab extends Tab {
             controller = loader.getController();
 
             super.setContent(tabPage);
-            Image image = new Image(this.file.toURI().toString());
-            controller.getImageView().setImage(image);
+            BufferedImage image = ImageIO.read(file);
+            if (image == null) {
+                throw new IllegalArgumentException("Unsupported file type.");
+            }
+
+            controller.setBufferedImage(image);
         } catch (IOException ex) {
             Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } catch (IllegalArgumentException ex) {
+            throw ex;
         }
     }
 
