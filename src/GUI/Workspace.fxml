@@ -154,6 +154,8 @@
                                         <Slider fx:id="gsSlider" />
                                         <Label text="Sharpen" />
                                         <Slider fx:id="sharpSlider" />
+                              <Label text="Glow" />
+                              <Slider fx:id="GlowSlider" blockIncrement="0.1" max="1.0" />
                                     </children>
                                 </VBox>
                             </content>

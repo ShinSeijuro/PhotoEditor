@@ -33,9 +33,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.event.*;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Tab;
-import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.GaussianBlur;
+import javafx.scene.effect.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.ScrollEvent;
@@ -153,6 +151,15 @@ public class WorkspaceController implements Initializable {
                 getCurrentController().getImageView().setEffect(bb);
             }
         });
+
+        GlowSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                    Number old_val, Number new_val) {
+                Glow bb = new Glow((double) new_val);
+                getCurrentController().getImageView().setEffect(bb);
+            }
+        });
+
         gsSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
@@ -308,6 +315,12 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    public void onGlow(ActionEvent event) {
+        Glow bb = new Glow(0.5);
+        currentController.getImageView().setEffect(bb);
+    }
+
+    @FXML
     public void onSharpen(ActionEvent event) {
         applyAction(new Sharpen(getCurrentImage()));
         //Sharpen s = new Sharp();
@@ -421,6 +434,8 @@ public class WorkspaceController implements Initializable {
     private Slider bawSlider;
     @FXML
     private Slider bblurSLider;
+    @FXML
+    private Slider GlowSlider;
     @FXML
     private Slider gsSlider;
     @FXML
