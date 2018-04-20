@@ -110,7 +110,7 @@
                         </GridPane>
                     </content>
                 </TitledPane>
-                <TitledPane animated="false" text="Adjustments">
+                <TitledPane fx:id="tiledPaneAdjustment" animated="false" text="Adjustments">
                     <content>
                         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
                             <content>
@@ -143,26 +143,84 @@
                     </content>
                 </TitledPane>
                 <TitledPane animated="false" text="Effects">
-                    <content>
-                        <ScrollPane fitToHeight="true" fitToWidth="true">
-                            <content>
-                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
-                                    <children>
-                                        <Button mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
-                                        <Label text="Box Blur" />
-                                        <Slider fx:id="bblurSLider" max="255.0" />
-                                        <Label text="Gaussian Blur" />
-                                        <Slider fx:id="gsSlider" />
-                                        <Label text="Sharpen" />
-                                        <Slider fx:id="sharpSlider" />
-                              <Label text="Glow" />
-                              <Slider fx:id="GlowSlider" blockIncrement="0.01" max="1.0" />
-                                    </children>
-                                </VBox>
-                            </content>
-                        </ScrollPane>
-                    </content>
+               <content>
+                  <Accordion>
+                    <panes>
+                      <TitledPane animated="false" text="Gaussian Blur">
+                           <content>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Radius" />
+                                    <Slider fx:id="sliderGaussianRadius" max="63.0" minorTickCount="1" showTickLabels="true" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </TitledPane>
+                      <TitledPane animated="false" text="Box Blur">
+                           <content>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Width" />
+                                    <Slider fx:id="sliderBoxBlurWidth" majorTickUnit="50.0" max="255.0" showTickLabels="true" />
+                                    <Label text="Height" />
+                                    <Slider fx:id="sliderBoxBlurHeight" majorTickUnit="50.0" max="255.0" showTickLabels="true" />
+                                    <Label text="Iteration" />
+                                    <Slider fx:id="sliderBoxBlurIteration" blockIncrement="1.0" majorTickUnit="1.0" max="3.0" minorTickCount="1" showTickLabels="true" value="1.0" />
+                                    <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                       <children>
+                                          <Button mnemonicParsing="false" onAction="#onColorAdjustApply" text="Apply" />
+                                          <Button mnemonicParsing="false" onAction="#onColorAdjustUndoAll" text="Undo all" />
+                                       </children>
+                                       <padding>
+                                          <Insets top="10.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </content>
+                        </TitledPane>
+                        <TitledPane prefHeight="200.0" prefWidth="200.0" text="Sharpen">
+                           <content>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Sharpen" />
+                                    <Slider fx:id="sliderSharpen" showTickLabels="true" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </TitledPane>
+                        <TitledPane prefHeight="200.0" prefWidth="200.0" text="Glow">
+                           <content>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Level" />
+                                    <Slider fx:id="sliderGlowLevel" blockIncrement="0.01" max="1.0" showTickLabels="true" />
+                                    <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                       <children>
+                                          <Button mnemonicParsing="false" onAction="#onColorAdjustApply" text="Apply" />
+                                          <Button mnemonicParsing="false" onAction="#onColorAdjustUndoAll" text="Undo all" />
+                                       </children>
+                                       <padding>
+                                          <Insets top="10.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </content>
+                        </TitledPane>
+                    </panes>
+                  </Accordion>
+               </content>
                 </TitledPane>
+            <TitledPane prefHeight="200.0" prefWidth="200.0" text="Filter">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
+                     </children>
+                  </VBox>
+               </content>
+            </TitledPane>
             </panes>
         </Accordion>
     </right>

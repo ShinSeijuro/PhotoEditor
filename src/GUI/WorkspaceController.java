@@ -151,6 +151,15 @@ public class WorkspaceController implements Initializable {
         sliderSaturation.valueProperty().addListener(colorAdjustChangeListener);
         sliderContrast.valueProperty().addListener(colorAdjustChangeListener);
 
+        tiledPaneAdjustment.expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == false) {
+                    onColorAdjustUndoAll(null);
+                }
+            }
+        });
+
         sliderZoom.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable,
@@ -161,7 +170,7 @@ public class WorkspaceController implements Initializable {
             }
         }
         );
-        bblurSLider.valueProperty().addListener(new ChangeListener<Number>() {
+        sliderBoxBlurWidth.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 BoxBlur bb = new BoxBlur();
@@ -172,7 +181,7 @@ public class WorkspaceController implements Initializable {
             }
         });
 
-        GlowSlider.valueProperty().addListener(new ChangeListener<Number>() {
+        sliderGlowLevel.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 Glow bb = new Glow((double) new_val);
@@ -180,7 +189,7 @@ public class WorkspaceController implements Initializable {
             }
         });
 
-        gsSlider.valueProperty().addListener(new ChangeListener<Number>() {
+        sliderGaussianRadius.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                     Number old_val, Number new_val) {
                 GaussianBlur gs = new GaussianBlur();
@@ -460,6 +469,8 @@ public class WorkspaceController implements Initializable {
     @FXML
     private Label labelZoom;
     @FXML
+    private TitledPane tiledPaneAdjustment;
+    @FXML
     private Slider sliderBrightness;
     @FXML
     private Slider sliderHue;
@@ -476,11 +487,16 @@ public class WorkspaceController implements Initializable {
     @FXML
     private Slider bawSlider;
     @FXML
-    private Slider bblurSLider;
+    private Slider sliderBoxBlurWidth;
     @FXML
-    private Slider GlowSlider;
+    private Slider sliderBoxBlurHeight;
     @FXML
-    private Slider gsSlider;
+    private Slider sliderBoxBlurIteration;
     @FXML
-    private Slider sharpSlider;
+    private Slider sliderGlowLevel;
+    @FXML
+    private Slider sliderGaussianRadius;
+    @FXML
+    private Slider sliderSharpen;
+
 }
