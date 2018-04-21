@@ -23,31 +23,39 @@ import javax.imageio.ImageIO;
  */
 public class ImageTab extends Tab {
 
-    public ImageTab(File file) throws IOException, IllegalArgumentException {
+    private ImageTab() throws IOException {
         super();
-
-        this.file = file;
-        super.setText(file.getName());
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ImageTab.fxml"));
             AnchorPane tabPage = (AnchorPane) loader.load();
             controller = loader.getController();
-
             super.setContent(tabPage);
-            BufferedImage image = ImageIO.read(file);
-            if (image == null) {
-                throw new IllegalArgumentException("Unsupported file type.");
-            }
-
-            originalDimension2D = new Dimension2D(image.getWidth(), image.getHeight());
-            controller.setBufferedImage(image);
         } catch (IOException ex) {
             Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
-        } catch (IllegalArgumentException ex) {
-            throw ex;
         }
+    }
+
+    public ImageTab(BufferedImage image, String name) throws IOException, IllegalArgumentException {
+        this();
+
+        if (image == null) {
+            throw new IllegalArgumentException("Unsupported file type.");
+        }
+
+        super.setText(name);
+
+        originalDimension2D = new Dimension2D(image.getWidth(), image.getHeight());
+        controller.setBufferedImage(image);
+    }
+
+    public ImageTab(BufferedImage image) throws IOException, IllegalArgumentException {
+        this(image, "new");
+    }
+
+    public ImageTab(File file) throws IOException, IllegalArgumentException {
+        this(ImageIO.read(file), file.getName());
     }
 
     private File file;

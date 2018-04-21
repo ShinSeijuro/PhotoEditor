@@ -10,6 +10,7 @@ import Action.*;
 import Adjustment.*;
 import Transformation.*;
 import History.*;
+import PlugIn.ImageFromClipboard;
 import PlugIn.WallpaperChanger;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -42,8 +43,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.geometry.Dimension2D;
 
 /**
@@ -257,9 +256,14 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onFileSave(ActionEvent event) throws IOException {
-        File outputfile = new File(this.currentTab.getFile().getPath());
-        String name = outputfile.getName();
-        ImageIO.write(getCurrentImage(), name.substring(name.lastIndexOf('.') + 1), outputfile);
+        File outputFile = getCurrentTab().getFile();
+        if (outputFile == null) {
+            onFileSaveAs(null);
+            return;
+        }
+
+        String name = outputFile.getName();
+        ImageIO.write(getCurrentImage(), name.substring(name.lastIndexOf('.') + 1), outputFile);
     }
 
     @FXML
@@ -564,6 +568,41 @@ public class WorkspaceController implements Initializable {
     @FXML
     private void onSetAsWallpaper(ActionEvent event) {
         WallpaperChanger.setWallpaper(getCurrentTab().getFile().getPath());
+    }
+
+    @FXML
+    private void onPasteFromClipboard(ActionEvent event) {
+        BufferedImage image = ImageFromClipboard.get();
+        if (image != null) {
+            ImageTab tab = null;
+            try {
+                tab = new ImageTab(image);
+            } catch (IOException | IllegalArgumentException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText(null);
+                alert.setTitle("Paste from Clipboard");
+                alert.setContentText("Unable to paste from clipboard." + "\n\nDetails:\n" + ex.getMessage());
+                alert.show();
+            }
+
+            if (tab == null) {
+                return;
+            }
+
+            tab.setOnClosed((e) -> {
+                setIsEmpty(tabs.isEmpty());
+            });
+
+            tabPane.getTabs().add(tab);
+            tabPane.getSelectionModel().selectLast();
+            setIsEmpty(false);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setTitle("Paste from Clipboard");
+            alert.setContentText("Clipboard does not contain any image!");
+            alert.show();
+        }
     }
 
     /* Controls */

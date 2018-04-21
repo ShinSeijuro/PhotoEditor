@@ -35,6 +35,8 @@
                                 <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image..." />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileInfo" text="File info" />
                                 <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#onPasteFromClipboard" text="Paste from Clipboard" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSaveAs" text="Save As..." />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onPrint" text="Print" />
@@ -51,7 +53,7 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Extras">
                             <items>
-                                <MenuItem mnemonicParsing="false" disable="${controller.isEmpty}" onAction="#onSetAsWallpaper" text="Set as wallpaper" />
+                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onSetAsWallpaper" text="Set as wallpaper" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
