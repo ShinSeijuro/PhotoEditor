@@ -10,6 +10,7 @@ import Action.*;
 import Adjustment.*;
 import Transformation.*;
 import History.*;
+import PlugIn.WallpaperChanger;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
@@ -558,6 +559,11 @@ public class WorkspaceController implements Initializable {
         } else {
             // ... user chose CANCEL or closed the dialog
         }
+    }
+
+    @FXML
+    private void onSetAsWallpaper(ActionEvent event) {
+        WallpaperChanger.setWallpaper(getCurrentTab().getFile().getPath());
     }
 
     /* Controls */
