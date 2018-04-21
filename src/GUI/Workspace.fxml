@@ -35,8 +35,8 @@
                                 <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image..." />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileInfo" text="File info" />
                                 <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#onPasteFromClipboard" text="Paste from Clipboard" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" onAction="#onPasteFromClipboard" text="Paste from Clipboard" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSaveAs" text="Save As..." />
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onPrint" text="Print" />
@@ -88,7 +88,7 @@
                     </HBox.margin>
                 </Label>
                 <Slider fx:id="sliderZoom" disable="${controller.isEmpty}" majorTickUnit="50.0" max="200.0" min="10.0" minorTickCount="1" value="100.0" />
-            <Button mnemonicParsing="false" onAction="#onFullScreen" text="FullScreen" />
+                <Button mnemonicParsing="false" onAction="#onFullScreen" text="FullScreen" />
             </children>
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -96,7 +96,7 @@
         </HBox>
     </bottom>
     <right>
-        <Accordion fx:id="accordionEdit" disable="${controller.isEmpty}" prefWidth="250.0" BorderPane.alignment="CENTER">
+        <Accordion fx:id="accordionEdit" disable="${controller.isEmpty}" visible="${toggleEdit.selected}" prefWidth="250.0" BorderPane.alignment="CENTER">
             <panes>
                 <TitledPane animated="false" text="Crop &amp; Rotate">
                     <content>

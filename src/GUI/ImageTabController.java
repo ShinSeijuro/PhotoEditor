@@ -29,12 +29,6 @@ import javafx.scene.layout.StackPane;
  */
 public class ImageTabController extends Tab implements Initializable {
 
-    private History history;
-
-    public History getHistory() {
-        return history;
-    }
-
     public ImageView getImageView() {
         return imageView;
     }
@@ -98,7 +92,6 @@ public class ImageTabController extends Tab implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        history = new History();
     }
 
     @FXML

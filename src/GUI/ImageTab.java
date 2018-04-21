@@ -5,11 +5,14 @@
  */
 package GUI;
 
+import History.History;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.Tab;
@@ -23,8 +26,30 @@ import javax.imageio.ImageIO;
  */
 public class ImageTab extends Tab {
 
+    private History history;
+
+    public History getHistory() {
+        return history;
+    }
+
     private ImageTab() throws IOException {
         super();
+
+        history = new History();
+        history.setIsModifiedChangeListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (oldValue == newValue) {
+                    return;
+                }
+
+                if (newValue == true) {
+                    setText(tabName + "*");
+                } else {
+                    setText(tabName);
+                }
+            }
+        });
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ImageTab.fxml"));
@@ -44,7 +69,8 @@ public class ImageTab extends Tab {
             throw new IllegalArgumentException("Unsupported file type.");
         }
 
-        super.setText(name);
+        tabName = name;
+        super.setText(tabName);
 
         originalDimension2D = new Dimension2D(image.getWidth(), image.getHeight());
         controller.setBufferedImage(image);
@@ -75,4 +101,6 @@ public class ImageTab extends Tab {
     public ImageTabController getController() {
         return controller;
     }
+
+    private String tabName;
 }

@@ -91,7 +91,7 @@ public class WorkspaceController implements Initializable {
         if (getCurrentController() == null) {
             return null;
         }
-        return getCurrentController().getHistory();
+        return getCurrentTab().getHistory();
     }
 
     public BufferedImage getCurrentImage() {
@@ -293,7 +293,6 @@ public class WorkspaceController implements Initializable {
     @FXML
     public void onFileClose(ActionEvent event) {
         PhotoEditor.getPrimaryStage().close();
-
         //TODO: You have unsaved documents. Do you want to exit?
     }
 
