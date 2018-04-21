@@ -43,7 +43,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  *
@@ -605,6 +609,35 @@ public class WorkspaceController implements Initializable {
         }
     }
 
+    @FXML
+    private void onFullScreen(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FullScreen.fxml"));
+            Parent root = loader.load();
+            FullScreenController controller = loader.getController();
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("PhotoEditor - Fullscreen");
+            stage.setFullScreen(true);
+            stage.fullScreenProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if (newValue == false) {
+                        stage.close();
+                    }
+                }
+            });
+
+            controller.setupImageView(getCurrentController().getImageView(), stage);
+
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /* Controls */
     @FXML
     private TabPane tabPane;
@@ -650,5 +683,4 @@ public class WorkspaceController implements Initializable {
     private Slider sliderGaussianRadius;
     @FXML
     private Slider sliderSharpen;
-
 }
