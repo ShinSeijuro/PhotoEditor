@@ -43,11 +43,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -115,6 +120,8 @@ public class WorkspaceController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+
+        PhotoEditor.getPrimaryStage().setOnCloseRequest(onWindowCloseRequest);
 
         tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
@@ -191,11 +198,81 @@ public class WorkspaceController implements Initializable {
         });
     }
 
+    public Alert makeDialog(String title, String header, String content, AlertType alertType, ButtonType... buttonTypes) {
+        final Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+
+        if (buttonTypes != null) {
+            alert.getButtonTypes().clear();
+            alert.getButtonTypes().addAll(buttonTypes);
+        }
+        return alert;
+    }
+
     public void applyAction(AbstractImageAction action) {
         BufferedImage image = action.applyTransform();
         getCurrentController().setBufferedImage(image);
         getCurrentHistory().add(action);
     }
+
+    private EventHandler<WindowEvent> onWindowCloseRequest = new EventHandler<WindowEvent>() {
+        @Override
+        public void handle(WindowEvent event) {
+            int leftovers = 0;
+            ObservableList<Tab> tabList = tabPane.getTabs();
+            while (!tabList.isEmpty() && leftovers < tabList.size()) {
+                ImageTab tab = (ImageTab) tabList.get(leftovers);
+                EventHandler<Event> handler = tab.getOnCloseRequest();
+                if (handler != null) {
+                    Event e = new Event(tab, null, Tab.TAB_CLOSE_REQUEST_EVENT);
+                    handler.handle(e);
+                    if (e.isConsumed()) {
+                        leftovers++;
+                    } else {
+                        tabList.remove(leftovers);
+                    }
+                } else {
+                    tabList.remove(leftovers);
+                }
+            }
+
+            if (leftovers > 0) {
+                event.consume();
+            }
+        }
+    };
+
+    private EventHandler<Event> onTabCloseRequest = new EventHandler<Event>() {
+        @Override
+        public void handle(Event event) {
+            if (event == null) {
+                return;
+            }
+
+            ImageTab tab = (ImageTab) event.getSource();
+            if (tab.getHistory().isModified()) {
+                tabPane.getSelectionModel().select(tab);
+
+                Alert alert = makeDialog(
+                        "Close tab",
+                        null,
+                        "Do you want to save changes you have made to \"" + tab.getTabName() + "\"?",
+                        AlertType.CONFIRMATION,
+                        ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.YES) {
+                    onFileSave(null);
+                } else if (result.get() == ButtonType.NO) {
+
+                } else {
+                    event.consume();
+                }
+            }
+        }
+    };
 
     public void loadFile(File file) {
         String tabName = file.getName();
@@ -207,10 +284,13 @@ public class WorkspaceController implements Initializable {
             try {
                 tab = new ImageTab(file);
             } catch (IOException | IllegalArgumentException ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("ERROR: Unable to open file");
-                alert.setTitle("Open image...");
-                alert.setContentText("Unable to open file: " + file.getPath() + "\n\nDetails:\n" + ex.getMessage());
+                Alert alert = makeDialog(
+                        "Open image...",
+                        "ERROR: Unable to open file",
+                        "Unable to open file: " + file.getPath() + "\n\nDetails:\n" + ex.getMessage(),
+                        AlertType.ERROR,
+                        null);
+
                 alert.show();
             }
 
@@ -222,6 +302,7 @@ public class WorkspaceController implements Initializable {
                 tabs.remove(tabName);
                 setIsEmpty(tabs.isEmpty());
             });
+            tab.setOnCloseRequest(onTabCloseRequest);
 
             tabPane.getTabs().add(tab);
             tabs.put(tabName, tab);
@@ -259,7 +340,7 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onFileSave(ActionEvent event) throws IOException {
+    public void onFileSave(ActionEvent event) {
         File outputFile = getCurrentTab().getFile();
         if (outputFile == null) {
             onFileSaveAs(null);
@@ -267,11 +348,15 @@ public class WorkspaceController implements Initializable {
         }
 
         String name = outputFile.getName();
-        ImageIO.write(getCurrentImage(), name.substring(name.lastIndexOf('.') + 1), outputFile);
+        try {
+            ImageIO.write(getCurrentImage(), name.substring(name.lastIndexOf('.') + 1), outputFile);
+        } catch (IOException ex) {
+            Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
-    public void onFileSaveAs(ActionEvent event) throws IOException {
+    public void onFileSaveAs(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
@@ -293,7 +378,6 @@ public class WorkspaceController implements Initializable {
     @FXML
     public void onFileClose(ActionEvent event) {
         PhotoEditor.getPrimaryStage().close();
-        //TODO: You have unsaved documents. Do you want to exit?
     }
 
     @FXML
@@ -559,8 +643,12 @@ public class WorkspaceController implements Initializable {
             try {
                 Runtime.getRuntime().exec("explorer.exe /select," + currentFile.getPath());
             } catch (IOException ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Folder not found!");
-                alert.setTitle("Open file location");
+                Alert alert = makeDialog(
+                        "Open file location",
+                        null,
+                        "Folder not found!",
+                        AlertType.ERROR,
+                        null);
                 alert.show();
             }
         } else {
@@ -581,10 +669,12 @@ public class WorkspaceController implements Initializable {
             try {
                 tab = new ImageTab(image);
             } catch (IOException | IllegalArgumentException ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(null);
-                alert.setTitle("Paste from Clipboard");
-                alert.setContentText("Unable to paste from clipboard." + "\n\nDetails:\n" + ex.getMessage());
+                Alert alert = makeDialog(
+                        "Paste from Clipboard",
+                        null,
+                        "Unable to paste from clipboard." + "\n\nDetails:\n" + ex.getMessage(),
+                        AlertType.ERROR,
+                        null);
                 alert.show();
             }
 
@@ -595,15 +685,18 @@ public class WorkspaceController implements Initializable {
             tab.setOnClosed((e) -> {
                 setIsEmpty(tabs.isEmpty());
             });
+            tab.setOnCloseRequest(onTabCloseRequest);
 
             tabPane.getTabs().add(tab);
             tabPane.getSelectionModel().selectLast();
             setIsEmpty(false);
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setTitle("Paste from Clipboard");
-            alert.setContentText("Clipboard does not contain any image!");
+            Alert alert = makeDialog(
+                    "Paste from Clipboard",
+                    null,
+                    "Clipboard does not contain any image!",
+                    AlertType.ERROR,
+                    null);
             alert.show();
         }
     }

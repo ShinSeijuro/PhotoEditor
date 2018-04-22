@@ -59,7 +59,7 @@ public class History {
 
     public void add(AbstractImageAction action) {
         if (isModifiedChangeListener != null) {
-            isModifiedChangeListener.changed(null, undoDeque.size() > 0, true);
+            isModifiedChangeListener.changed(null, isModified(), true);
         }
 
         if (redoDeque.size() > 0) {
@@ -92,7 +92,7 @@ public class History {
             redoDeque.push(undoDeque.pop());
 
             if (isModifiedChangeListener != null) {
-                isModifiedChangeListener.changed(null, true, undoDeque.size() > 0);
+                isModifiedChangeListener.changed(null, true, isModified());
             }
         }
     }
@@ -100,5 +100,9 @@ public class History {
     public void clear() {
         undoDeque.clear();
         redoDeque.clear();
+    }
+
+    public boolean isModified() {
+        return undoDeque.size() > 0;
     }
 }

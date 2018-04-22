@@ -103,4 +103,8 @@ public class ImageTab extends Tab {
     }
 
     private String tabName;
+
+    public String getTabName() {
+        return tabName;
+    }
 }
