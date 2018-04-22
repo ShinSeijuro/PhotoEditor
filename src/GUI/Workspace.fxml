@@ -96,7 +96,7 @@
         </HBox>
     </bottom>
     <right>
-        <Accordion fx:id="accordionEdit" disable="${controller.isEmpty}" visible="${toggleEdit.selected}" prefWidth="250.0" BorderPane.alignment="CENTER">
+        <Accordion fx:id="accordionEdit" disable="${controller.isEmpty}" prefWidth="250.0" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
             <panes>
                 <TitledPane animated="false" text="Crop &amp; Rotate">
                     <content>
@@ -232,7 +232,7 @@
                         </Accordion>
                     </content>
                 </TitledPane>
-                <TitledPane prefHeight="200.0" prefWidth="200.0" text="Filter">
+                <TitledPane animated="false" prefHeight="200.0" prefWidth="200.0" text="Filter">
                     <content>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                             <children>

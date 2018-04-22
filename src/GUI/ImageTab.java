@@ -9,6 +9,7 @@ import History.History;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
@@ -16,7 +17,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.Tab;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javax.imageio.ImageIO;
 
@@ -39,7 +39,7 @@ public class ImageTab extends Tab {
         history.setIsModifiedChangeListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (oldValue == newValue) {
+                if (Objects.equals(oldValue, newValue)) {
                     return;
                 }
 

@@ -244,7 +244,7 @@ public class WorkspaceController implements Initializable {
         }
     };
 
-    private EventHandler<Event> onTabCloseRequest = new EventHandler<Event>() {
+    private final EventHandler<Event> onTabCloseRequest = new EventHandler<Event>() {
         @Override
         public void handle(Event event) {
             if (event == null) {
@@ -414,7 +414,7 @@ public class WorkspaceController implements Initializable {
         applyAction(new GrayScale(getCurrentImage()));
     }
 
-    private ChangeListener<Number> colorAdjustChangeListener = new ChangeListener<Number>() {
+    private final ChangeListener<Number> colorAdjustChangeListener = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> ov,
                 Number old_val, Number new_val) {
@@ -427,7 +427,7 @@ public class WorkspaceController implements Initializable {
         }
     };
 
-    private ChangeListener<Number> gaussianBlurChangeListener = new ChangeListener<Number>() {
+    private final ChangeListener<Number> gaussianBlurChangeListener = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             GaussianBlur gaussianBlur = new GaussianBlur(
@@ -437,7 +437,7 @@ public class WorkspaceController implements Initializable {
 
     };
 
-    private ChangeListener<Number> boxBlurChangeListener = new ChangeListener<Number>() {
+    private final ChangeListener<Number> boxBlurChangeListener = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             BoxBlur boxBlur = new BoxBlur(
@@ -448,7 +448,7 @@ public class WorkspaceController implements Initializable {
         }
     };
 
-    private ChangeListener<Number> glowChangeListener = new ChangeListener<Number>() {
+    private final ChangeListener<Number> glowChangeListener = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             Glow glow = new Glow(

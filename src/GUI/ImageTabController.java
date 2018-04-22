@@ -5,7 +5,6 @@
  */
 package GUI;
 
-import History.History;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -47,7 +46,7 @@ public class ImageTabController extends Tab implements Initializable {
         return selection;
     }
 
-    private BooleanProperty isSelecting = new SimpleBooleanProperty(false);
+    private final BooleanProperty isSelecting = new SimpleBooleanProperty(false);
 
     public BooleanProperty isSelectingProperty() {
         return isSelecting;
@@ -72,7 +71,7 @@ public class ImageTabController extends Tab implements Initializable {
         }
     }
 
-    private DoubleProperty zoomRatio = new SimpleDoubleProperty(1.0);
+    private final DoubleProperty zoomRatio = new SimpleDoubleProperty(1.0);
 
     public DoubleProperty zoomRatioProperty() {
         return zoomRatio;
