@@ -13,6 +13,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -31,34 +32,67 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="New Image..." />
-                                <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image..." />
-                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileInfo" text="File info" />
+                                <MenuItem mnemonicParsing="false" text="New Image...">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                                <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image...">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileInfo" text="File info">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                                 <SeparatorMenuItem mnemonicParsing="false" />
-                                <MenuItem mnemonicParsing="false" onAction="#onPasteFromClipboard" text="Paste from Clipboard" />
+                                <MenuItem mnemonicParsing="false" onAction="#onPasteFromClipboard" text="Paste from Clipboard">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                                 <SeparatorMenuItem mnemonicParsing="false" />
-                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
+                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSave" text="Save">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                                 <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSaveAs" text="Save As..." />
-                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onPrint" text="Print" />
+                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onPrint" text="Print">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                                 <SeparatorMenuItem mnemonicParsing="false" />
-                                <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close" />
+                                <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                             </items>
                         </Menu>
                         <Menu disable="${controller.isEmpty}" mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
                             <items>
-                                <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#onUndo" text="Undo" />
-                                <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#onRedo" text="Redo" />
+                                <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#onUndo" text="Undo">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                                <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#onRedo" text="Redo">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="Y" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                                 <SeparatorMenuItem mnemonicParsing="false" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Extras">
                             <items>
-                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onSetAsWallpaper" text="Set as wallpaper" />
+                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onSetAsWallpaper" text="Set as wallpaper">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                           </accelerator></MenuItem>
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="About" />
+                                <MenuItem mnemonicParsing="false" text="About">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                             </items>
                         </Menu>
                     </menus>

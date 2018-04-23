@@ -31,9 +31,12 @@ public class PhotoEditor extends Application {
     public void start(Stage stage) throws Exception {
         setPrimaryStage(stage);
 
-        Parent root = FXMLLoader.load(getClass().getResource("Workspace.fxml"));
-        Scene scene = new Scene(root);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Workspace.fxml"));
+        Parent root = loader.load();
+        WorkspaceController controller = (WorkspaceController) loader.getController();
 
+        Scene scene = new Scene(root);
+        controller.attachHotKeys(scene);
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.setTitle("PhotoEditor");

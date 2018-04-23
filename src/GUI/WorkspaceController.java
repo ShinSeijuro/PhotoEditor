@@ -51,6 +51,10 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -217,6 +221,18 @@ public class WorkspaceController implements Initializable {
 
                 getCurrentController().setZoomRatio(newValue.doubleValue() / 100.0);
                 labelZoom.setText(newValue.intValue() + "%");
+            }
+        });
+    }
+
+    public void attachHotKeys(Scene scene) {
+        KeyCombination keyComb = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.ALT_DOWN);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (keyComb.match(event)) {
+                    onFullScreen(null);
+                }
             }
         });
     }
