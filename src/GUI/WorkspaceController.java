@@ -55,6 +55,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -767,6 +772,61 @@ public class WorkspaceController implements Initializable {
         } else {
             // ... user chose CANCEL or closed the dialog
         }
+    }
+
+    @FXML
+    private void onFixRedEye(ActionEvent event) {
+        // Obtain PixelReader
+        Image img = getCurrentController().getImageView().getImage();
+        PixelReader pixelReader = img.getPixelReader();
+        // Create WritableImage
+        WritableImage wImage = new WritableImage((int) img.getWidth(), (int) img.getHeight());
+        PixelWriter pixelWriter = wImage.getPixelWriter();
+        for (int y = 0; y < img.getHeight(); y++) {
+            for (int x = 0; x < img.getWidth(); x++) {
+                Color color = pixelReader.getColor(x, y);
+                // Color values of the pixel from 0-1
+                double r = color.getRed();
+                double g = color.getGreen();
+                double b = color.getBlue();
+
+                // Color values from 0 to 255
+                int red = (int) (r * 255);
+                int green = (int) (g * 255);
+                int blue = (int) (b * 255);
+
+                /**
+                 * **************************************************
+                 * TO DO: The code to handle red eye for the left eye is
+                 * basically the same as the code for the right eye. Write a
+                 * method so an if statement block can be replaced with a single
+                 * method, for example, color =
+                 * replaceRedIfInBoundary(color,x,y,red,green,blue,133,149,169,185);
+                 * would handle the left eye and a similar call could handle the
+                 * right eye. **************************************************
+                 */
+                // If this is a pixel inside the left eye area
+                if ((x >= 133) && (x < 149) && (y >= 169) && (y < 185)) {
+                    // The red pixels had a red component > 80 and green < 60
+                    if ((red > 80) && (green < 60)) {
+                        red = (green + blue) / 2;		// Decreases the red to the average of the green and blue
+                        color = Color.rgb(red, green, blue);  // Create new color for this pixel that is not so red
+                    }
+                }
+                // If this is a pixel inside the right eye area
+                if ((x >= 256) && (x < 270) && (y >= 143) && (y < 157)) {
+                    // The red pixels had a red component > 80 and green < 60
+                    if ((red > 80) && (green < 60)) {
+                        red = (green + blue) / 2;		// Decreases the red to the average of the green and blue
+                        color = Color.rgb(red, green, blue);  // Create new color for this pixel that is not so red
+                    }
+                }
+
+                // Copy the pixel to the writable image
+                pixelWriter.setColor(x, y, color);
+            }
+        }
+        getCurrentController().getImageView().setImage(img);
     }
 
     @FXML
