@@ -199,6 +199,27 @@
                                         </VBox>
                                     </content>
                                 </TitledPane>
+                                <TitledPane fx:id="titledPaneMotionBlur" animated="false" layoutX="10.0" layoutY="10.0" text="Motion Blur">
+                                    <content>
+                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                            <children>
+                                                <Label text="Angle" />
+                                                <Slider fx:id="sliderMotionBlurAngle" majorTickUnit="90.0" max="180.0" showTickLabels="true" />
+                                                <Label text="Radius" />
+                                                <Slider fx:id="sliderMotionBlurRadius" max="63.0" showTickLabels="true" />
+                                                <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                                    <children>
+                                                        <Button mnemonicParsing="false" onAction="#onApplyMotionBlur" text="Apply" />
+                                                        <Button mnemonicParsing="false" onAction="#onUndoAllMotionBlur" text="Undo all" />
+                                                    </children>
+                                                    <padding>
+                                                        <Insets top="10.0" />
+                                                    </padding>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </TitledPane>
                                 <TitledPane prefHeight="200.0" prefWidth="200.0" text="Sharpen">
                                     <content>
                                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">

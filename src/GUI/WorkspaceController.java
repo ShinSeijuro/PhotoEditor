@@ -176,6 +176,18 @@ public class WorkspaceController implements Initializable {
             }
         });
 
+        sliderMotionBlurAngle.valueProperty().addListener(motionBlurChangeListener);
+        sliderMotionBlurRadius.valueProperty().addListener(motionBlurChangeListener);
+
+        titledPaneMotionBlur.expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == false) {
+                    onUndoAllMotionBlur(null);
+                }
+            }
+        });
+
         sliderGlowLevel.valueProperty().addListener(glowChangeListener);
 
         titledPaneGlow.expandedProperty().addListener(new ChangeListener<Boolean>() {
@@ -448,6 +460,16 @@ public class WorkspaceController implements Initializable {
         }
     };
 
+    private final ChangeListener<Number> motionBlurChangeListener = new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            MotionBlur motionBlur = new MotionBlur(
+                    sliderMotionBlurAngle.getValue(),
+                    sliderMotionBlurRadius.getValue());
+            getCurrentController().getImageView().setEffect(motionBlur);
+        }
+    };
+
     private final ChangeListener<Number> glowChangeListener = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -559,6 +581,20 @@ public class WorkspaceController implements Initializable {
     private void onUndoAllBoxBlur(ActionEvent event) {
         sliderBoxBlurWidth.setValue(0);
         sliderBoxBlurHeight.setValue(0);
+    }
+
+    @FXML
+    private void onApplyMotionBlur(ActionEvent event) {
+        ImageView imageView = getCurrentController().getImageView();
+        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+        onUndoAllMotionBlur(null);
+        imageView.setEffect(null);
+    }
+
+    @FXML
+    private void onUndoAllMotionBlur(ActionEvent event) {
+        sliderMotionBlurAngle.setValue(0);
+        sliderMotionBlurRadius.setValue(0);
     }
 
     @FXML
@@ -748,6 +784,8 @@ public class WorkspaceController implements Initializable {
     @FXML
     private TitledPane titledPaneBoxBlur;
     @FXML
+    private TitledPane titledPaneMotionBlur;
+    @FXML
     private TitledPane titledPaneGlow;
     @FXML
     private Slider sliderBrightness;
@@ -769,6 +807,10 @@ public class WorkspaceController implements Initializable {
     private Slider sliderBoxBlurHeight;
     @FXML
     private Slider sliderBoxBlurIteration;
+    @FXML
+    private Slider sliderMotionBlurAngle;
+    @FXML
+    private Slider sliderMotionBlurRadius;
     @FXML
     private Slider sliderGlowLevel;
     @FXML
