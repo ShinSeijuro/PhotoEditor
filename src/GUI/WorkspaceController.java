@@ -199,6 +199,17 @@ public class WorkspaceController implements Initializable {
             }
         });
 
+        sliderSepiaToneLevel.valueProperty().addListener(sepiaChangeListener);
+
+        titledPaneSepiaTone.expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == false) {
+                    onUndoAllSepiaTone(null);
+                }
+            }
+        });
+
         sliderZoom.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable,
@@ -479,6 +490,15 @@ public class WorkspaceController implements Initializable {
         }
     };
 
+    private final ChangeListener<Number> sepiaChangeListener = new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            SepiaTone sepiaTone = new SepiaTone(
+                    sliderSepiaToneLevel.getValue() / 100.0);
+            getCurrentController().getImageView().setEffect(sepiaTone);
+        }
+    };
+
     @FXML
     public void onBlur(ActionEvent event) {
         //applyAction(new BoxBlur(getCurrentImage()));
@@ -608,6 +628,19 @@ public class WorkspaceController implements Initializable {
     @FXML
     private void onUndoAllGlow(ActionEvent event) {
         sliderGlowLevel.setValue(0);
+    }
+
+    @FXML
+    private void onApplySepiaTone(ActionEvent event) {
+        ImageView imageView = getCurrentController().getImageView();
+        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+        onUndoAllSepiaTone(null);
+        imageView.setEffect(null);
+    }
+
+    @FXML
+    private void onUndoAllSepiaTone(ActionEvent event) {
+        sliderSepiaToneLevel.setValue(0);
     }
 
     @FXML
@@ -788,6 +821,8 @@ public class WorkspaceController implements Initializable {
     @FXML
     private TitledPane titledPaneGlow;
     @FXML
+    private TitledPane titledPaneSepiaTone;
+    @FXML
     private Slider sliderBrightness;
     @FXML
     private Slider sliderHue;
@@ -815,6 +850,8 @@ public class WorkspaceController implements Initializable {
     private Slider sliderGlowLevel;
     @FXML
     private Slider sliderGaussianRadius;
+    @FXML
+    private Slider sliderSepiaToneLevel;
     @FXML
     private Slider sliderSharpen;
 }

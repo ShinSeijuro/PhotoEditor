@@ -220,7 +220,7 @@
                                         </VBox>
                                     </content>
                                 </TitledPane>
-                                <TitledPane prefHeight="200.0" prefWidth="200.0" text="Sharpen">
+                                <TitledPane animated="false" prefHeight="200.0" prefWidth="200.0" text="Sharpen">
                                     <content>
                                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                                             <children>
@@ -230,7 +230,7 @@
                                         </VBox>
                                     </content>
                                 </TitledPane>
-                                <TitledPane fx:id="titledPaneGlow" prefHeight="200.0" prefWidth="200.0" text="Glow">
+                                <TitledPane fx:id="titledPaneGlow" animated="false" prefHeight="200.0" prefWidth="200.0" text="Glow">
                                     <content>
                                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                                             <children>
@@ -249,6 +249,25 @@
                                         </VBox>
                                     </content>
                                 </TitledPane>
+                        <TitledPane fx:id="titledPaneSepiaTone" animated="false" layoutX="10.0" layoutY="110.0" prefHeight="200.0" prefWidth="200.0" text="Sepia Tone">
+                           <content>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Level" />
+                                    <Slider fx:id="sliderSepiaToneLevel" showTickLabels="true" />
+                                    <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                       <children>
+                                          <Button mnemonicParsing="false" onAction="#onApplySepiaTone" text="Apply" />
+                                          <Button mnemonicParsing="false" onAction="#onUndoAllSepiaTone" text="Undo all" />
+                                       </children>
+                                       <padding>
+                                          <Insets top="10.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </content>
+                        </TitledPane>
                             </panes>
                         </Accordion>
                     </content>
