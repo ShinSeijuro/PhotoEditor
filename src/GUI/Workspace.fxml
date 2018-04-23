@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
+<BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
     <center>
         <TabPane fx:id="tabPane" prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
     </center>
@@ -33,16 +33,27 @@
                             <items>
                                 <MenuItem mnemonicParsing="false" text="New Image..." />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileOpen" text="Open Image..." />
-                                <MenuItem disable="${controller.isEditable}" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
-                                <MenuItem disable="${controller.isEditable}" mnemonicParsing="false" text="Save As..." />
+                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileInfo" text="File info" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" onAction="#onPasteFromClipboard" text="Paste from Clipboard" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSave" text="Save" />
+                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSaveAs" text="Save As..." />
+                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onPrint" text="Print" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
                                 <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close" />
                             </items>
                         </Menu>
-                        <Menu disable="${controller.isEditable}" mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
+                        <Menu disable="${controller.isEmpty}" mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
                             <items>
                                 <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#onUndo" text="Undo" />
                                 <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#onRedo" text="Redo" />
                                 <SeparatorMenuItem mnemonicParsing="false" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Extras">
+                            <items>
+                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onSetAsWallpaper" text="Set as wallpaper" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
@@ -52,7 +63,7 @@
                         </Menu>
                     </menus>
                 </MenuBar>
-                <HBox alignment="CENTER" disable="${controller.isEditable}" spacing="5.0" style="-fx-background-color: lightgray;">
+                <HBox alignment="CENTER" disable="${controller.isEmpty}" spacing="5.0" style="-fx-background-color: lightgray;">
                     <children>
                         <ToggleButton fx:id="toggleEdit" mnemonicParsing="false" onAction="#onToggleEdit" text="Edit..." />
                         <Button mnemonicParsing="false" onAction="#onRotateLeft90" text="Rotate left" />
@@ -71,20 +82,21 @@
     <bottom>
         <HBox alignment="CENTER_RIGHT" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="labelZoom" disable="${controller.isEditable}" text="100%">
+                <Label fx:id="labelZoom" disable="${controller.isEmpty}" text="100%">
                     <HBox.margin>
                         <Insets right="5.0" />
                     </HBox.margin>
                 </Label>
-                <Slider fx:id="sliderZoom" disable="${controller.isEditable}" majorTickUnit="50.0" max="200.0" min="10.0" minorTickCount="1" value="100.0" />
+                <Slider fx:id="sliderZoom" disable="${controller.isEmpty}" majorTickUnit="50.0" max="200.0" min="10.0" minorTickCount="1" value="100.0" />
+                <Button mnemonicParsing="false" onAction="#onFullScreen" text="FullScreen" />
             </children>
             <padding>
-                <Insets bottom="5.0" top="5.0" />
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
         </HBox>
     </bottom>
     <right>
-        <Accordion fx:id="accordionEdit" disable="${controller.isEditable}" prefWidth="250.0" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
+        <Accordion fx:id="accordionEdit" disable="${controller.isEmpty}" prefWidth="250.0" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
             <panes>
                 <TitledPane animated="false" text="Crop &amp; Rotate">
                     <content>
@@ -109,7 +121,7 @@
                         </GridPane>
                     </content>
                 </TitledPane>
-                <TitledPane animated="false" text="Adjustments">
+                <TitledPane fx:id="titledPaneAdjustment" animated="false" text="Adjustments">
                     <content>
                         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
                             <content>
@@ -123,6 +135,15 @@
                                         <Slider fx:id="sliderHue" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
                                         <Label text="Saturation" />
                                         <Slider fx:id="sliderSaturation" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
+                                        <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                            <children>
+                                                <Button mnemonicParsing="false" onAction="#onApplyColorAdjust" text="Apply" />
+                                                <Button mnemonicParsing="false" onAction="#onUndoAllColorAdjust" text="Undo all" />
+                                            </children>
+                                            <padding>
+                                                <Insets top="10.0" />
+                                            </padding>
+                                        </HBox>
                                     </children>
                                     <padding>
                                         <Insets left="10.0" right="10.0" />
@@ -134,20 +155,130 @@
                 </TitledPane>
                 <TitledPane animated="false" text="Effects">
                     <content>
-                        <ScrollPane fitToHeight="true" fitToWidth="true">
-                            <content>
-                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
-                                    <children>
-                              <Button mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
-                              <Button mnemonicParsing="false" onAction="#onSharpen" text="Sharpen" />
-                              <Label text="Box Blur" />
-                              <Slider fx:id="bblurSLider" max="255.0" />
-                              <Label text="Gaussian Blur" />
-                              <Slider fx:id="gsSlider" />
-                                    </children>
-                                </VBox>
-                            </content>
-                        </ScrollPane>
+                        <Accordion>
+                            <panes>
+                                <TitledPane fx:id="titledPaneGaussianBlur" animated="false" text="Gaussian Blur">
+                                    <content>
+                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                            <children>
+                                                <Label text="Radius" />
+                                                <Slider fx:id="sliderGaussianRadius" max="63.0" showTickLabels="true" />
+                                                <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                                    <children>
+                                                        <Button mnemonicParsing="false" onAction="#onApplyGaussianBlur" text="Apply" />
+                                                        <Button mnemonicParsing="false" onAction="#onUndoAllGaussianBlur" text="Undo all" />
+                                                    </children>
+                                                    <padding>
+                                                        <Insets top="10.0" />
+                                                    </padding>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane fx:id="titledPaneBoxBlur" animated="false" text="Box Blur">
+                                    <content>
+                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                            <children>
+                                                <Label text="Width" />
+                                                <Slider fx:id="sliderBoxBlurWidth" majorTickUnit="50.0" max="255.0" showTickLabels="true" snapToTicks="true" />
+                                                <Label text="Height" />
+                                                <Slider fx:id="sliderBoxBlurHeight" majorTickUnit="50.0" max="255.0" showTickLabels="true" snapToTicks="true" />
+                                                <Label text="Iteration" />
+                                                <Slider fx:id="sliderBoxBlurIteration" blockIncrement="1.0" majorTickUnit="1.0" max="3.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="3.0" />
+                                                <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                                    <children>
+                                                        <Button mnemonicParsing="false" onAction="#onApplyBoxBlur" text="Apply" />
+                                                        <Button mnemonicParsing="false" onAction="#onUndoAllBoxBlur" text="Undo all" />
+                                                    </children>
+                                                    <padding>
+                                                        <Insets top="10.0" />
+                                                    </padding>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane fx:id="titledPaneMotionBlur" animated="false" layoutX="10.0" layoutY="10.0" text="Motion Blur">
+                                    <content>
+                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                            <children>
+                                                <Label text="Angle" />
+                                                <Slider fx:id="sliderMotionBlurAngle" majorTickUnit="90.0" max="180.0" showTickLabels="true" />
+                                                <Label text="Radius" />
+                                                <Slider fx:id="sliderMotionBlurRadius" max="63.0" showTickLabels="true" />
+                                                <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                                    <children>
+                                                        <Button mnemonicParsing="false" onAction="#onApplyMotionBlur" text="Apply" />
+                                                        <Button mnemonicParsing="false" onAction="#onUndoAllMotionBlur" text="Undo all" />
+                                                    </children>
+                                                    <padding>
+                                                        <Insets top="10.0" />
+                                                    </padding>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane animated="false" prefHeight="200.0" prefWidth="200.0" text="Sharpen">
+                                    <content>
+                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                            <children>
+                                                <Label text="Sharpen" />
+                                                <Slider fx:id="sliderSharpen" showTickLabels="true" />
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane fx:id="titledPaneGlow" animated="false" prefHeight="200.0" prefWidth="200.0" text="Glow">
+                                    <content>
+                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                            <children>
+                                                <Label text="Level" />
+                                                <Slider fx:id="sliderGlowLevel" showTickLabels="true" />
+                                                <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                                    <children>
+                                                        <Button mnemonicParsing="false" onAction="#onApplyGlow" text="Apply" />
+                                                        <Button mnemonicParsing="false" onAction="#onUndoAllGlow" text="Undo all" />
+                                                    </children>
+                                                    <padding>
+                                                        <Insets top="10.0" />
+                                                    </padding>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </TitledPane>
+                        <TitledPane fx:id="titledPaneSepiaTone" animated="false" layoutX="10.0" layoutY="110.0" prefHeight="200.0" prefWidth="200.0" text="Sepia Tone">
+                           <content>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Level" />
+                                    <Slider fx:id="sliderSepiaToneLevel" showTickLabels="true" />
+                                    <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                       <children>
+                                          <Button mnemonicParsing="false" onAction="#onApplySepiaTone" text="Apply" />
+                                          <Button mnemonicParsing="false" onAction="#onUndoAllSepiaTone" text="Undo all" />
+                                       </children>
+                                       <padding>
+                                          <Insets top="10.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </content>
+                        </TitledPane>
+                            </panes>
+                        </Accordion>
+                    </content>
+                </TitledPane>
+                <TitledPane animated="false" prefHeight="200.0" prefWidth="200.0" text="Filter">
+                    <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
+                            </children>
+                        </VBox>
                     </content>
                 </TitledPane>
             </panes>

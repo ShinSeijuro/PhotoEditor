@@ -5,7 +5,6 @@
  */
 package GUI;
 
-import History.History;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -29,12 +28,6 @@ import javafx.scene.layout.StackPane;
  */
 public class ImageTabController extends Tab implements Initializable {
 
-    private History history;
-
-    public History getHistory() {
-        return history;
-    }
-
     public ImageView getImageView() {
         return imageView;
     }
@@ -53,7 +46,7 @@ public class ImageTabController extends Tab implements Initializable {
         return selection;
     }
 
-    private BooleanProperty isSelecting = new SimpleBooleanProperty(false);
+    private final BooleanProperty isSelecting = new SimpleBooleanProperty(false);
 
     public BooleanProperty isSelectingProperty() {
         return isSelecting;
@@ -78,7 +71,7 @@ public class ImageTabController extends Tab implements Initializable {
         }
     }
 
-    private DoubleProperty zoomRatio = new SimpleDoubleProperty(1.0);
+    private final DoubleProperty zoomRatio = new SimpleDoubleProperty(1.0);
 
     public DoubleProperty zoomRatioProperty() {
         return zoomRatio;
@@ -98,7 +91,6 @@ public class ImageTabController extends Tab implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        history = new History();
     }
 
     @FXML

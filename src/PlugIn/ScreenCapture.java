@@ -39,11 +39,14 @@ public class ScreenCapture {
 //        ImageIO.write(image, "jpg", new File(outFileName));
 //        System.out.println("Da luu vao file \"" + outFileName + "\".");
 //    }
-    public static BufferedImage Capture() {
+    public static Dimension getScreenSize() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
-        Rectangle screenRect = new Rectangle(screenSize);
+        return screenSize;
+    }
 
+    public static BufferedImage Capture() {
+        Rectangle screenRect = new Rectangle(getScreenSize());
         return Capture(screenRect);
     }
 

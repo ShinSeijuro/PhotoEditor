@@ -8,6 +8,7 @@ package History;
 import Action.AbstractImageAction;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
+import javafx.beans.value.ChangeListener;
 
 /**
  *
@@ -43,10 +44,24 @@ public class History {
         return undoDeque.size() + redoDeque.size();
     }
 
+    private ChangeListener<Boolean> isModifiedChangeListener;
+
+    public ChangeListener<Boolean> getIsModifiedChangeListener() {
+        return isModifiedChangeListener;
+    }
+
+    public void setIsModifiedChangeListener(ChangeListener<Boolean> listener) {
+        isModifiedChangeListener = listener;
+    }
+
     public History() {
     }
 
     public void add(AbstractImageAction action) {
+        if (isModifiedChangeListener != null) {
+            isModifiedChangeListener.changed(null, isModified(), true);
+        }
+
         if (redoDeque.size() > 0) {
             redoDeque.clear();
         }
@@ -75,11 +90,19 @@ public class History {
     public void undo() {
         if (isUndoable()) {
             redoDeque.push(undoDeque.pop());
+
+            if (isModifiedChangeListener != null) {
+                isModifiedChangeListener.changed(null, true, isModified());
+            }
         }
     }
 
     public void clear() {
         undoDeque.clear();
         redoDeque.clear();
+    }
+
+    public boolean isModified() {
+        return undoDeque.size() > 0;
     }
 }
