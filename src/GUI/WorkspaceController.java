@@ -380,6 +380,13 @@ public class WorkspaceController implements Initializable {
             ImageIO.write(getCurrentImage(), name.substring(name.lastIndexOf('.') + 1), outputFile);
         } catch (IOException ex) {
             Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = makeDialog(
+                    "Save",
+                    "ERROR: Unable to save file",
+                    "Unable to save file: " + outputFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
+                    AlertType.ERROR,
+                    null);
+            alert.show();
         }
     }
 
@@ -397,7 +404,16 @@ public class WorkspaceController implements Initializable {
 
             try {
                 ImageIO.write(this.getCurrentImage(), "png", savedFile);
-            } catch (IOException e) {
+                getCurrentTab().setFile(savedFile);
+            } catch (IOException ex) {
+                Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
+                Alert alert = makeDialog(
+                        "Save as...",
+                        "ERROR: Unable to save file",
+                        "Unable to save file: " + savedFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
+                        AlertType.ERROR,
+                        null);
+                alert.show();
             }
         }
 
@@ -693,12 +709,20 @@ public class WorkspaceController implements Initializable {
     @FXML
     private void onFileInfo(ActionEvent event) {
         File currentFile = currentTab.getFile();
+
+        if (currentFile == null) {
+            Alert alert = makeDialog(
+                    "File info",
+                    null,
+                    "You need to save this file to view its info.",
+                    AlertType.ERROR,
+                    null);
+            alert.show();
+            return;
+        }
+
         Dimension2D dimension = currentTab.getOriginalDimension2D();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd/MM/yyyy HH:mm");
-
-        Alert info = new Alert(Alert.AlertType.INFORMATION);
-        info.setTitle("File info");
-        info.setHeaderText(null);
 
         String content
                 = "File name: " + currentFile.getName()
@@ -706,11 +730,15 @@ public class WorkspaceController implements Initializable {
                 + "\nSize: " + (currentFile.length() / 1024) + " KB"
                 + "\nDimension: " + (int) dimension.getWidth() + " x " + (int) dimension.getHeight()
                 + "\nFolder: " + currentFile.getParent();
-        info.setContentText(content);
 
         ButtonType buttonTypeOpen = new ButtonType("Open file location");
-        ButtonType buttonTypeCancel = new ButtonType("OK", ButtonBar.ButtonData.CANCEL_CLOSE);
-        info.getButtonTypes().setAll(buttonTypeOpen, buttonTypeCancel);
+
+        Alert info = makeDialog(
+                "File info",
+                null,
+                content,
+                AlertType.INFORMATION,
+                buttonTypeOpen, ButtonType.OK);
 
         Optional<ButtonType> result = info.showAndWait();
         if (result.get() == buttonTypeOpen) {
@@ -787,7 +815,22 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onSetAsWallpaper(ActionEvent event) {
-        WallpaperChanger.setWallpaper(getCurrentTab().getFile().getPath());
+        File currentFile = getCurrentTab().getFile();
+        if (currentFile == null) {
+            onFileSaveAs(null);
+        }
+        if (currentFile == null) {
+            Alert alert = makeDialog(
+                    "Set as Wallpaper",
+                    null,
+                    "You need to save this file to set as wallpaper",
+                    AlertType.ERROR,
+                    null);
+            alert.show();
+            return;
+        }
+
+        WallpaperChanger.setWallpaper(currentFile.getPath());
     }
 
     @FXML

@@ -69,9 +69,7 @@ public class ImageTab extends Tab {
             throw new IllegalArgumentException("Unsupported file type.");
         }
 
-        tabName = name;
-        super.setText(tabName);
-
+        setTabName(name);
         originalDimension2D = new Dimension2D(image.getWidth(), image.getHeight());
         controller.setBufferedImage(image);
     }
@@ -82,12 +80,22 @@ public class ImageTab extends Tab {
 
     public ImageTab(File file) throws IOException, IllegalArgumentException {
         this(ImageIO.read(file), file.getName());
+        this.file = file;
     }
 
     private File file;
 
     public File getFile() {
         return file;
+    }
+
+    public void setFile(File file) {
+        if (this.file != null) {
+            return;
+        }
+
+        this.file = file;
+        setTabName(file.getName());
     }
 
     private Dimension2D originalDimension2D;
@@ -106,5 +114,10 @@ public class ImageTab extends Tab {
 
     public String getTabName() {
         return tabName;
+    }
+
+    private void setTabName(String tabName) {
+        this.tabName = tabName;
+        super.setText(tabName);
     }
 }
