@@ -86,7 +86,11 @@ public class ImageTabController extends Tab implements Initializable {
     }
 
     public void setZoomRatio(double zoomRatio) {
-        if (zoomRatio < 0.1 || zoomRatio > 2.0) {
+        if (zoomRatio < 0.1) {
+            zoomRatio = 0.1;
+            return;
+        } else if (zoomRatio > 2.0) {
+            zoomRatio = 2.0;
             return;
         }
 
@@ -117,8 +121,6 @@ public class ImageTabController extends Tab implements Initializable {
     private ImageView imageView;
     @FXML
     private ScrollPane scrollPane;
-    @FXML
-    private StackPane stackPane;
     @FXML
     private Group groupImage;
 }

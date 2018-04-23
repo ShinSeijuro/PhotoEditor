@@ -94,7 +94,7 @@ public class WorkspaceController implements Initializable {
         }
     }
 
-    private ObjectProperty<ImageTabController> currentController = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<ImageTabController> currentController = new SimpleObjectProperty<>(null);
 
     public ObjectProperty<ImageTabController> currentControllerProperty() {
         return currentController;
