@@ -45,6 +45,8 @@ import java.text.SimpleDateFormat;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
@@ -83,6 +85,7 @@ public class WorkspaceController implements Initializable {
 
     private void setCurrentTab(ImageTab currentTab) {
         this.currentTab = currentTab;
+        setIsEmpty(currentTab == null);
 
         if (currentTab != null) {
             setCurrentController(currentTab.getController());
@@ -91,14 +94,18 @@ public class WorkspaceController implements Initializable {
         }
     }
 
-    private ImageTabController currentController;
+    private ObjectProperty<ImageTabController> currentController = new SimpleObjectProperty<>(null);
 
-    public ImageTabController getCurrentController() {
+    public ObjectProperty<ImageTabController> currentControllerProperty() {
         return currentController;
     }
 
+    public ImageTabController getCurrentController() {
+        return currentController.get();
+    }
+
     private void setCurrentController(ImageTabController currentController) {
-        this.currentController = currentController;
+        this.currentController.set(currentController);
     }
 
     public History getCurrentHistory() {
@@ -135,13 +142,7 @@ public class WorkspaceController implements Initializable {
         tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
-                if (newValue == null) {
-                    setCurrentTab(null);
-                    return;
-                }
-
                 setCurrentTab((ImageTab) newValue);
-                sliderZoom.setValue(getCurrentController().getZoomRatio() * 100.0);
             }
         });
 
@@ -224,8 +225,22 @@ public class WorkspaceController implements Initializable {
             public void changed(ObservableValue<? extends Number> observable,
                     Number oldValue, Number newValue) {
 
-                getCurrentController().setZoomRatio(newValue.doubleValue() / 100.0);
-                labelZoom.setText(newValue.intValue() + "%");
+                labelZoom.setText((int) (newValue.doubleValue() * 100.0) + "%");
+            }
+        });
+
+        currentController.addListener(new ChangeListener<ImageTabController>() {
+            @Override
+            public void changed(ObservableValue<? extends ImageTabController> observable, ImageTabController oldValue, ImageTabController newValue) {
+                if (oldValue != null) {
+                    sliderZoom.valueProperty().unbindBidirectional(oldValue.zoomRatioProperty());
+                }
+
+                if (newValue != null) {
+                    sliderZoom.valueProperty().bindBidirectional(newValue.zoomRatioProperty());
+                } else {
+                    sliderZoom.setValue(1.0);
+                }
             }
         });
     }
@@ -344,14 +359,12 @@ public class WorkspaceController implements Initializable {
 
             tab.setOnClosed((e) -> {
                 tabs.remove(tabName);
-                setIsEmpty(tabs.isEmpty());
             });
             tab.setOnCloseRequest(onTabCloseRequest);
 
             tabPane.getTabs().add(tab);
             tabs.put(tabName, tab);
             tabPane.getSelectionModel().selectLast();
-            setIsEmpty(false);
         }
     }
 
@@ -537,16 +550,6 @@ public class WorkspaceController implements Initializable {
     };
 
     @FXML
-    public void onBlur(ActionEvent event) {
-        //applyAction(new BoxBlur(getCurrentImage()));
-        BoxBlur bb = new BoxBlur();
-        bb.setWidth(5);
-        bb.setHeight(5);
-        bb.setIterations(3);
-        currentController.getImageView().setEffect(bb);
-    }
-
-    @FXML
     public void onPrint(ActionEvent event) throws FileNotFoundException, PrintException, IOException {
         printImage(this.getCurrentImage());
     }
@@ -567,12 +570,6 @@ public class WorkspaceController implements Initializable {
             printJob.print();
         } catch (PrinterException e1) {
         }
-    }
-
-    @FXML
-    public void onGlow(ActionEvent event) {
-        Glow bb = new Glow(0.5);
-        currentController.getImageView().setEffect(bb);
     }
 
     @FXML
@@ -870,14 +867,10 @@ public class WorkspaceController implements Initializable {
                 return;
             }
 
-            tab.setOnClosed((e) -> {
-                setIsEmpty(tabs.isEmpty());
-            });
             tab.setOnCloseRequest(onTabCloseRequest);
 
             tabPane.getTabs().add(tab);
             tabPane.getSelectionModel().selectLast();
-            setIsEmpty(false);
         } else {
             Alert alert = makeDialog(
                     "Paste from Clipboard",

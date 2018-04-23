@@ -13,12 +13,16 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -82,6 +86,10 @@ public class ImageTabController extends Tab implements Initializable {
     }
 
     public void setZoomRatio(double zoomRatio) {
+        if (zoomRatio < 0.1 || zoomRatio > 2.0) {
+            return;
+        }
+
         this.zoomRatio.set(zoomRatio);
     }
 
@@ -91,6 +99,18 @@ public class ImageTabController extends Tab implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        scrollPane.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                if (event.isControlDown() && !event.isAltDown()) {
+                    setZoomRatio(getZoomRatio() + (event.getDeltaY() / 1000.0));
+                    event.consume();
+                } else if (event.isAltDown() && !event.isControlDown()) {
+                    scrollPane.setHvalue(scrollPane.getHvalue() + (-event.getDeltaY() / 750.0));
+                    event.consume();
+                }
+            }
+        });
     }
 
     @FXML

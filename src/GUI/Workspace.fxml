@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600" prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141" fx:controller="GUI.WorkspaceController">
+<BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
     <center>
         <TabPane fx:id="tabPane" prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
     </center>
@@ -135,7 +135,7 @@
                         <Insets right="5.0" />
                     </HBox.margin>
                 </Label>
-                <Slider fx:id="sliderZoom" disable="${controller.isEmpty}" majorTickUnit="50.0" max="200.0" min="10.0" minorTickCount="1" value="100.0" />
+                <Slider fx:id="sliderZoom" blockIncrement="0.1" disable="${controller.isEmpty}" majorTickUnit="0.5" max="2.0" min="0.1" value="1.0" />
                 <Button mnemonicParsing="false" onAction="#onFullScreen" text="FullScreen" />
             </children>
             <padding>
