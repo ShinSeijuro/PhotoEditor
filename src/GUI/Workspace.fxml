@@ -139,12 +139,11 @@
                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                                     <children>
                               <Button mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
+                              <Button mnemonicParsing="false" onAction="#onSharpen" text="Sharpen" />
                               <Label text="Box Blur" />
                               <Slider fx:id="bblurSLider" max="255.0" />
                               <Label text="Gaussian Blur" />
                               <Slider fx:id="gsSlider" />
-                              <Label text="Sharpen" />
-                              <Slider fx:id="sharpSlider" />
                                     </children>
                                 </VBox>
                             </content>

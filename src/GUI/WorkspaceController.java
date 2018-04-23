@@ -39,6 +39,11 @@ import javafx.scene.shape.Rectangle;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.highgui.Highgui;
+import org.opencv.imgproc.Imgproc;
 
 /**
  *
@@ -182,7 +187,6 @@ public class WorkspaceController implements Initializable {
                 getCurrentController().getImageView().setEffect(gs);
             }
         });
-
     }
 
     public void applyAction(AbstractImageAction action) {
