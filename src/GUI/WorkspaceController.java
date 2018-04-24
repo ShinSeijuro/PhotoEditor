@@ -234,12 +234,15 @@ public class WorkspaceController implements Initializable {
             public void changed(ObservableValue<? extends ImageTabController> observable, ImageTabController oldValue, ImageTabController newValue) {
                 if (oldValue != null) {
                     sliderZoom.valueProperty().unbindBidirectional(oldValue.zoomRatioProperty());
+                    toggleFitToView.selectedProperty().unbindBidirectional(oldValue.fitToViewProperty());
                 }
 
                 if (newValue != null) {
                     sliderZoom.valueProperty().bindBidirectional(newValue.zoomRatioProperty());
+                    toggleFitToView.selectedProperty().bindBidirectional(newValue.fitToViewProperty());
                 } else {
                     sliderZoom.setValue(1.0);
+                    toggleFitToView.setSelected(false);
                 }
             }
         });
@@ -911,6 +914,11 @@ public class WorkspaceController implements Initializable {
         }
     }
 
+    @FXML
+    private void onToggleFitToView(ActionEvent event) {
+        getCurrentController().setFitToView(toggleFitToView.isSelected());
+    }
+
     /* Controls */
     @FXML
     private TabPane tabPane;
@@ -922,6 +930,8 @@ public class WorkspaceController implements Initializable {
     private Slider sliderZoom;
     @FXML
     private Label labelZoom;
+    @FXML
+    private ToggleButton toggleFitToView;
     @FXML
     private TitledPane titledPaneAdjustment;
     @FXML
