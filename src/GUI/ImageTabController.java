@@ -121,10 +121,6 @@ public class ImageTabController extends Tab implements Initializable {
         } else {
             scrollPane.widthProperty().removeListener(scrollPaneChangeListener);
             scrollPane.heightProperty().removeListener(scrollPaneChangeListener);
-            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-            scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-            imageView.setFitWidth(0);
-            imageView.setFitHeight(0);
         }
     }
 
