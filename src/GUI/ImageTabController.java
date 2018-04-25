@@ -88,8 +88,8 @@ public class ImageTabController extends Tab implements Initializable {
     public void setZoomRatio(double zoomRatio) {
         if (zoomRatio < 0.1) {
             zoomRatio = 0.1;
-        } else if (zoomRatio > 2.0) {
-            zoomRatio = 2.0;
+        } else if (zoomRatio > 16.0) {
+            zoomRatio = 16.0;
         }
 
         this.zoomRatio.set(zoomRatio);

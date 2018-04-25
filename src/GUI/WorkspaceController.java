@@ -45,7 +45,9 @@ import java.text.SimpleDateFormat;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -131,6 +133,20 @@ public class WorkspaceController implements Initializable {
 
     private void setIsEmpty(boolean value) {
         isEmpty.set(value);
+    }
+
+    private final DoubleProperty actualZoomRatio = new SimpleDoubleProperty(1.0);
+
+    public double getActualZoom() {
+        return actualZoomRatio.get();
+    }
+
+    public void setActualZoom(double value) {
+        actualZoomRatio.set(value);
+    }
+
+    public DoubleProperty actualZoomRatioProperty() {
+        return actualZoomRatio;
     }
 
     @Override
@@ -220,12 +236,19 @@ public class WorkspaceController implements Initializable {
             }
         });
 
+        actualZoomRatioProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                sliderZoom.setValue(sliderZoomConvertFrom(newValue.doubleValue()));
+                labelZoom.setText((int) (newValue.doubleValue() * 100.0) + "%");
+            }
+        });
+
         sliderZoom.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable,
                     Number oldValue, Number newValue) {
-
-                labelZoom.setText((int) (newValue.doubleValue() * 100.0) + "%");
+                setActualZoom(sliderZoomConvertTo(newValue.doubleValue()));
             }
         });
 
@@ -233,15 +256,15 @@ public class WorkspaceController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends ImageTabController> observable, ImageTabController oldValue, ImageTabController newValue) {
                 if (oldValue != null) {
-                    sliderZoom.valueProperty().unbindBidirectional(oldValue.zoomRatioProperty());
+                    actualZoomRatioProperty().unbindBidirectional(oldValue.zoomRatioProperty());
                     toggleFitToView.selectedProperty().unbindBidirectional(oldValue.fitToViewProperty());
                 }
 
                 if (newValue != null) {
-                    sliderZoom.valueProperty().bindBidirectional(newValue.zoomRatioProperty());
+                    actualZoomRatioProperty().bindBidirectional(newValue.zoomRatioProperty());
                     toggleFitToView.selectedProperty().bindBidirectional(newValue.fitToViewProperty());
                 } else {
-                    sliderZoom.setValue(1.0);
+                    setActualZoom(1.0);
                     toggleFitToView.setSelected(false);
                 }
             }
@@ -877,6 +900,22 @@ public class WorkspaceController implements Initializable {
                     "Clipboard does not contain any image!",
                     AlertType.ERROR);
             alert.show();
+        }
+    }
+
+    public double sliderZoomConvertTo(double value) {
+        if (value <= 0.5) {
+            return (1.6 * value * value) + (value) + 0.1;
+        } else {
+            return (16.0 * value * value) + (6.0 * value) - 6.0;
+        }
+    }
+
+    public double sliderZoomConvertFrom(double value) {
+        if (value <= 1.0) {
+            return (-1.0 + Math.sqrt(1.0 - (4.0 * 1.6 * (0.1 - value)))) / (2.0 * 1.6);
+        } else {
+            return (-6.0 + Math.sqrt(36.0 - (4.0 * 16.0 * (-6.0 - value)))) / (2.0 * 16.0);
         }
     }
 
