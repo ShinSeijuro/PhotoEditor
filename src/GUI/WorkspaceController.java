@@ -346,12 +346,10 @@ public class WorkspaceController implements Initializable {
             try {
                 tab = new ImageTab(file);
             } catch (IOException | IllegalArgumentException ex) {
-                Alert alert = makeDialog(
-                        "Open image...",
+                Alert alert = makeDialog("Open image...",
                         "ERROR: Unable to open file",
                         "Unable to open file: " + file.getPath() + "\n\nDetails:\n" + ex.getMessage(),
-                        AlertType.ERROR,
-                        null);
+                        AlertType.ERROR, (ButtonType) null);
 
                 alert.show();
             }
@@ -412,12 +410,10 @@ public class WorkspaceController implements Initializable {
             ImageIO.write(getCurrentImage(), name.substring(name.lastIndexOf('.') + 1), outputFile);
         } catch (IOException ex) {
             Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
-            Alert alert = makeDialog(
-                    "Save",
+            Alert alert = makeDialog("Save",
                     "ERROR: Unable to save file",
                     "Unable to save file: " + outputFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
-                    AlertType.ERROR,
-                    null);
+                    AlertType.ERROR, (ButtonType) null);
             alert.show();
         }
     }
@@ -439,12 +435,10 @@ public class WorkspaceController implements Initializable {
                 getCurrentTab().setFile(savedFile);
             } catch (IOException ex) {
                 Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
-                Alert alert = makeDialog(
-                        "Save as...",
+                Alert alert = makeDialog("Save as...",
                         "ERROR: Unable to save file",
                         "Unable to save file: " + savedFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
-                        AlertType.ERROR,
-                        null);
+                        AlertType.ERROR, (ButtonType) null);
                 alert.show();
             }
         }
@@ -727,12 +721,10 @@ public class WorkspaceController implements Initializable {
         File currentFile = currentTab.getFile();
 
         if (currentFile == null) {
-            Alert alert = makeDialog(
-                    "File info",
+            Alert alert = makeDialog("File info",
                     null,
                     "You need to save this file to view its info.",
-                    AlertType.ERROR,
-                    null);
+                    AlertType.ERROR, (ButtonType) null);
             alert.show();
             return;
         }
@@ -761,12 +753,10 @@ public class WorkspaceController implements Initializable {
             try {
                 Runtime.getRuntime().exec("explorer.exe /select," + currentFile.getPath());
             } catch (IOException ex) {
-                Alert alert = makeDialog(
-                        "Open file location",
+                Alert alert = makeDialog("Open file location",
                         null,
                         "Folder not found!",
-                        AlertType.ERROR,
-                        null);
+                        AlertType.ERROR, (ButtonType) null);
                 alert.show();
             }
         } else {
@@ -836,12 +826,10 @@ public class WorkspaceController implements Initializable {
             onFileSaveAs(null);
         }
         if (currentFile == null) {
-            Alert alert = makeDialog(
-                    "Set as Wallpaper",
+            Alert alert = makeDialog("Set as Wallpaper",
                     null,
                     "You need to save this file to set as wallpaper",
-                    AlertType.ERROR,
-                    null);
+                    AlertType.ERROR, (ButtonType) null);
             alert.show();
             return;
         }
@@ -857,12 +845,10 @@ public class WorkspaceController implements Initializable {
             try {
                 tab = new ImageTab(image);
             } catch (IOException | IllegalArgumentException ex) {
-                Alert alert = makeDialog(
-                        "Paste from Clipboard",
+                Alert alert = makeDialog("Paste from Clipboard",
                         null,
                         "Unable to paste from clipboard." + "\n\nDetails:\n" + ex.getMessage(),
-                        AlertType.ERROR,
-                        null);
+                        AlertType.ERROR, (ButtonType) null);
                 alert.show();
             }
 
@@ -875,12 +861,10 @@ public class WorkspaceController implements Initializable {
             tabPane.getTabs().add(tab);
             tabPane.getSelectionModel().selectLast();
         } else {
-            Alert alert = makeDialog(
-                    "Paste from Clipboard",
+            Alert alert = makeDialog("Paste from Clipboard",
                     null,
                     "Clipboard does not contain any image!",
-                    AlertType.ERROR,
-                    null);
+                    AlertType.ERROR, (ButtonType) null);
             alert.show();
         }
     }
