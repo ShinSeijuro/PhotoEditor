@@ -5,21 +5,9 @@
  */
 package Transformation;
 
-import GUI.Selection;
 import Action.AbstractImageAction;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Bounds;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.FileChooser;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -40,8 +28,55 @@ public class Crop extends AbstractImageAction {
         setName("Crop");
     }
 
+    private boolean validateRect() {
+        double imageWidth = getOriginalImage().getWidth();
+        double imageHeight = getOriginalImage().getHeight();
+
+        if (!rect.intersects(0, 0, imageWidth, imageHeight)) {
+            return false;
+        }
+
+        if (rect.getX() < 0) {
+            rect.setWidth(rect.getWidth() + rect.getX());
+            if (rect.getWidth() <= 0) {
+                return false;
+            }
+            rect.setX(0);
+        }
+
+        if (rect.getX() + rect.getWidth() > imageWidth) {
+            rect.setWidth(imageWidth - rect.getX());
+
+            if (rect.getWidth() <= 0) {
+                return false;
+            }
+        }
+
+        if (rect.getY() < 0) {
+            rect.setHeight(rect.getHeight() + rect.getY());
+            if (rect.getHeight() <= 0) {
+                return false;
+            }
+            rect.setY(0);
+        }
+
+        if (rect.getY() + rect.getHeight() > imageHeight) {
+            rect.setHeight(imageHeight - rect.getY());
+
+            if (rect.getHeight() <= 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     @Override
     protected BufferedImage applyTransform(BufferedImage image) {
+        if (validateRect() == false) {
+            return getOriginalImage();
+        }
+
         BufferedImage dest = image.getSubimage((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
         return dest;
     }

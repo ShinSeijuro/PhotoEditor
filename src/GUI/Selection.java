@@ -94,8 +94,8 @@ public class Selection {
 
     public final boolean isNothing() {
         return rect == null
-                || (rect.getWidth() == 0
-                && rect.getHeight() == 0);
+                || rect.getWidth() == 0
+                || rect.getHeight() == 0;
     }
 
     EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
@@ -161,15 +161,9 @@ public class Selection {
                 return;
             }
 
-            // remove rectangle
-            // note: we want to keep the ruuberband selection for the cropping => code is just commented out
-            /*
-            rect.setX(0);
-            rect.setY(0);
-            rect.setWidth(0);
-            rect.setHeight(0);
-            group.getChildren().remove( rect);
-             */
+            if (isNothing()) {
+                removeRect();
+            }
         }
     };
 

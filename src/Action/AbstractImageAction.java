@@ -28,7 +28,7 @@ public abstract class AbstractImageAction implements INameable {
         this.name = newName;
     }
 
-    public BufferedImage originalImage;
+    private BufferedImage originalImage;
 
     public BufferedImage getOriginalImage() {
         return originalImage;
