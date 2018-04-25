@@ -126,7 +126,7 @@ public class ImageTabController extends Tab implements Initializable {
         }
     };
 
-    private void doFitToView() {
+    public void doFitToView() {
         Image image = imageView.getImage();
         double widthRatio = scrollPane.getWidth() / image.getWidth();
         double heightRatio = scrollPane.getHeight() / image.getHeight();

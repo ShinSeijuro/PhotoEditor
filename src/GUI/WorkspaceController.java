@@ -708,8 +708,9 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onToggleCrop(ActionEvent event) {
+        ImageTabController currentController = getCurrentController();
         if (toggleCrop.isSelected()) {
-            getCurrentController().setSelecting(true);
+            currentController.setSelecting(true);
             return;
         }
 
@@ -718,7 +719,10 @@ public class WorkspaceController implements Initializable {
             Crop crop = new Crop(getCurrentImage(), selection.getRect());
             if (!crop.isInvalid()) {
                 applyAction(crop);
-                getCurrentController().setSelecting(false);
+                currentController.setSelecting(false);
+                if (toggleFitToView.isSelected()) {
+                    currentController.doFitToView();
+                }
                 return;
             }
         }
