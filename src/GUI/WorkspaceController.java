@@ -91,7 +91,7 @@ public class WorkspaceController implements Initializable {
 
     private void setCurrentTab(ImageTab currentTab) {
         this.currentTab = currentTab;
-        setIsEmpty(currentTab == null);
+        setEmpty(currentTab == null);
 
         if (currentTab != null) {
             setCurrentController(currentTab.getController());
@@ -125,18 +125,18 @@ public class WorkspaceController implements Initializable {
         return getCurrentController().getBufferedImage();
     }
 
-    private BooleanProperty isEmpty = new SimpleBooleanProperty(true);
+    private BooleanProperty empty = new SimpleBooleanProperty(true);
 
-    public BooleanProperty isEmptyProperty() {
-        return this.isEmpty;
+    public BooleanProperty emptyProperty() {
+        return this.empty;
     }
 
-    public boolean getIsEmpty() {
-        return isEmpty.get();
+    public boolean isEmpty() {
+        return empty.get();
     }
 
-    private void setIsEmpty(boolean value) {
-        isEmpty.set(value);
+    private void setEmpty(boolean value) {
+        empty.set(value);
     }
 
     private final DoubleProperty actualZoomRatio = new SimpleDoubleProperty(1.0);
@@ -709,7 +709,7 @@ public class WorkspaceController implements Initializable {
     @FXML
     private void onToggleCrop(ActionEvent event) {
         if (toggleCrop.isSelected()) {
-            getCurrentController().setIsSelecting(true);
+            getCurrentController().setSelecting(true);
             return;
         }
 
@@ -718,7 +718,7 @@ public class WorkspaceController implements Initializable {
             Crop crop = new Crop(getCurrentImage(), selection.getRect());
             if (!crop.isInvalid()) {
                 applyAction(crop);
-                getCurrentController().setIsSelecting(false);
+                getCurrentController().setSelecting(false);
                 return;
             }
         }

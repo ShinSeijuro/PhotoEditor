@@ -41,16 +41,16 @@ public class Selection {
         return rect.getBoundsInParent();
     }
 
-    private boolean isDisable;
+    private boolean disabled;
 
-    public boolean isIsDisable() {
-        return isDisable;
+    public final boolean isDisabled() {
+        return disabled;
     }
 
-    public void setIsDisable(boolean isDisable) {
-        this.isDisable = isDisable;
+    public final void setDisabled(boolean disabled) {
+        this.disabled = disabled;
 
-        if (isDisable) {
+        if (disabled) {
             removeEventHandler();
             removeRect();
         } else {
@@ -68,7 +68,7 @@ public class Selection {
         rect.setStrokeLineCap(StrokeLineCap.ROUND);
         rect.setFill(Color.LIGHTBLUE.deriveColor(0, 1.2, 1, 0.6));
 
-        setIsDisable(false);
+        setDisabled(false);
     }
 
     private void removeRect() {
@@ -80,13 +80,13 @@ public class Selection {
         group.getChildren().remove(rect);
     }
 
-    private final void addEventHandler() {
+    private void addEventHandler() {
         group.addEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
         group.addEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
         group.addEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
     }
 
-    private final void removeEventHandler() {
+    private void removeEventHandler() {
         group.removeEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
         group.removeEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
         group.removeEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);

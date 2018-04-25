@@ -44,22 +44,22 @@ public class History {
         return undoDeque.size() + redoDeque.size();
     }
 
-    private ChangeListener<Boolean> isModifiedChangeListener;
+    private ChangeListener<Boolean> modifiedChangeListener;
 
-    public ChangeListener<Boolean> getIsModifiedChangeListener() {
-        return isModifiedChangeListener;
+    public ChangeListener<Boolean> getModifiedChangeListener() {
+        return modifiedChangeListener;
     }
 
-    public void setIsModifiedChangeListener(ChangeListener<Boolean> listener) {
-        isModifiedChangeListener = listener;
+    public void setModifiedChangeListener(ChangeListener<Boolean> listener) {
+        modifiedChangeListener = listener;
     }
 
     public History() {
     }
 
     public void add(AbstractImageAction action) {
-        if (isModifiedChangeListener != null) {
-            isModifiedChangeListener.changed(null, isModified(), true);
+        if (modifiedChangeListener != null) {
+            modifiedChangeListener.changed(null, isModified(), true);
         }
 
         if (redoDeque.size() > 0) {
@@ -91,8 +91,8 @@ public class History {
         if (isUndoable()) {
             redoDeque.push(undoDeque.pop());
 
-            if (isModifiedChangeListener != null) {
-                isModifiedChangeListener.changed(null, true, isModified());
+            if (modifiedChangeListener != null) {
+                modifiedChangeListener.changed(null, true, isModified());
             }
         }
     }

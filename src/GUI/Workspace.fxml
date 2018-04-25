@@ -42,7 +42,7 @@
                                         <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                     </accelerator>
                                 </MenuItem>
-                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileInfo" text="File info">
+                                <MenuItem disable="${controller.empty}" mnemonicParsing="false" onAction="#onFileInfo" text="File info">
                                     <accelerator>
                                         <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                     </accelerator>
@@ -54,17 +54,17 @@
                                     </accelerator>
                                 </MenuItem>
                                 <SeparatorMenuItem mnemonicParsing="false" />
-                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSave" text="Save">
+                                <MenuItem disable="${controller.empty}" mnemonicParsing="false" onAction="#onFileSave" text="Save">
                                     <accelerator>
                                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                     </accelerator>
                                 </MenuItem>
-                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFileSaveAs" text="Save As...">
+                                <MenuItem disable="${controller.empty}" mnemonicParsing="false" onAction="#onFileSaveAs" text="Save As...">
                                     <accelerator>
                                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                                     </accelerator>
                                 </MenuItem>
-                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onPrint" text="Print">
+                                <MenuItem disable="${controller.empty}" mnemonicParsing="false" onAction="#onPrint" text="Print">
                                     <accelerator>
                                         <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                     </accelerator>
@@ -77,7 +77,7 @@
                                 </MenuItem>
                             </items>
                         </Menu>
-                        <Menu disable="${controller.isEmpty}" mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
+                        <Menu disable="${controller.empty}" mnemonicParsing="false" onShowing="#onMenuEditShowing" text="Edit">
                             <items>
                                 <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#onUndo" text="Undo">
                                     <accelerator>
@@ -94,13 +94,13 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Extras">
                             <items>
-                                <MenuItem disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onSetAsWallpaper" text="Set as wallpaper">
+                                <MenuItem disable="${controller.empty}" mnemonicParsing="false" onAction="#onSetAsWallpaper" text="Set as wallpaper">
                                     <accelerator>
                                         <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                                     </accelerator>
                                 </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#onScreenCapture" text="Screen capture" />
-                        <MenuItem mnemonicParsing="false" onAction="#onScreenCaptureWithTimer" text="Screen capture with timer..." />
+                                <MenuItem mnemonicParsing="false" onAction="#onScreenCapture" text="Screen capture" />
+                                <MenuItem mnemonicParsing="false" onAction="#onScreenCaptureWithTimer" text="Screen capture with timer..." />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
@@ -114,7 +114,7 @@
                         </Menu>
                     </menus>
                 </MenuBar>
-                <HBox alignment="CENTER" disable="${controller.isEmpty}" spacing="5.0" style="-fx-background-color: lightgray;">
+                <HBox alignment="CENTER" disable="${controller.empty}" spacing="5.0" style="-fx-background-color: lightgray;">
                     <children>
                         <ToggleButton fx:id="toggleEdit" mnemonicParsing="false" onAction="#onToggleEdit" text="Edit..." />
                         <Button mnemonicParsing="false" onAction="#onRotateLeft90" text="Rotate left" />
@@ -133,14 +133,14 @@
     <bottom>
         <HBox alignment="CENTER_RIGHT" spacing="5.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="labelZoom" disable="${controller.isEmpty}" text="100%">
+                <Label fx:id="labelZoom" disable="${controller.empty}" text="100%">
                     <HBox.margin>
                         <Insets right="5.0" />
                     </HBox.margin>
                 </Label>
-                <Slider fx:id="sliderZoom" blockIncrement="0.1" disable="${controller.isEmpty}" majorTickUnit="0.1" max="1.0" value="0.5" />
-                <ToggleButton fx:id="toggleFitToView" disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onToggleFitToView" text="Fit to View" />
-                <Button disable="${controller.isEmpty}" mnemonicParsing="false" onAction="#onFullScreen" text="FullScreen" />
+                <Slider fx:id="sliderZoom" blockIncrement="0.1" disable="${controller.empty}" majorTickUnit="0.1" max="1.0" value="0.5" />
+                <ToggleButton fx:id="toggleFitToView" disable="${controller.empty}" mnemonicParsing="false" onAction="#onToggleFitToView" text="Fit to View" />
+                <Button disable="${controller.empty}" mnemonicParsing="false" onAction="#onFullScreen" text="FullScreen" />
             </children>
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -148,7 +148,7 @@
         </HBox>
     </bottom>
     <right>
-        <Accordion fx:id="accordionEdit" disable="${controller.isEmpty}" prefWidth="250.0" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
+        <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="250.0" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
             <panes>
                 <TitledPane animated="false" text="Crop &amp; Rotate">
                     <content>

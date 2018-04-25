@@ -36,7 +36,7 @@ public class ImageTab extends Tab {
         super();
 
         history = new History();
-        history.setIsModifiedChangeListener(new ChangeListener<Boolean>() {
+        history.setModifiedChangeListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (Objects.equals(oldValue, newValue)) {

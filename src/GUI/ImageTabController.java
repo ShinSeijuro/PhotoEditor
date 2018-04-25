@@ -50,27 +50,27 @@ public class ImageTabController extends Tab implements Initializable {
         return selection;
     }
 
-    private final BooleanProperty isSelecting = new SimpleBooleanProperty(false);
+    private final BooleanProperty selecting = new SimpleBooleanProperty(false);
 
-    public BooleanProperty isSelectingProperty() {
-        return isSelecting;
+    public BooleanProperty selectingProperty() {
+        return selecting;
     }
 
-    public boolean isIsSelecting() {
-        return isSelecting.get();
+    public boolean isSelecting() {
+        return selecting.get();
     }
 
-    public void setIsSelecting(boolean isSelecting) {
-        this.isSelecting.set(isSelecting);
+    public void setSelecting(boolean isSelecting) {
+        this.selecting.set(isSelecting);
 
         if (isSelecting) {
             if (selection == null) {
                 selection = new Selection(groupImage);
             }
-            selection.setIsDisable(false);
+            selection.setDisabled(false);
         } else {
             if (selection != null) {
-                selection.setIsDisable(true);
+                selection.setDisabled(true);
             }
         }
     }
