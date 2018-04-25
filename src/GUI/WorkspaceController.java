@@ -11,6 +11,7 @@ import Adjustment.*;
 import Transformation.*;
 import History.*;
 import PlugIn.ImageFromClipboard;
+import PlugIn.ScreenCapture;
 import PlugIn.WallpaperChanger;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -42,9 +43,11 @@ import javax.print.PrintException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.PauseTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -66,6 +69,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 
 /**
  *
@@ -869,6 +873,66 @@ public class WorkspaceController implements Initializable {
         }
 
         WallpaperChanger.setWallpaper(currentFile.getPath());
+    }
+
+    private void onScreenCapture(double timer) {
+        // Minimize window
+        Stage stage = PhotoEditor.getPrimaryStage();
+        stage.setIconified(true);
+
+        // Set delay
+        PauseTransition wait = new PauseTransition(Duration.seconds(timer));
+        wait.setOnFinished(e -> {
+            BufferedImage image = ScreenCapture.Capture();
+
+            // Restore window;
+            if (stage.isIconified()) {
+                stage.setIconified(false);
+            }
+
+            // Add to workspace
+            ImageTab tab = null;
+            try {
+                tab = new ImageTab(image);
+            } catch (IOException | IllegalArgumentException ex) {
+                Alert alert = makeDialog("Screen capture",
+                        null,
+                        "Failed to capture screen." + "\n\nDetails:\n" + ex.getMessage(),
+                        AlertType.ERROR);
+                alert.show();
+            }
+
+            if (tab == null) {
+                return;
+            }
+
+            tab.setOnCloseRequest(onTabCloseRequest);
+            tabPane.getTabs().add(tab);
+            tabPane.getSelectionModel().selectLast();
+        });
+
+        wait.play();
+    }
+
+    @FXML
+    private void onScreenCapture(ActionEvent event) {
+        onScreenCapture(1.0);
+    }
+
+    @FXML
+    private void onScreenCaptureWithTimer(ActionEvent event) {
+        List<Integer> choices = new ArrayList<>();
+        for (int i = 0; i <= 5; i++) {
+            choices.add(i);
+        }
+
+        ChoiceDialog<Integer> dialog = new ChoiceDialog<>(1, choices);
+        dialog.setTitle("Screen capture with timer");
+        dialog.setHeaderText(null);
+        dialog.setContentText("Set timer in seconds:");
+
+        Optional<Integer> result = dialog.showAndWait();
+        result.ifPresent(e -> onScreenCapture(result.get().doubleValue()));
     }
 
     @FXML

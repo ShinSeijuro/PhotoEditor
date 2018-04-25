@@ -99,6 +99,8 @@
                                         <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                                     </accelerator>
                                 </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#onScreenCapture" text="Screen capture" />
+                        <MenuItem mnemonicParsing="false" onAction="#onScreenCaptureWithTimer" text="Screen capture with timer..." />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
