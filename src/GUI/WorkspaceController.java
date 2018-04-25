@@ -260,12 +260,17 @@ public class WorkspaceController implements Initializable {
         });
     }
 
-    public Alert makeDialog(String title, String header, String content, AlertType alertType, ButtonType... buttonTypes) {
+    public Alert makeDialog(String title, String header, String content, AlertType alertType) {
         final Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
 
+        return alert;
+    }
+
+    public Alert makeDialog(String title, String header, String content, AlertType alertType, ButtonType... buttonTypes) {
+        final Alert alert = makeDialog(title, header, content, alertType);
         if (buttonTypes != null) {
             alert.getButtonTypes().clear();
             alert.getButtonTypes().addAll(buttonTypes);
@@ -349,7 +354,7 @@ public class WorkspaceController implements Initializable {
                 Alert alert = makeDialog("Open image...",
                         "ERROR: Unable to open file",
                         "Unable to open file: " + file.getPath() + "\n\nDetails:\n" + ex.getMessage(),
-                        AlertType.ERROR, (ButtonType) null);
+                        AlertType.ERROR);
 
                 alert.show();
             }
@@ -413,7 +418,7 @@ public class WorkspaceController implements Initializable {
             Alert alert = makeDialog("Save",
                     "ERROR: Unable to save file",
                     "Unable to save file: " + outputFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
-                    AlertType.ERROR, (ButtonType) null);
+                    AlertType.ERROR);
             alert.show();
         }
     }
@@ -438,7 +443,7 @@ public class WorkspaceController implements Initializable {
                 Alert alert = makeDialog("Save as...",
                         "ERROR: Unable to save file",
                         "Unable to save file: " + savedFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
-                        AlertType.ERROR, (ButtonType) null);
+                        AlertType.ERROR);
                 alert.show();
             }
         }
@@ -682,12 +687,18 @@ public class WorkspaceController implements Initializable {
         }
 
         Selection selection = getCurrentController().getSelection();
-        if (selection.isNothing()) {
-            return;
+        if (!selection.isNothing()) {
+            Crop crop = new Crop(getCurrentImage(), selection.getRect());
+            if (!crop.isInvalid()) {
+                applyAction(crop);
+                getCurrentController().setIsSelecting(false);
+                return;
+            }
         }
 
-        applyAction(new Crop(getCurrentImage(), selection.getRect()));
-        getCurrentController().setIsSelecting(false);
+        // Selection failed
+        Alert alert = makeDialog("Crop", null, "No pixels were selected.", AlertType.ERROR);
+        alert.show();
     }
 
     @FXML
@@ -724,7 +735,7 @@ public class WorkspaceController implements Initializable {
             Alert alert = makeDialog("File info",
                     null,
                     "You need to save this file to view its info.",
-                    AlertType.ERROR, (ButtonType) null);
+                    AlertType.ERROR);
             alert.show();
             return;
         }
@@ -756,7 +767,7 @@ public class WorkspaceController implements Initializable {
                 Alert alert = makeDialog("Open file location",
                         null,
                         "Folder not found!",
-                        AlertType.ERROR, (ButtonType) null);
+                        AlertType.ERROR);
                 alert.show();
             }
         } else {
@@ -829,7 +840,7 @@ public class WorkspaceController implements Initializable {
             Alert alert = makeDialog("Set as Wallpaper",
                     null,
                     "You need to save this file to set as wallpaper",
-                    AlertType.ERROR, (ButtonType) null);
+                    AlertType.ERROR);
             alert.show();
             return;
         }
@@ -848,7 +859,7 @@ public class WorkspaceController implements Initializable {
                 Alert alert = makeDialog("Paste from Clipboard",
                         null,
                         "Unable to paste from clipboard." + "\n\nDetails:\n" + ex.getMessage(),
-                        AlertType.ERROR, (ButtonType) null);
+                        AlertType.ERROR);
                 alert.show();
             }
 
@@ -864,7 +875,7 @@ public class WorkspaceController implements Initializable {
             Alert alert = makeDialog("Paste from Clipboard",
                     null,
                     "Clipboard does not contain any image!",
-                    AlertType.ERROR, (ButtonType) null);
+                    AlertType.ERROR);
             alert.show();
         }
     }

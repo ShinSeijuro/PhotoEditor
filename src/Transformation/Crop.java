@@ -21,9 +21,16 @@ public class Crop extends AbstractImageAction {
         return rect;
     }
 
+    private boolean invalid;
+
+    public boolean isInvalid() {
+        return invalid;
+    }
+
     public Crop(BufferedImage originalImage, Rectangle rect) {
         super(originalImage);
         this.rect = rect;
+        this.invalid = !validateRect();
 
         setName("Crop");
     }
@@ -73,7 +80,7 @@ public class Crop extends AbstractImageAction {
 
     @Override
     protected BufferedImage applyTransform(BufferedImage image) {
-        if (validateRect() == false) {
+        if (isInvalid()) {
             return getOriginalImage();
         }
 
