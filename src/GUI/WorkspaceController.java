@@ -437,9 +437,8 @@ public class WorkspaceController implements Initializable {
             return;
         }
 
-        String name = outputFile.getName();
         try {
-            ImageIO.write(getCurrentImage(), name.substring(name.lastIndexOf('.') + 1), outputFile);
+            getCurrentTab().saveFile();
         } catch (IOException ex) {
             Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
             Alert alert = makeDialog("Save",
@@ -463,8 +462,7 @@ public class WorkspaceController implements Initializable {
         if (savedFile != null) {
 
             try {
-                ImageIO.write(this.getCurrentImage(), "png", savedFile);
-                getCurrentTab().setFile(savedFile);
+                getCurrentTab().saveFile(savedFile);
             } catch (IOException ex) {
                 Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
                 Alert alert = makeDialog("Save as...",

@@ -44,18 +44,6 @@ public class ImageTab extends Tab {
         return file;
     }
 
-    public void setFile(File file) {
-        if (this.file == null || !this.file.equals(file)) {
-            this.file = file;
-            name = file.getName();
-            modified = false;
-            savePivot = 0;
-        }
-
-        // ImageIO.write
-        updateText();
-    }
-
     private Dimension2D originalDimension2D;
 
     public Dimension2D getOriginalDimension2D() {
@@ -138,5 +126,31 @@ public class ImageTab extends Tab {
         } else {
             setText(name);
         }
+    }
+
+    public void saveFile(File file) throws IOException {
+        if (file == null) {
+            throw new IllegalArgumentException("File to save cannot be null.");
+        }
+
+        if (this.file == null || !this.file.equals(file)) {
+            this.file = file;
+            name = file.getName();
+        }
+
+        saveFile();
+    }
+
+    public void saveFile() throws IOException {
+        if (file == null) {
+            throw new IllegalStateException("This tab is not associated with any file.");
+        }
+
+        savePivot = 0;
+        modified = false;
+
+        ImageIO.write(controller.getBufferedImage(), name.substring(name.lastIndexOf('.') + 1), file);
+
+        updateText();
     }
 }
