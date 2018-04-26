@@ -7,8 +7,10 @@ package History;
 
 import Action.AbstractImageAction;
 import java.awt.image.BufferedImage;
+import javafx.event.EventHandler;
 import java.util.ArrayDeque;
-import javafx.beans.value.ChangeListener;
+import javafx.event.Event;
+import javafx.event.EventType;
 
 /**
  *
@@ -40,33 +42,53 @@ public class History {
         return null;
     }
 
+    public AbstractImageAction getCurrentAction() {
+        return undoDeque.peekFirst();
+    }
+
     public int getActionCount() {
         return undoDeque.size() + redoDeque.size();
     }
 
-    private ChangeListener<Boolean> modifiedChangeListener;
+    public static final EventType<Event> ON_UNDONE_EVENT
+            = new EventType<Event>(Event.ANY, "ON_UNDONE_EVENT");
 
-    public ChangeListener<Boolean> getModifiedChangeListener() {
-        return modifiedChangeListener;
+    private EventHandler<Event> onUndone;
+
+    public EventHandler<Event> getOnUndone() {
+        return onUndone;
     }
 
-    public void setModifiedChangeListener(ChangeListener<Boolean> listener) {
-        modifiedChangeListener = listener;
+    public void setOnUndone(EventHandler<Event> onUndone) {
+        this.onUndone = onUndone;
+    }
+
+    public static final EventType<Event> ON_REDONE_EVENT
+            = new EventType<Event>(Event.ANY, "ON_REDONE_EVENT");
+
+    private EventHandler<Event> onRedone;
+
+    public EventHandler<Event> getOnRedone() {
+        return onRedone;
+    }
+
+    public void setOnRedone(EventHandler<Event> onRedone) {
+        this.onRedone = onRedone;
     }
 
     public History() {
     }
 
     public void add(AbstractImageAction action) {
-        if (modifiedChangeListener != null) {
-            modifiedChangeListener.changed(null, isModified(), true);
-        }
-
         if (redoDeque.size() > 0) {
             redoDeque.clear();
         }
 
         undoDeque.push(action);
+
+        if (onRedone != null) {
+            onRedone.handle(new Event(ON_REDONE_EVENT));
+        }
 
         if (getActionCount() > maximumAction) {
             undoDeque.removeLast();
@@ -84,6 +106,10 @@ public class History {
     public void redo() {
         if (isRedoable()) {
             undoDeque.push(redoDeque.pop());
+
+            if (onRedone != null) {
+                onRedone.handle(new Event(ON_REDONE_EVENT));
+            }
         }
     }
 
@@ -91,8 +117,8 @@ public class History {
         if (isUndoable()) {
             redoDeque.push(undoDeque.pop());
 
-            if (modifiedChangeListener != null) {
-                modifiedChangeListener.changed(null, true, isModified());
+            if (onUndone != null) {
+                onUndone.handle(new Event(ON_UNDONE_EVENT));
             }
         }
     }

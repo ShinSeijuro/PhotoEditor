@@ -26,61 +26,16 @@ import javax.imageio.ImageIO;
  */
 public class ImageTab extends Tab {
 
+    private ImageTabController controller;
+
+    public ImageTabController getController() {
+        return controller;
+    }
+
     private History history;
 
     public History getHistory() {
         return history;
-    }
-
-    private ImageTab() throws IOException {
-        super();
-
-        history = new History();
-        history.setModifiedChangeListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (Objects.equals(oldValue, newValue)) {
-                    return;
-                }
-
-                if (newValue == true) {
-                    setText(tabName + "*");
-                } else {
-                    setText(tabName);
-                }
-            }
-        });
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ImageTab.fxml"));
-            AnchorPane tabPage = (AnchorPane) loader.load();
-            controller = loader.getController();
-            super.setContent(tabPage);
-        } catch (IOException ex) {
-            Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
-        }
-    }
-
-    public ImageTab(BufferedImage image, String name) throws IOException, IllegalArgumentException {
-        this();
-
-        if (image == null) {
-            throw new IllegalArgumentException("Unsupported file type.");
-        }
-
-        setTabName(name);
-        originalDimension2D = new Dimension2D(image.getWidth(), image.getHeight());
-        controller.setBufferedImage(image);
-    }
-
-    public ImageTab(BufferedImage image) throws IOException, IllegalArgumentException {
-        this(image, "new");
-    }
-
-    public ImageTab(File file) throws IOException, IllegalArgumentException {
-        this(ImageIO.read(file), file.getName());
-        this.file = file;
     }
 
     private File file;
@@ -90,12 +45,15 @@ public class ImageTab extends Tab {
     }
 
     public void setFile(File file) {
-        if (this.file != null) {
-            return;
+        if (this.file == null || !this.file.equals(file)) {
+            this.file = file;
+            name = file.getName();
+            modified = false;
+            savePivot = 0;
         }
 
-        this.file = file;
-        setTabName(file.getName());
+        // ImageIO.write
+        updateText();
     }
 
     private Dimension2D originalDimension2D;
@@ -104,20 +62,81 @@ public class ImageTab extends Tab {
         return originalDimension2D;
     }
 
-    private ImageTabController controller;
+    private String name;
 
-    public ImageTabController getController() {
-        return controller;
+    public String getName() {
+        return name;
     }
 
-    private String tabName;
+    private boolean modified;
 
-    public String getTabName() {
-        return tabName;
+    public boolean isModified() {
+        return modified;
     }
 
-    private void setTabName(String tabName) {
-        this.tabName = tabName;
-        super.setText(tabName);
+    private int savePivot;
+
+    private void addPivot(int step) {
+        savePivot += step;
+
+        if (file == null) {
+            return;
+        }
+
+        this.modified = (savePivot != 0);
+        updateText();
+    }
+
+    private ImageTab() throws IOException {
+        super();
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ImageTab.fxml"));
+            AnchorPane tabPage = (AnchorPane) loader.load();
+            super.setContent(tabPage);
+            controller = loader.getController();
+        } catch (IOException ex) {
+            Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        }
+
+        history = new History();
+        history.setOnUndone(e -> addPivot(-1));
+        history.setOnRedone(e -> addPivot(1));
+
+        savePivot = 0;
+    }
+
+    private ImageTab(BufferedImage image, String name) throws IOException, IllegalArgumentException {
+        this();
+
+        if (image == null) {
+            throw new IllegalArgumentException("Unsupported file type.");
+        }
+
+        this.name = name;
+        originalDimension2D = new Dimension2D(image.getWidth(), image.getHeight());
+        controller.setBufferedImage(image);
+    }
+
+    public ImageTab(BufferedImage image) throws IOException, IllegalArgumentException {
+        this(image, "new");
+        modified = true;
+        updateText();
+    }
+
+    public ImageTab(File file) throws IOException, IllegalArgumentException {
+        this(ImageIO.read(file), file.getName());
+        this.file = file;
+        modified = false;
+        updateText();
+    }
+
+    private void updateText() {
+        if (modified) {
+            setText(name + "*");
+        } else {
+            setText(name);
+        }
     }
 }

@@ -346,13 +346,13 @@ public class WorkspaceController implements Initializable {
             }
 
             ImageTab tab = (ImageTab) event.getSource();
-            if (tab.getHistory().isModified()) {
+            if (tab.isModified()) {
                 tabPane.getSelectionModel().select(tab);
 
                 Alert alert = makeDialog(
                         "Close tab",
                         null,
-                        "Do you want to save changes you have made to \"" + tab.getTabName() + "\"?",
+                        "Do you want to save changes you have made to \"" + tab.getName() + "\"?",
                         AlertType.CONFIRMATION,
                         ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 
