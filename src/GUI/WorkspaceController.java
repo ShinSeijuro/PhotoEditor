@@ -916,15 +916,7 @@ public class WorkspaceController implements Initializable {
                         color = Color.rgb(red, green, blue);  // Create new color for this pixel that is not so red
                     }
                 }
-                // If this is a pixel inside the right eye area
-//                if ((x >= 166) && (x < 269) && (y >= 317) && (y < 407)) {
-//                    // The red pixels had a red component > 80 and green < 60
-//                    if ((red > 80) && (green < 60)) {
-//                        red = (green + blue) / 2;		// Decreases the red to the average of the green and blue
-//                        color = Color.rgb(red, green, blue);  // Create new color for this pixel that is not so red
-//                    }
-//                }
-                // Copy the pixel to the writable image
+
                 pixelWriter.setColor(x, y, color);
             }
         }
