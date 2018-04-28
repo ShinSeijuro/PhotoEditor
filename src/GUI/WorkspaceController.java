@@ -821,94 +821,9 @@ public class WorkspaceController implements Initializable {
         }
     }
 
-    public static Mat bufferedImageToMat(BufferedImage im) {
-        BufferedImage convertImg = new BufferedImage(im.getWidth(), im.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-        convertImg.getGraphics().drawImage(im, 0, 0, null);
-        byte[] pixels = ((DataBufferByte) convertImg.getRaster().getDataBuffer()).getData();
-
-        // Create a Matrix the same size of image
-        Mat image = new Mat(im.getHeight(), im.getWidth(), CvType.CV_8UC3);
-        // Fill Matrix with image values
-        image.put(0, 0, pixels);
-
-        return image;
-    }
-
-    public MatOfRect eyeDetect() {
-        //Eye detection
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        System.out.println("\nRunning FaceDetector");
-        CascadeClassifier faceDetector = new CascadeClassifier("E:\\Downloads\\opencv\\sources\\data\\haarcascades\\haarcascade_frontalface_default.xml");
-        CascadeClassifier eyeDetector = new CascadeClassifier("E:\\Downloads\\opencv\\sources\\data\\haarcascades\\haarcascade_eye.xml");
-        if (faceDetector.empty()) {
-            System.out.println("Error!");
-        } else {
-            Mat image = bufferedImageToMat(getCurrentController().getBufferedImage());
-            MatOfRect faceDetections = new MatOfRect();
-            faceDetector.detectMultiScale(image, faceDetections);
-            System.out.println(String.format("Detected %s faces", faceDetections.toArray().length));
-            // Draw a bounding box around each face.
-            for (Rect rect : faceDetections.toArray()) {
-                //This line for draw a circle for face regconization
-                //Imgproc.rectangle(image, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0, 255, 0));
-                MatOfRect eyeDetections = new MatOfRect();
-                Mat eyeMat = new Mat(image, rect);
-                eyeDetector.detectMultiScale(eyeMat, eyeDetections);
-                for (Rect rect_2 : eyeDetections.toArray()) {
-                    Point leftTop = new Point(rect_2.x, rect_2.y);
-                    Point rightBot = new Point(rect_2.x + rect_2.width, rect_2.y + rect_2.height);
-                    fixRedEye(leftTop, rightBot);
-                    Point center = new Point(rect_2.x + rect_2.width * 0.5, rect_2.y + rect_2.height * 0.5);
-                    int radius = (int) Math.round((rect_2.width + rect_2.height) * 0.25);
-//                    Imgproc.circle(eyeMat, center, radius, new Scalar(0, 255, 0));
-                    Imgproc.rectangle(eyeMat, new Point(rect_2.x, rect_2.y), new Point(rect_2.x + rect_2.width, rect_2.y + rect_2.height), new Scalar(0, 255, 0));
-                }
-            }
-            String filename = "D:\\faceDetection.png";
-            System.out.println(String.format("Writing %s", filename));
-            Imgcodecs.imwrite(filename, image);
-        }
-        return null;
-    }
-
     @FXML
     private void onFixRedEye(ActionEvent event) {
-        eyeDetect();
-    }
-
-    public void fixRedEye(Point leftTop, Point rightBot) {
-        // Obtain PixelReader
-        Image img = getCurrentController().getImageView().getImage();
-        PixelReader pixelReader = img.getPixelReader();
-        // Create WritableImage
-        WritableImage wImage = new WritableImage((int) img.getWidth(), (int) img.getHeight());
-        PixelWriter pixelWriter = wImage.getPixelWriter();
-        //MatOfRect eyeDetection = eyeDetect();
-        for (int y = 0; y < img.getHeight(); y++) {
-            for (int x = 0; x < img.getWidth(); x++) {
-                Color color = pixelReader.getColor(x, y);
-                // Color values of the pixel from 0-1
-                double r = color.getRed();
-                double g = color.getGreen();
-                double b = color.getBlue();
-
-                // Color values from 0 to 255
-                int red = (int) (r * 255);
-                int green = (int) (g * 255);
-                int blue = (int) (b * 255);
-                //If this is a pixel inside the left eye area
-                if ((x >= leftTop.x + 128) && (x < rightBot.x + 128) && (y >= leftTop.y + 220) && (y < rightBot.y + 220)) {
-                    // The red pixels had a red component > 80 and green < 60
-                    if ((red > 80) && (green < 60)) {
-                        red = (green + blue) / 2;		// Decreases the red to the average of the green and blue
-                        color = Color.rgb(red, green, blue);  // Create new color for this pixel that is not so red
-                    }
-                }
-
-                pixelWriter.setColor(x, y, color);
-            }
-        }
-        getCurrentController().getImageView().setImage(wImage);
+        applyAction(new RemoveRedEye(getCurrentImage()));
     }
 
     @FXML
