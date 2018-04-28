@@ -5,11 +5,15 @@
  */
 package GUI;
 
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.opencv.core.Core;
 
 /**
  *
@@ -25,6 +29,12 @@ public class PhotoEditor extends Application {
 
     private static void setPrimaryStage(Stage stage) {
         primaryStage = stage;
+    }
+
+    private static boolean openCVAvailable = false;
+
+    public static boolean isOpenCVAvailable() {
+        return openCVAvailable;
     }
 
     @Override
@@ -43,11 +53,29 @@ public class PhotoEditor extends Application {
         stage.show();
     }
 
+    public static String getStartupPath() {
+        return System.getProperty("user.dir");
+    }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        loadLibrary();
         launch(args);
+    }
+
+    private static void loadLibrary() {
+
+        if (!openCVAvailable) {
+            try {
+                // load the native OpenCV library
+                System.load(PhotoEditor.getStartupPath() + "\\lib\\" + Core.NATIVE_LIBRARY_NAME + ".dll");
+                openCVAvailable = true;
+            } catch (UnsatisfiedLinkError | SecurityException ex) {
+                Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
 }

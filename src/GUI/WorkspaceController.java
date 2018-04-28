@@ -395,12 +395,10 @@ public class WorkspaceController implements Initializable {
             try {
                 tab = new ImageTab(file);
             } catch (IOException | IllegalArgumentException ex) {
-                Alert alert = makeDialog("Open image...",
+                makeDialog("Open image...",
                         "ERROR: Unable to open file",
                         "Unable to open file: " + file.getPath() + "\n\nDetails:\n" + ex.getMessage(),
-                        AlertType.ERROR);
-
-                alert.show();
+                        AlertType.ERROR).show();
             }
 
             if (tab == null) {
@@ -458,11 +456,10 @@ public class WorkspaceController implements Initializable {
             getCurrentTab().saveFile();
         } catch (IOException ex) {
             Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
-            Alert alert = makeDialog("Save",
+            makeDialog("Save",
                     "ERROR: Unable to save file",
                     "Unable to save file: " + outputFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
-                    AlertType.ERROR);
-            alert.show();
+                    AlertType.ERROR).show();
         }
     }
 
@@ -482,11 +479,10 @@ public class WorkspaceController implements Initializable {
                 getCurrentTab().saveFile(savedFile);
             } catch (IOException ex) {
                 Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
-                Alert alert = makeDialog("Save as...",
+                makeDialog("Save as...",
                         "ERROR: Unable to save file",
                         "Unable to save file: " + savedFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
-                        AlertType.ERROR);
-                alert.show();
+                        AlertType.ERROR).show();
             }
         }
 
@@ -743,8 +739,7 @@ public class WorkspaceController implements Initializable {
         }
 
         // Selection failed
-        Alert alert = makeDialog("Crop", null, "No pixels were selected.", AlertType.ERROR);
-        alert.show();
+        makeDialog("Crop", null, "No pixels were selected.", AlertType.ERROR).show();
     }
 
     @FXML
@@ -778,11 +773,10 @@ public class WorkspaceController implements Initializable {
         File currentFile = currentTab.getFile();
 
         if (currentFile == null) {
-            Alert alert = makeDialog("File info",
+            makeDialog("File info",
                     null,
                     "You need to save this file to view its info.",
-                    AlertType.ERROR);
-            alert.show();
+                    AlertType.ERROR).show();
             return;
         }
 
@@ -810,33 +804,27 @@ public class WorkspaceController implements Initializable {
             try {
                 Runtime.getRuntime().exec("explorer.exe /select," + currentFile.getPath());
             } catch (IOException ex) {
-                Alert alert = makeDialog("Open file location",
+                makeDialog("Open file location",
                         null,
                         "Folder not found!",
-                        AlertType.ERROR);
-                alert.show();
+                        AlertType.ERROR).show();
             }
         } else {
             // ... user chose CANCEL or closed the dialog
         }
     }
 
-    public static Mat bufferedImageToMat(BufferedImage im) {
-        BufferedImage convertImg = new BufferedImage(im.getWidth(), im.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-        convertImg.getGraphics().drawImage(im, 0, 0, null);
-        byte[] pixels = ((DataBufferByte) convertImg.getRaster().getDataBuffer()).getData();
-
-        // Create a Matrix the same size of image
-        Mat image = new Mat(im.getHeight(), im.getWidth(), CvType.CV_8UC3);
-        // Fill Matrix with image values
-        image.put(0, 0, pixels);
-
-        return image;
-    }
-
     @FXML
     private void onFixRedEye(ActionEvent event) {
-        applyAction(new RemoveRedEye(getCurrentImage()));
+        if (!FixRedEye.isSupported()) {
+            makeDialog("Fix Red Eye",
+                    null,
+                    "Fix Red Eye function is missing some libraries!",
+                    AlertType.ERROR).show();
+            return;
+        }
+
+        applyAction(new FixRedEye(getCurrentImage()));
     }
 
     @FXML
@@ -847,11 +835,10 @@ public class WorkspaceController implements Initializable {
             onFileSaveAs(null);
         }
         if (currentFile == null) {
-            Alert alert = makeDialog("Set as Wallpaper",
+            makeDialog("Set as Wallpaper",
                     null,
                     "You need to save this file to set as wallpaper",
-                    AlertType.ERROR);
-            alert.show();
+                    AlertType.ERROR).show();
             return;
         }
 
@@ -878,11 +865,10 @@ public class WorkspaceController implements Initializable {
             try {
                 tab = new ImageTab(image);
             } catch (IOException | IllegalArgumentException ex) {
-                Alert alert = makeDialog("Screen capture",
+                makeDialog("Screen capture",
                         null,
                         "Failed to capture screen." + "\n\nDetails:\n" + ex.getMessage(),
-                        AlertType.ERROR);
-                alert.show();
+                        AlertType.ERROR).show();
             }
 
             if (tab == null) {
@@ -926,11 +912,10 @@ public class WorkspaceController implements Initializable {
             try {
                 tab = new ImageTab(image);
             } catch (IOException | IllegalArgumentException ex) {
-                Alert alert = makeDialog("Paste from Clipboard",
+                makeDialog("Paste from Clipboard",
                         null,
                         "Unable to paste from clipboard." + "\n\nDetails:\n" + ex.getMessage(),
-                        AlertType.ERROR);
-                alert.show();
+                        AlertType.ERROR).show();
             }
 
             if (tab == null) {
@@ -942,11 +927,10 @@ public class WorkspaceController implements Initializable {
             tabPane.getTabs().add(tab);
             tabPane.getSelectionModel().selectLast();
         } else {
-            Alert alert = makeDialog("Paste from Clipboard",
+            makeDialog("Paste from Clipboard",
                     null,
                     "Clipboard does not contain any image!",
-                    AlertType.ERROR);
-            alert.show();
+                    AlertType.ERROR).show();
         }
     }
 
