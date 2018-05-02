@@ -25,6 +25,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.shape.Line;
 
 /**
  * FXML Controller class
@@ -76,8 +77,8 @@ public class ImageTabController extends Tab implements Initializable {
         }
     }
 
-    public void setDrawing() {
-        Draw draw = new Draw(getBufferedImage(), groupImage);
+    public void setDrawing(Line line) {
+        Draw draw = new Draw(getBufferedImage(), groupImage, getImageView(), line);
     }
     private final DoubleProperty zoomRatio = new SimpleDoubleProperty(1.0);
 

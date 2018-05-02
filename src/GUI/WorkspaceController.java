@@ -71,6 +71,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
@@ -290,7 +291,28 @@ public class WorkspaceController implements Initializable {
                 }
             }
         });
+        sliderBoldnessLevel.valueProperty().addListener(boldnessAdjustChangeListener);
+        colorPicker.setOnAction((event) -> {
+            line.setStroke(colorPicker.getValue());
+            getCurrentController().setDrawing(line);
+        });
     }
+    private final ChangeListener<Number> colorPickerChangeListener = new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+            line.setStrokeWidth(sliderBoldnessLevel.getValue());
+            getCurrentController().setDrawing(line);
+        }
+    };
+    private final ChangeListener<Number> boldnessAdjustChangeListener = new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+            line.setStrokeWidth(sliderBoldnessLevel.getValue());
+            getCurrentController().setDrawing(line);
+        }
+    };
 
     public void attachHotKeys(Scene scene) {
         KeyCombination keyComb = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.ALT_DOWN);
@@ -992,8 +1014,9 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onDraw(ActionEvent event) {
-        getCurrentController().setDrawing();
+        getCurrentController().setDrawing(line);
     }
+    Line line = new Line();
     /* Controls */
     @FXML
     private TabPane tabPane;
@@ -1051,4 +1074,8 @@ public class WorkspaceController implements Initializable {
     private Slider sliderSepiaToneLevel;
     @FXML
     private Slider sliderSharpen;
+    @FXML
+    private Slider sliderBoldnessLevel;
+    @FXML
+    private ColorPicker colorPicker;
 }

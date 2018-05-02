@@ -12,6 +12,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -27,6 +28,9 @@ public class Draw extends AbstractImageAction {
     double initX;
     double initY;
     Line line;
+    ImageView imageView;
+    double maxX;
+    double maxY;
     private final Draw.DragContext dragContext = new Draw.DragContext();
 
     EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
@@ -50,13 +54,18 @@ public class Draw extends AbstractImageAction {
             if (event.isSecondaryButtonDown()) {
                 return;
             }
-            line = new Line(initX, initY, event.getSceneX(), event.getSceneY());
-            line.setFill(null);
-            line.setStroke(Color.RED);
-            line.setStrokeWidth(2);
-            group.getChildren().add(line);
-            initX = event.getSceneX();
-            initY = event.getSceneY();
+            Line templine = new Line(initX, initY, event.getSceneX(), event.getSceneY());
+            templine.setFill(line.getFill());
+            templine.setStroke(line.getStroke());
+            templine.setStrokeWidth(line.getStrokeWidth());
+            group.getChildren().add(templine);
+//            line = new Line(initX, initY, event.getSceneX(), event.getSceneY());
+//            line.setFill(null);
+//            line.setStroke(Color.RED);
+//            line.setStrokeWidth(2);
+//            group.getChildren().add(line);
+            initX = event.getSceneX() > maxX ? maxX : event.getSceneX();
+            initY = event.getSceneY() > maxY ? maxY : event.getSceneY();
         }
     };
     EventHandler<MouseEvent> onMouseReleasedEventHandler = new EventHandler<MouseEvent>() {
@@ -71,9 +80,12 @@ public class Draw extends AbstractImageAction {
         }
     };
 
-    public Draw(BufferedImage originalImage, Group group) {
+    public Draw(BufferedImage originalImage, Group group, ImageView imageView, Line line) {
         super(originalImage);
         this.group = group;
+        this.line = line;
+        maxX = imageView.getImage().getWidth();
+        maxY = imageView.getImage().getHeight();
         addEventHandler();
     }
 
