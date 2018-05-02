@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import PlugIn.Draw;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -75,6 +76,9 @@ public class ImageTabController extends Tab implements Initializable {
         }
     }
 
+    public void setDrawing() {
+        Draw draw = new Draw(getBufferedImage(), groupImage);
+    }
     private final DoubleProperty zoomRatio = new SimpleDoubleProperty(1.0);
 
     public DoubleProperty zoomRatioProperty() {

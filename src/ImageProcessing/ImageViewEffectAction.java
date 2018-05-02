@@ -36,7 +36,7 @@ public class ImageViewEffectAction extends AbstractImageAction {
         this.imageView = imageView;
         this.effect = imageView.getEffect();
 
-        setName(effect.getClass().getSimpleName().replaceAll("(.)([A-Z])", "$1 $2"));
+        //setName(effect.getClass().getSimpleName().replaceAll("(.)([A-Z])", "$1 $2"));
     }
 
     @Override

@@ -643,6 +643,12 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onApplyDraw(ActionEvent event) {
+        ImageView imageView = getCurrentController().getImageView();
+        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+    }
+
+    @FXML
     private void onUndoAllColorAdjust(ActionEvent event) {
         sliderBrightness.setValue(0);
         sliderContrast.setValue(0);
@@ -984,6 +990,10 @@ public class WorkspaceController implements Initializable {
         getCurrentController().setFitToView(toggleFitToView.isSelected());
     }
 
+    @FXML
+    private void onDraw(ActionEvent event) {
+        getCurrentController().setDrawing();
+    }
     /* Controls */
     @FXML
     private TabPane tabPane;
