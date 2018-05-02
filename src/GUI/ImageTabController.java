@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import PlugIn.Draw;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -24,6 +25,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.shape.Line;
 
 /**
  * FXML Controller class
@@ -75,6 +77,9 @@ public class ImageTabController extends Tab implements Initializable {
         }
     }
 
+    public void setDrawing(Line line) {
+        Draw draw = new Draw(getBufferedImage(), groupImage, getImageView(), line);
+    }
     private final DoubleProperty zoomRatio = new SimpleDoubleProperty(1.0);
 
     public DoubleProperty zoomRatioProperty() {
