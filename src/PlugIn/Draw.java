@@ -108,6 +108,5 @@ public class Draw extends AbstractImageAction {
 
         public double mouseAnchorX;
         public double mouseAnchorY;
-
     }
 }
