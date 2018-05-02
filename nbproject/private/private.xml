@@ -3,19 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Transformation/Flip.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/GUI/ImageTabController.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/GUI/ImageTab.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/PlugIn/WallpaperChanger.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Action/INameable.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/GUI/WorkspaceController.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/GUI/Selection.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/GUI/PhotoEditor.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/GUI/ImageTab.fxml</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/PlugIn/DisplayImage.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Transformation/Rotation.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Transformation/Crop.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Action/AbstractImageAction.java</file>
+            <file>file:/D:/CMQ/Documents/NetBeansProjects/PhotoEditor/PhotoEditor/src/GUI/PhotoEditor.java</file>
+            <file>file:/D:/CMQ/Documents/NetBeansProjects/PhotoEditor/PhotoEditor/src/ImageProcessing/FixRedEye.java</file>
+            <file>file:/D:/CMQ/Documents/NetBeansProjects/PhotoEditor/PhotoEditor/src/ImageProcessing/Utils.java</file>
+            <file>file:/D:/CMQ/Documents/NetBeansProjects/PhotoEditor/PhotoEditor/src/GUI/WorkspaceController.java</file>
         </group>
     </open-files>
 </project-private>

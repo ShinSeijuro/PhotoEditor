@@ -18,7 +18,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.stream.ImageOutputStream;
 
 /**
  *
@@ -128,6 +133,10 @@ public class ImageTab extends Tab {
         }
     }
 
+    public String getExtension() {
+        return name.substring(name.lastIndexOf('.') + 1);
+    }
+
     public void saveFile(File file) throws IOException {
         if (file == null) {
             throw new IllegalArgumentException("File to save cannot be null.");
@@ -149,8 +158,34 @@ public class ImageTab extends Tab {
         savePivot = 0;
         modified = false;
 
-        ImageIO.write(controller.getBufferedImage(), name.substring(name.lastIndexOf('.') + 1), file);
-
+        writeImage();
         updateText();
+    }
+
+    private void writeImage() throws IOException {
+        String extension = getExtension();
+
+        if (extension.equals("jpg") || extension.equals("jpeg")) {
+            // Eliminate bug: confusion between ARGB & CYMK
+            // Create a new fixed image with only RGB channel
+            BufferedImage originalImage = controller.getBufferedImage();
+            int width = originalImage.getWidth();
+            int height = originalImage.getHeight();
+            BufferedImage fixedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            int[] rgb = originalImage.getRGB(0, 0, width, height, null, 0, width);
+            fixedImage.setRGB(0, 0, width, height, rgb, 0, width);
+
+            // maximize quality
+            ImageWriter writer = ImageIO.getImageWritersByFormatName(extension).next();
+            ImageWriteParam param = writer.getDefaultWriteParam();
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT); // see javadoc
+            param.setCompressionQuality(1.0F); // Highest quality
+            try (ImageOutputStream imageOutputStream = ImageIO.createImageOutputStream(file)) {
+                writer.setOutput(imageOutputStream);
+                writer.write(null, new IIOImage(fixedImage, null, null), param);
+            }
+        } else {
+            ImageIO.write(controller.getBufferedImage(), extension, file);
+        }
     }
 }
