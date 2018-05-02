@@ -41,6 +41,7 @@ public class Draw extends AbstractImageAction {
             if (event.isSecondaryButtonDown()) {
                 return;
             }
+
             initX = event.getSceneX();
             initY = event.getSceneY();
             event.consume();

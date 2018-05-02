@@ -38,6 +38,10 @@ public class ImageTabController extends Tab implements Initializable {
         return imageView;
     }
 
+    public Group getGroupImage() {
+        return groupImage;
+    }
+
     public BufferedImage getBufferedImage() {
         return SwingFXUtils.fromFXImage(imageView.getImage(), null);
     }

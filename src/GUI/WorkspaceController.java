@@ -10,6 +10,7 @@ import Action.*;
 import Adjustment.*;
 import Transformation.*;
 import History.*;
+import PlugIn.Draw;
 import PlugIn.ImageFromClipboard;
 import PlugIn.ScreenCapture;
 import PlugIn.WallpaperChanger;
@@ -59,6 +60,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
@@ -666,8 +668,9 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyDraw(ActionEvent event) {
+        ImageTabController currentController = getCurrentController();
         ImageView imageView = getCurrentController().getImageView();
-        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+        applyAction(new Draw(currentController.getBufferedImage(), currentController.getGroupImage(), imageView, line));
     }
 
     @FXML
@@ -1014,7 +1017,8 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onDraw(ActionEvent event) {
-        getCurrentController().setDrawing(line);
+        ImageTabController currentController = getCurrentController();
+        currentController.setDrawing(line);
     }
     Line line = new Line();
     /* Controls */
