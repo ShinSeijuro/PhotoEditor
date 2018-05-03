@@ -298,6 +298,7 @@ public class WorkspaceController implements Initializable {
             line.setStroke(colorPicker.getValue());
             getCurrentController().setDrawing(line);
         });
+        colorPicker.setValue(Color.BLACK);
     }
     private final ChangeListener<Number> colorPickerChangeListener = new ChangeListener<Number>() {
         @Override

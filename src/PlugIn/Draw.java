@@ -42,8 +42,8 @@ public class Draw extends AbstractImageAction {
                 return;
             }
 
-            initX = event.getSceneX();
-            initY = event.getSceneY();
+            initX = event.getX();
+            initY = event.getY();
             event.consume();
         }
     };
@@ -55,18 +55,18 @@ public class Draw extends AbstractImageAction {
             if (event.isSecondaryButtonDown()) {
                 return;
             }
-            Line templine = new Line(initX, initY, event.getSceneX(), event.getSceneY());
+            Line templine = new Line(initX, initY, event.getX(), event.getY());
             templine.setFill(line.getFill());
             templine.setStroke(line.getStroke());
             templine.setStrokeWidth(line.getStrokeWidth());
             group.getChildren().add(templine);
-//            line = new Line(initX, initY, event.getSceneX(), event.getSceneY());
+//            line = new Line(initX, initY, event.getX(), event.getY());
 //            line.setFill(null);
 //            line.setStroke(Color.RED);
 //            line.setStrokeWidth(2);
 //            group.getChildren().add(line);
-            initX = event.getSceneX() > maxX ? maxX : event.getSceneX();
-            initY = event.getSceneY() > maxY ? maxY : event.getSceneY();
+            initX = event.getX() > maxX ? maxX : event.getX();
+            initY = event.getY() > maxY ? maxY : event.getY();
         }
     };
     EventHandler<MouseEvent> onMouseReleasedEventHandler = new EventHandler<MouseEvent>() {
