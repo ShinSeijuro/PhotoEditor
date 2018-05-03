@@ -9,14 +9,25 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 /**
  *
  * @author CMQ
  */
 public class Utils {
+
+    Mat mat;
+    public BufferedImage image;
+    byte[] data;
+    int nByte = 3;
 
     public static Mat toMat(BufferedImage image) {
         BufferedImage convertImg = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
@@ -29,6 +40,16 @@ public class Utils {
         matImage.put(0, 0, pixels);
 
         return matImage;
+    }
+
+    public static BufferedImage mat2image(Mat matrix) throws IOException {
+
+        MatOfByte mob = new MatOfByte();
+        Imgcodecs.imencode(".jpg", matrix, mob);
+        byte ba[] = mob.toArray();
+
+        BufferedImage bi = ImageIO.read(new ByteArrayInputStream(ba));
+        return bi;
     }
 
     public static BufferedImage deepCopy(BufferedImage bi) {

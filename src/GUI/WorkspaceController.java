@@ -688,6 +688,12 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onDenoising(ActionEvent event) {
+        ImageView imageView = getCurrentController().getImageView();
+        applyAction(new Denoising(getCurrentImage()));
+    }
+
+    @FXML
     private void onUndoAllColorAdjust(ActionEvent event) {
         sliderBrightness.setValue(0);
         sliderContrast.setValue(0);

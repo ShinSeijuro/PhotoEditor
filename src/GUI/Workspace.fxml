@@ -351,6 +351,7 @@
                             <children>
                                 <Button mnemonicParsing="false" onAction="#onFixRedEye" text="Fix Red Eye" />
                                 <Button mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
+                        <Button mnemonicParsing="false" onAction="#onDenoising" text="Denoising" />
                             </children>
                         </VBox>
                     </content>
