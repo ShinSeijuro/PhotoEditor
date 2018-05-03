@@ -675,6 +675,19 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onUndoAllDraw(ActionEvent event) {
+        if (!getCurrentController().getGroupImage().getChildren().isEmpty()) {
+            getCurrentController().getGroupImage().getChildren().remove(1, getCurrentController().getGroupImage().getChildren().size());
+        }
+    }
+
+    @FXML
+    private void onUndoAllOne(ActionEvent event) {
+        //int i = getCurrentController().getGroupImage().getChildren().
+        //getCurrentController().getGroupImage().getChildren().
+    }
+
+    @FXML
     private void onUndoAllColorAdjust(ActionEvent event) {
         sliderBrightness.setValue(0);
         sliderContrast.setValue(0);

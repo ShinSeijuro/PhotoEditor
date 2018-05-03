@@ -33,6 +33,9 @@ public class Draw extends AbstractImageAction {
     double maxY;
     private final Draw.DragContext dragContext = new Draw.DragContext();
 
+    private void removeLine() {
+        group.getChildren().remove(1, group.getChildren().size());
+    }
     EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
 
         @Override
