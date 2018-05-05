@@ -99,7 +99,13 @@ public class Selection {
                 || rect.getHeight() == 0;
     }
 
-    EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        removeEventHandler();
+    }
+
+    private final EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
 
         @Override
         public void handle(MouseEvent event) {
@@ -125,7 +131,7 @@ public class Selection {
         }
     };
 
-    EventHandler<MouseEvent> onMouseDraggedEventHandler = new EventHandler<MouseEvent>() {
+    private final EventHandler<MouseEvent> onMouseDraggedEventHandler = new EventHandler<MouseEvent>() {
 
         @Override
         public void handle(MouseEvent event) {
@@ -153,7 +159,7 @@ public class Selection {
         }
     };
 
-    EventHandler<MouseEvent> onMouseReleasedEventHandler = new EventHandler<MouseEvent>() {
+    private final EventHandler<MouseEvent> onMouseReleasedEventHandler = new EventHandler<MouseEvent>() {
 
         @Override
         public void handle(MouseEvent event) {

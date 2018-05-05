@@ -5,12 +5,13 @@
  */
 package GUI;
 
+//<editor-fold defaultstate="collapsed" desc="import">
 import ImageProcessing.*;
 import Action.*;
 import Adjustment.*;
+import Drawing.HandDrawing;
 import Transformation.*;
 import History.*;
-import Drawing.HandDrawing;
 import PlugIn.ImageFromClipboard;
 import PlugIn.ScreenCapture;
 import PlugIn.WallpaperChanger;
@@ -55,7 +56,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
@@ -68,10 +68,11 @@ import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+//</editor-fold>
 
 /**
  *
- * @author Yuuki
+ * @author Admin
  */
 public class WorkspaceController implements Initializable {
 
@@ -181,12 +182,30 @@ public class WorkspaceController implements Initializable {
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Draw">
-        sliderBoldnessLevel.valueProperty().addListener(boldnessAdjustChangeListener);
-        colorPicker.setOnAction((event) -> {
-            line.setStroke(colorPicker.getValue());
-            getCurrentController().setDrawing(line);
+        sliderHandDrawThickness.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if (!sliderHandDrawThickness.isValueChanging()) {
+                    getCurrentController().getHandDrawing().setStrokeWidth(newValue.doubleValue());
+                }
+            }
         });
-        colorPicker.setValue(Color.BLACK);
+        colorPickerHandDraw.setValue(Color.BLACK);
+
+        titledPaneDraw.expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                ImageTabController controller = getCurrentController();
+                if (controller != null) {
+                    if (newValue == false) {
+                        toggleHandDrawPen.setSelected(true);
+                        onApplyHandDraw(null);
+                    }
+
+                    controller.setDrawing(newValue);
+                }
+            }
+        });
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Adjustments">
@@ -362,6 +381,13 @@ public class WorkspaceController implements Initializable {
                 return;
             }
 
+            if (titledPaneCropAndRotate.isExpanded()) {
+                titledPaneCropAndRotate.setExpanded(false);
+            }
+            if (titledPaneDraw.isExpanded()) {
+                titledPaneDraw.setExpanded(false);
+            }
+
             ImageTab tab = (ImageTab) event.getSource();
             if (tab.isModified()) {
                 tabPane.getSelectionModel().select(tab);
@@ -380,6 +406,7 @@ public class WorkspaceController implements Initializable {
 
                 } else {
                     event.consume();
+                    return;
                 }
             }
         }
@@ -444,23 +471,6 @@ public class WorkspaceController implements Initializable {
             SepiaTone sepiaTone = new SepiaTone(
                     sliderSepiaToneLevel.getValue() / 100.0);
             getCurrentController().getImageView().setEffect(sepiaTone);
-        }
-    };
-
-    private final ChangeListener<Number> colorPickerChangeListener = new ChangeListener<Number>() {
-        @Override
-        public void changed(ObservableValue<? extends Number> ov,
-                Number old_val, Number new_val) {
-            line.setStrokeWidth(sliderBoldnessLevel.getValue());
-            getCurrentController().setDrawing(line);
-        }
-    };
-    private final ChangeListener<Number> boldnessAdjustChangeListener = new ChangeListener<Number>() {
-        @Override
-        public void changed(ObservableValue<? extends Number> ov,
-                Number old_val, Number new_val) {
-            line.setStrokeWidth(sliderBoldnessLevel.getValue());
-            getCurrentController().setDrawing(line);
         }
     };
     //</editor-fold>
@@ -720,28 +730,29 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    private void onApplyDraw(ActionEvent event) {
-        ImageTabController currentController = getCurrentController();
-        ImageView imageView = getCurrentController().getImageView();
-        applyAction(new HandDrawing(currentController.getBufferedImage(), currentController.getGroupImage(), imageView, line));
+    private void onApplyHandDraw(ActionEvent event) {
+        ImageTabController controller = getCurrentController();
+        applyAction(controller.getHandDrawing());
+        controller.getHandDrawing().getPathList().clear();
     }
 
     @FXML
-    private void onUndoAllDraw(ActionEvent event) {
-        if (!getCurrentController().getGroupImage().getChildren().isEmpty()) {
-            getCurrentController().getGroupImage().getChildren().remove(1, getCurrentController().getGroupImage().getChildren().size());
-        }
+    private void onUndoAllHandDraw(ActionEvent event) {
+        getCurrentController().getHandDrawing().getPathList().clear();
     }
 
     @FXML
-    private void onUndoAllOne(ActionEvent event) {
-        //int i = getCurrentController().getGroupImage().getChildren().
-        //getCurrentController().getGroupImage().getChildren().
+    private void onToggleHandDrawPen(ActionEvent event) {
+        getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.PEN);
+    }
+
+    @FXML
+    private void onToggleHandDrawEraser(ActionEvent event) {
+        getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.ERASER);
     }
 
     @FXML
     private void onDenoising(ActionEvent event) {
-        ImageView imageView = getCurrentController().getImageView();
         applyAction(new Denoising(getCurrentImage()));
     }
 
@@ -818,6 +829,11 @@ public class WorkspaceController implements Initializable {
     @FXML
     private void onUndoAllSepiaTone(ActionEvent event) {
         sliderSepiaToneLevel.setValue(0);
+    }
+
+    @FXML
+    private void onDrawColorPick(ActionEvent event) {
+        getCurrentController().getHandDrawing().setStroke(colorPickerHandDraw.getValue());
     }
 
     @FXML
@@ -1070,13 +1086,6 @@ public class WorkspaceController implements Initializable {
     private void onToggleFitToView(ActionEvent event) {
         getCurrentController().setFitToView(toggleFitToView.isSelected());
     }
-
-    @FXML
-    private void onDraw(ActionEvent event) {
-        ImageTabController currentController = getCurrentController();
-        currentController.setDrawing(line);
-    }
-    Line line = new Line();
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Controls">
@@ -1086,6 +1095,8 @@ public class WorkspaceController implements Initializable {
     private MenuItem menuUndo;
     @FXML
     private MenuItem menuRedo;
+    @FXML
+    private ToggleButton toggleEdit;
     @FXML
     private Slider sliderZoom;
     @FXML
@@ -1099,11 +1110,25 @@ public class WorkspaceController implements Initializable {
     @FXML
     private ToggleButton toggleCrop;
     @FXML
+    private TitledPane titledPaneAdjustment;
+    @FXML
+    private Slider sliderBrightness;
+    @FXML
+    private Slider sliderHue;
+    @FXML
+    private Slider sliderSaturation;
+    @FXML
+    private Slider sliderContrast;
+    @FXML
+    private TitledPane titledPaneDraw;
+    @FXML
+    private ToggleButton toggleHandDrawPen;
+    @FXML
+    private ToggleButton toggleHandDrawEraser;
+    @FXML
     private TitledPane titledPaneEffects;
     @FXML
     private Accordion accordionEffects;
-    @FXML
-    private TitledPane titledPaneAdjustment;
     @FXML
     private TitledPane titledPaneGaussianBlur;
     @FXML
@@ -1114,16 +1139,6 @@ public class WorkspaceController implements Initializable {
     private TitledPane titledPaneGlow;
     @FXML
     private TitledPane titledPaneSepiaTone;
-    @FXML
-    private Slider sliderBrightness;
-    @FXML
-    private Slider sliderHue;
-    @FXML
-    private Slider sliderSaturation;
-    @FXML
-    private Slider sliderContrast;
-    @FXML
-    private ToggleButton toggleEdit;
     @FXML
     private Slider sliderBoxBlurWidth;
     @FXML
@@ -1143,8 +1158,8 @@ public class WorkspaceController implements Initializable {
     @FXML
     private Slider sliderSharpen;
     @FXML
-    private Slider sliderBoldnessLevel;
+    private Slider sliderHandDrawThickness;
     @FXML
-    private ColorPicker colorPicker;
+    private ColorPicker colorPickerHandDraw;
     //</editor-fold>
 }

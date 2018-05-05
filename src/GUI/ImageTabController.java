@@ -56,20 +56,17 @@ public class ImageTabController extends Tab implements Initializable {
         return selection;
     }
 
-    private final BooleanProperty selecting = new SimpleBooleanProperty(false);
+    private boolean selecting = false;
 
-    public BooleanProperty selectingProperty() {
+    public boolean isSelecting() {
         return selecting;
     }
 
-    public boolean isSelecting() {
-        return selecting.get();
-    }
+    public void setSelecting(boolean selecting) {
+        this.selecting = selecting;
+        scrollPane.setPannable(!selecting);
 
-    public void setSelecting(boolean isSelecting) {
-        this.selecting.set(isSelecting);
-
-        if (isSelecting) {
+        if (selecting) {
             if (selection == null) {
                 selection = new Selection(groupImage);
             }
@@ -81,9 +78,34 @@ public class ImageTabController extends Tab implements Initializable {
         }
     }
 
-    public void setDrawing(Line line) {
-        HandDrawing draw = new HandDrawing(getBufferedImage(), groupImage, getImageView(), line);
+    private HandDrawing handDrawing;
+
+    public HandDrawing getHandDrawing() {
+        return handDrawing;
     }
+
+    private boolean drawing = false;
+
+    public boolean isDrawing() {
+        return drawing;
+    }
+
+    public void setDrawing(boolean drawing) {
+        this.drawing = drawing;
+        scrollPane.setPannable(!drawing);
+
+        if (drawing) {
+            if (handDrawing == null) {
+                handDrawing = new HandDrawing(getBufferedImage(), groupImage);
+            }
+        } else {
+            if (handDrawing != null) {
+                handDrawing.finish();
+                handDrawing = null;
+            }
+        }
+    }
+
     private final DoubleProperty zoomRatio = new SimpleDoubleProperty(1.0);
 
     public DoubleProperty zoomRatioProperty() {
