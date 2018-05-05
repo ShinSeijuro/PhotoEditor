@@ -55,6 +55,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
@@ -165,6 +166,21 @@ public class WorkspaceController implements Initializable {
 
         accordionEdit.setManaged(false);
 
+        //<editor-fold defaultstate="collapsed" desc="Crop & Rotate">
+        titledPaneCropAndRotate.expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == false) {
+                    if (toggleCrop.isSelected()) {
+                        getCurrentController().setSelecting(false);
+                        toggleCrop.setSelected(false);
+                    }
+                }
+            }
+        });
+        //</editor-fold>
+
+        //<editor-fold defaultstate="collapsed" desc="Adjustments">
         sliderBrightness.valueProperty().addListener(colorAdjustChangeListener);
         sliderHue.valueProperty().addListener(colorAdjustChangeListener);
         sliderSaturation.valueProperty().addListener(colorAdjustChangeListener);
@@ -178,7 +194,23 @@ public class WorkspaceController implements Initializable {
                 }
             }
         });
+        //</editor-fold>
 
+        //<editor-fold defaultstate="collapsed" desc="Effects">
+        titledPaneEffects.expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == false) {
+                    for (TitledPane titledPane : accordionEffects.getPanes()) {
+                        if (titledPane.isExpanded()) {
+                            titledPane.setExpanded(false);
+                            return;
+                        }
+                    }
+                }
+            }
+        });
+        //<editor-fold defaultstate="collapsed" desc="GaussianBlur">
         sliderGaussianRadius.valueProperty().addListener(gaussianBlurChangeListener);
 
         titledPaneGaussianBlur.expandedProperty().addListener(new ChangeListener<Boolean>() {
@@ -189,7 +221,9 @@ public class WorkspaceController implements Initializable {
                 }
             }
         });
+        //</editor-fold>
 
+        //<editor-fold defaultstate="collapsed" desc="BoxBlur">
         sliderBoxBlurHeight.valueProperty().addListener(boxBlurChangeListener);
         sliderBoxBlurWidth.valueProperty().addListener(boxBlurChangeListener);
         sliderBoxBlurIteration.valueProperty().addListener(boxBlurChangeListener);
@@ -202,7 +236,9 @@ public class WorkspaceController implements Initializable {
                 }
             }
         });
+        //</editor-fold>
 
+        //<editor-fold defaultstate="collapsed" desc="MotionBlur">
         sliderMotionBlurAngle.valueProperty().addListener(motionBlurChangeListener);
         sliderMotionBlurRadius.valueProperty().addListener(motionBlurChangeListener);
 
@@ -214,7 +250,9 @@ public class WorkspaceController implements Initializable {
                 }
             }
         });
+        //</editor-fold>
 
+        //<editor-fold defaultstate="collapsed" desc="Glow">
         sliderGlowLevel.valueProperty().addListener(glowChangeListener);
 
         titledPaneGlow.expandedProperty().addListener(new ChangeListener<Boolean>() {
@@ -225,7 +263,9 @@ public class WorkspaceController implements Initializable {
                 }
             }
         });
+        //</editor-fold>
 
+        //<editor-fold defaultstate="collapsed" desc="SepiaTone">
         sliderSepiaToneLevel.valueProperty().addListener(sepiaChangeListener);
 
         titledPaneSepiaTone.expandedProperty().addListener(new ChangeListener<Boolean>() {
@@ -236,7 +276,9 @@ public class WorkspaceController implements Initializable {
                 }
             }
         });
+        //</editor-fold>
 
+        //<editor-fold defaultstate="collapsed" desc="Zoom">
         actualZoomRatioProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -252,6 +294,8 @@ public class WorkspaceController implements Initializable {
                 setActualZoom(sliderZoomConvertTo(newValue.doubleValue()));
             }
         });
+        //</editor-fold>
+        //</editor-fold>
 
         currentController.addListener(new ChangeListener<ImageTabController>() {
             @Override
@@ -1044,6 +1088,16 @@ public class WorkspaceController implements Initializable {
     @FXML
     private ToggleButton toggleFitToView;
     @FXML
+    private Accordion accordionEdit;
+    @FXML
+    private TitledPane titledPaneCropAndRotate;
+    @FXML
+    private ToggleButton toggleCrop;
+    @FXML
+    private TitledPane titledPaneEffects;
+    @FXML
+    private Accordion accordionEffects;
+    @FXML
     private TitledPane titledPaneAdjustment;
     @FXML
     private TitledPane titledPaneGaussianBlur;
@@ -1064,11 +1118,7 @@ public class WorkspaceController implements Initializable {
     @FXML
     private Slider sliderContrast;
     @FXML
-    private Accordion accordionEdit;
-    @FXML
     private ToggleButton toggleEdit;
-    @FXML
-    private ToggleButton toggleCrop;
     @FXML
     private Slider sliderBoxBlurWidth;
     @FXML

@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
+<BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
     <center>
         <TabPane fx:id="tabPane" prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
     </center>
@@ -151,7 +151,7 @@
     <right>
         <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="250.0" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
             <panes>
-                <TitledPane animated="false" text="Crop &amp; Rotate">
+                <TitledPane fx:id="titledPaneCropAndRotate" animated="false" text="Crop &amp; Rotate">
                     <content>
                         <GridPane>
                             <columnConstraints>
@@ -206,9 +206,28 @@
                         </ScrollPane>
                     </content>
                 </TitledPane>
-                <TitledPane animated="false" text="Effects">
+                    <TitledPane animated="false" text="Draw">
+                        <content>
+                            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                <children>
+                                    <ToggleButton mnemonicParsing="false" onAction="#onDraw" text="Start" />
+                                    <Label alignment="CENTER" text="Boldness" />
+                                    <Slider fx:id="sliderBoldnessLevel" majorTickUnit="2.0" max="10.0" min="1.0" />
+                                    <ColorPicker fx:id="colorPicker" />
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                        <children>
+                              <Button mnemonicParsing="false" onAction="#onUndoAllOne" text="Undo" />
+                                            <Button mnemonicParsing="false" onAction="#onUndoAllDraw" text="Undo All" />
+                                            <Button mnemonicParsing="false" onAction="#onApplyDraw" text="Apply" />
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
+                        </content>
+                    </TitledPane>
+                <TitledPane fx:id="titledPaneEffects" animated="false" text="Effects">
                     <content>
-                        <Accordion>
+                        <Accordion fx:id="accordionEffects">
                             <panes>
                                 <TitledPane fx:id="titledPaneGaussianBlur" animated="false" text="Gaussian Blur">
                                     <content>
@@ -317,25 +336,6 @@
                                                     <padding>
                                                         <Insets top="10.0" />
                                                     </padding>
-                                                </HBox>
-                                            </children>
-                                        </VBox>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane animated="false" text="Draw">
-                                    <content>
-                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                            <children>
-                                                <ToggleButton mnemonicParsing="false" onAction="#onDraw" text="Start" />
-                                                <Label alignment="CENTER" text="Boldness" />
-                                                <Slider fx:id="sliderBoldnessLevel" majorTickUnit="2.0" max="10.0" min="1.0" />
-                                                <ColorPicker fx:id="colorPicker" />
-                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                                                    <children>
-                                          <Button mnemonicParsing="false" onAction="#onUndoAllOne" text="Undo" />
-                                                        <Button mnemonicParsing="false" onAction="#onUndoAllDraw" text="Undo All" />
-                                                        <Button mnemonicParsing="false" onAction="#onApplyDraw" text="Apply" />
-                                                    </children>
                                                 </HBox>
                                             </children>
                                         </VBox>
