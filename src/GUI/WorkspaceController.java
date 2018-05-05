@@ -14,17 +14,13 @@ import PlugIn.Draw;
 import PlugIn.ImageFromClipboard;
 import PlugIn.ScreenCapture;
 import PlugIn.WallpaperChanger;
-import java.awt.AlphaComposite;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.awt.print.PageFormat;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
@@ -43,7 +39,6 @@ import javafx.event.*;
 import javafx.scene.control.Tab;
 import javafx.scene.effect.*;
 import javafx.scene.image.ImageView;
-import javax.imageio.ImageIO;
 import javax.print.PrintException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -60,7 +55,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
@@ -68,28 +62,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import static org.opencv.core.CvType.CV_8UC;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfRect;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.objdetect.CascadeClassifier;
 
 /**
  *
@@ -300,59 +277,8 @@ public class WorkspaceController implements Initializable {
         });
         colorPicker.setValue(Color.BLACK);
     }
-    private final ChangeListener<Number> colorPickerChangeListener = new ChangeListener<Number>() {
-        @Override
-        public void changed(ObservableValue<? extends Number> ov,
-                Number old_val, Number new_val) {
-            line.setStrokeWidth(sliderBoldnessLevel.getValue());
-            getCurrentController().setDrawing(line);
-        }
-    };
-    private final ChangeListener<Number> boldnessAdjustChangeListener = new ChangeListener<Number>() {
-        @Override
-        public void changed(ObservableValue<? extends Number> ov,
-                Number old_val, Number new_val) {
-            line.setStrokeWidth(sliderBoldnessLevel.getValue());
-            getCurrentController().setDrawing(line);
-        }
-    };
 
-    public void attachHotKeys(Scene scene) {
-        KeyCombination keyComb = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.ALT_DOWN);
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (keyComb.match(event)) {
-                    onFullScreen(null);
-                }
-            }
-        });
-    }
-
-    public Alert makeDialog(String title, String header, String content, AlertType alertType) {
-        final Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-
-        return alert;
-    }
-
-    public Alert makeDialog(String title, String header, String content, AlertType alertType, ButtonType... buttonTypes) {
-        final Alert alert = makeDialog(title, header, content, alertType);
-        if (buttonTypes != null) {
-            alert.getButtonTypes().clear();
-            alert.getButtonTypes().addAll(buttonTypes);
-        }
-        return alert;
-    }
-
-    public void applyAction(AbstractImageAction action) {
-        BufferedImage image = action.applyTransform();
-        getCurrentController().setBufferedImage(image);
-        getCurrentHistory().add(action);
-    }
-
+    //<editor-fold defaultstate="collapsed" desc="Events, Listeners">
     private EventHandler<WindowEvent> onWindowCloseRequest = new EventHandler<WindowEvent>() {
         @Override
         public void handle(WindowEvent event) {
@@ -409,148 +335,6 @@ public class WorkspaceController implements Initializable {
             }
         }
     };
-
-    public void loadFile(File file) {
-        String tabName = file.getName();
-
-        if (tabs.containsKey(tabName)) {
-            tabPane.getSelectionModel().select(tabs.get(tabName));
-        } else {
-            ImageTab tab = null;
-            try {
-                tab = new ImageTab(file);
-            } catch (IOException | IllegalArgumentException ex) {
-                makeDialog("Open image...",
-                        "ERROR: Unable to open file",
-                        "Unable to open file: " + file.getPath() + "\n\nDetails:\n" + ex.getMessage(),
-                        AlertType.ERROR).show();
-            }
-
-            if (tab == null) {
-                return;
-            }
-
-            tab.setOnClosed((e) -> {
-                tabs.remove(tabName);
-            });
-            tab.setOnCloseRequest(onTabCloseRequest);
-
-            tabPane.getTabs().add(tab);
-            tabs.put(tabName, tab);
-            tabPane.getSelectionModel().selectLast();
-        }
-    }
-
-    public void loadFile(List<File> files) {
-        for (File file : files) {
-            loadFile(file);
-        }
-    }
-
-    private File lastDirectory;
-
-    @FXML
-    public void onFileOpen(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
-                new ExtensionFilter("All Files", "*.*"));
-
-        if (lastDirectory != null) {
-            fileChooser.setInitialDirectory(lastDirectory);
-        }
-
-        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(PhotoEditor.getPrimaryStage());
-
-        if (selectedFiles != null) {
-            loadFile(selectedFiles);
-            lastDirectory = selectedFiles.get(0).getParentFile();
-        }
-    }
-
-    @FXML
-    public void onFileSave(ActionEvent event) {
-        File outputFile = getCurrentTab().getFile();
-        if (outputFile == null) {
-            onFileSaveAs(null);
-            return;
-        }
-
-        try {
-            getCurrentTab().saveFile();
-        } catch (IOException ex) {
-            Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
-            makeDialog("Save",
-                    "ERROR: Unable to save file",
-                    "Unable to save file: " + outputFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
-                    AlertType.ERROR).show();
-        }
-    }
-
-    @FXML
-    public void onFileSaveAs(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
-                new ExtensionFilter("All Files", "*.*"));
-        fileChooser.setTitle("Save file");
-        fileChooser.setInitialFileName(getCurrentTab().getText());
-        File savedFile = fileChooser.showSaveDialog(PhotoEditor.getPrimaryStage());
-
-        if (savedFile != null) {
-
-            try {
-                getCurrentTab().saveFile(savedFile);
-            } catch (IOException ex) {
-                Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
-                makeDialog("Save as...",
-                        "ERROR: Unable to save file",
-                        "Unable to save file: " + savedFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
-                        AlertType.ERROR).show();
-            }
-        }
-
-    }
-
-    @FXML
-    public void onFileClose(ActionEvent event) {
-        PhotoEditor.getPrimaryStage().close();
-    }
-
-    @FXML
-    public void onRotateRight90(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), Math.toRadians(90)));
-    }
-
-    @FXML
-    public void onRotateLeft90(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), Math.toRadians(-90)));
-    }
-
-    @FXML
-    public void onRotateRight180(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), Math.toRadians(180)));
-    }
-
-    @FXML
-    public void onRotateLeft180(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), Math.toRadians(-180)));
-    }
-
-    @FXML
-    public void onFlipHorizontal(ActionEvent event) {
-        applyAction(new Flip(getCurrentImage(), Flip.Orientation.Horizontal));
-    }
-
-    public void onFlipVertical(ActionEvent event) {
-        applyAction(new Flip(getCurrentImage(), Flip.Orientation.Vertical));
-    }
-
-    @FXML
-    public void onBlackAndWhite(ActionEvent event) {
-        applyAction(new GrayScale(getCurrentImage()));
-    }
 
     private final ChangeListener<Number> colorAdjustChangeListener = new ChangeListener<Number>() {
         @Override
@@ -614,12 +398,99 @@ public class WorkspaceController implements Initializable {
         }
     };
 
-    @FXML
-    public void onPrint(ActionEvent event) throws FileNotFoundException, PrintException, IOException {
-        printImage(this.getCurrentImage());
+    private final ChangeListener<Number> colorPickerChangeListener = new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+            line.setStrokeWidth(sliderBoldnessLevel.getValue());
+            getCurrentController().setDrawing(line);
+        }
+    };
+    private final ChangeListener<Number> boldnessAdjustChangeListener = new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+            line.setStrokeWidth(sliderBoldnessLevel.getValue());
+            getCurrentController().setDrawing(line);
+        }
+    };
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Functions">
+    public void attachHotKeys(Scene scene) {
+        KeyCombination keyComb = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.ALT_DOWN);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (keyComb.match(event)) {
+                    onFullScreen(null);
+                }
+            }
+        });
     }
 
-    private void printImage(BufferedImage image) {
+    public Alert makeDialog(String title, String header, String content, AlertType alertType) {
+        final Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+
+        return alert;
+    }
+
+    public Alert makeDialog(String title, String header, String content, AlertType alertType, ButtonType... buttonTypes) {
+        final Alert alert = makeDialog(title, header, content, alertType);
+        if (buttonTypes != null) {
+            alert.getButtonTypes().clear();
+            alert.getButtonTypes().addAll(buttonTypes);
+        }
+        return alert;
+    }
+
+    public void applyAction(AbstractImageAction action) {
+        BufferedImage image = action.applyTransform();
+        getCurrentController().setBufferedImage(image);
+        getCurrentHistory().add(action);
+    }
+
+    public void loadFile(File file) {
+        String tabName = file.getName();
+
+        if (tabs.containsKey(tabName)) {
+            tabPane.getSelectionModel().select(tabs.get(tabName));
+        } else {
+            ImageTab tab = null;
+            try {
+                tab = new ImageTab(file);
+            } catch (IOException | IllegalArgumentException ex) {
+                makeDialog("Open image...",
+                        "ERROR: Unable to open file",
+                        "Unable to open file: " + file.getPath() + "\n\nDetails:\n" + ex.getMessage(),
+                        AlertType.ERROR).show();
+            }
+
+            if (tab == null) {
+                return;
+            }
+
+            tab.setOnClosed((e) -> {
+                tabs.remove(tabName);
+            });
+            tab.setOnCloseRequest(onTabCloseRequest);
+
+            tabPane.getTabs().add(tab);
+            tabs.put(tabName, tab);
+            tabPane.getSelectionModel().selectLast();
+        }
+    }
+
+    public void loadFile(List<File> files) {
+        for (File file : files) {
+            loadFile(file);
+        }
+    }
+
+    public void printImage(BufferedImage image) {
         PrinterJob printJob = PrinterJob.getPrinterJob();
         printJob.setPrintable((Graphics graphics, PageFormat pageFormat, int pageIndex) -> {
             // Get the upper left corner that it printable
@@ -635,6 +506,138 @@ public class WorkspaceController implements Initializable {
             printJob.print();
         } catch (PrinterException e1) {
         }
+    }
+
+    public double sliderZoomConvertTo(double value) {
+        if (value <= 0.5) {
+            return (1.6 * value * value) + (value) + 0.1;
+        } else {
+            return (16.0 * value * value) + (6.0 * value) - 6.0;
+        }
+    }
+
+    public double sliderZoomConvertFrom(double value) {
+        if (value <= 1.0) {
+            return (-1.0 + Math.sqrt(1.0 - (4.0 * 1.6 * (0.1 - value)))) / (2.0 * 1.6);
+        } else {
+            return (-6.0 + Math.sqrt(36.0 - (4.0 * 16.0 * (-6.0 - value)))) / (2.0 * 16.0);
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Events">
+    private File lastDirectory;
+
+    @FXML
+    public void onFileOpen(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+                new ExtensionFilter("All Files", "*.*"));
+
+        if (lastDirectory != null) {
+            fileChooser.setInitialDirectory(lastDirectory);
+        }
+
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(PhotoEditor.getPrimaryStage());
+
+        if (selectedFiles != null) {
+            loadFile(selectedFiles);
+            lastDirectory = selectedFiles.get(0).getParentFile();
+        }
+    }
+
+    @FXML
+    public void onFileSave(ActionEvent event) {
+        File outputFile = getCurrentTab().getFile();
+        if (outputFile == null) {
+            onFileSaveAs(null);
+            return;
+        }
+
+        try {
+            getCurrentTab().saveFile();
+        } catch (IOException ex) {
+            Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
+            makeDialog("Save",
+                    "ERROR: Unable to save file",
+                    "Unable to save file: " + outputFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
+                    AlertType.ERROR).show();
+        }
+    }
+
+    @FXML
+    public void onFileSaveAs(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+                new ExtensionFilter("All Files", "*.*"));
+        fileChooser.setTitle("Save file");
+        fileChooser.setInitialFileName(getCurrentTab().getText());
+        File savedFile = fileChooser.showSaveDialog(PhotoEditor.getPrimaryStage());
+
+        if (lastDirectory != null) {
+            fileChooser.setInitialDirectory(lastDirectory);
+        }
+
+        if (savedFile != null) {
+
+            try {
+                getCurrentTab().saveFile(savedFile);
+            } catch (IOException ex) {
+                Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
+                makeDialog("Save as...",
+                        "ERROR: Unable to save file",
+                        "Unable to save file: " + savedFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
+                        AlertType.ERROR).show();
+            }
+        }
+
+    }
+
+    @FXML
+    public void onFileClose(ActionEvent event) {
+        PhotoEditor.getPrimaryStage().close();
+    }
+
+    @FXML
+    public void onRotateRight90(ActionEvent event) {
+        applyAction(new Rotation(getCurrentImage(), Math.toRadians(90)));
+    }
+
+    @FXML
+    public void onRotateLeft90(ActionEvent event) {
+        applyAction(new Rotation(getCurrentImage(), Math.toRadians(-90)));
+    }
+
+    @FXML
+    public void onRotateRight180(ActionEvent event) {
+        applyAction(new Rotation(getCurrentImage(), Math.toRadians(180)));
+    }
+
+    @FXML
+    public void onRotateLeft180(ActionEvent event) {
+        applyAction(new Rotation(getCurrentImage(), Math.toRadians(-180)));
+    }
+
+    @FXML
+    public void onFlipHorizontal(ActionEvent event) {
+        applyAction(new Flip(getCurrentImage(), Flip.Orientation.Horizontal));
+    }
+
+    public void onFlipVertical(ActionEvent event) {
+        applyAction(new Flip(getCurrentImage(), Flip.Orientation.Vertical));
+    }
+
+    @FXML
+    public void onBlackAndWhite(ActionEvent event) {
+        applyAction(new GrayScale(getCurrentImage()));
+    }
+
+    @FXML
+    public void onPrint(ActionEvent event) throws FileNotFoundException, PrintException, IOException {
+        printImage(this.getCurrentImage());
     }
 
     @FXML
@@ -985,22 +988,6 @@ public class WorkspaceController implements Initializable {
         }
     }
 
-    public double sliderZoomConvertTo(double value) {
-        if (value <= 0.5) {
-            return (1.6 * value * value) + (value) + 0.1;
-        } else {
-            return (16.0 * value * value) + (6.0 * value) - 6.0;
-        }
-    }
-
-    public double sliderZoomConvertFrom(double value) {
-        if (value <= 1.0) {
-            return (-1.0 + Math.sqrt(1.0 - (4.0 * 1.6 * (0.1 - value)))) / (2.0 * 1.6);
-        } else {
-            return (-6.0 + Math.sqrt(36.0 - (4.0 * 16.0 * (-6.0 - value)))) / (2.0 * 16.0);
-        }
-    }
-
     @FXML
     private void onFullScreen(ActionEvent event) {
         try {
@@ -1041,7 +1028,9 @@ public class WorkspaceController implements Initializable {
         currentController.setDrawing(line);
     }
     Line line = new Line();
-    /* Controls */
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Controls">
     @FXML
     private TabPane tabPane;
     @FXML
@@ -1102,4 +1091,5 @@ public class WorkspaceController implements Initializable {
     private Slider sliderBoldnessLevel;
     @FXML
     private ColorPicker colorPicker;
+    //</editor-fold>
 }

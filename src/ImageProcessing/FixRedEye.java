@@ -9,15 +9,8 @@ import Action.AbstractImageAction;
 import GUI.PhotoEditor;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
-import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.objdetect.CascadeClassifier;
 

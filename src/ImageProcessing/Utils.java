@@ -24,11 +24,6 @@ import org.opencv.imgproc.Imgproc;
  */
 public class Utils {
 
-    Mat mat;
-    public BufferedImage image;
-    byte[] data;
-    int nByte = 3;
-
     public static Mat toMat(BufferedImage image) {
         BufferedImage convertImg = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
         convertImg.getGraphics().drawImage(image, 0, 0, null);
