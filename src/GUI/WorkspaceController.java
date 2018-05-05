@@ -6,10 +6,11 @@
 package GUI;
 
 //<editor-fold defaultstate="collapsed" desc="import">
-import ImageProcessing.*;
+import Adjustment.ImageViewEffectAction;
 import Action.*;
+import ImageProcessing.*;
 import Adjustment.*;
-import Drawing.HandDrawing;
+import Drawing.*;
 import Transformation.*;
 import History.*;
 import PlugIn.ImageFromClipboard;
@@ -64,7 +65,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
@@ -199,7 +199,9 @@ public class WorkspaceController implements Initializable {
                 if (controller != null) {
                     if (newValue == false) {
                         toggleHandDrawPen.setSelected(true);
-                        onApplyHandDraw(null);
+                        if (controller.getHandDrawing().getPathList().size() > 0) {
+                            onApplyHandDraw(null);
+                        }
                     }
 
                     controller.setDrawing(newValue);

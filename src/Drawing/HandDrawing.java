@@ -5,7 +5,7 @@
  */
 package Drawing;
 
-import Action.AbstractImageAction;
+import Action.ImageSnapshotAction;
 import java.awt.image.BufferedImage;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -27,17 +27,15 @@ import javafx.scene.shape.Shape;
  *
  * @author Admin
  */
-public class HandDrawing extends AbstractImageAction {
+public class HandDrawing extends ImageSnapshotAction {
 
     public enum Tool {
         PEN,
         ERASER
     }
 
-    private Group group;
-
     public Group getGroup() {
-        return group;
+        return (Group) getNode();
     }
 
     private Paint stroke;
@@ -81,11 +79,10 @@ public class HandDrawing extends AbstractImageAction {
     private double maxX;
     private double maxY;
 
-    public HandDrawing(BufferedImage originalImage, Group group) {
-        super(originalImage);
+    public HandDrawing(BufferedImage originalImage, Group node) {
+        super(originalImage, node);
         setName("Hand Drawing");
         this.pathList = FXCollections.observableArrayList();
-        this.group = group;
         this.tool = Tool.PEN;
         this.stroke = Color.BLACK;
         this.strokeWidth = 1.0;
@@ -98,21 +95,13 @@ public class HandDrawing extends AbstractImageAction {
             public void onChanged(ListChangeListener.Change<? extends Path> c) {
                 while (c.next()) {
                     if (c.wasAdded()) {
-                        group.getChildren().addAll(c.getAddedSubList());
+                        node.getChildren().addAll(c.getAddedSubList());
                     } else if (c.wasRemoved()) {
-                        group.getChildren().removeAll(c.getRemoved());
+                        node.getChildren().removeAll(c.getRemoved());
                     }
                 }
             }
         });
-    }
-
-    @Override
-    protected BufferedImage applyTransform(BufferedImage image) {
-        SnapshotParameters sp = new SnapshotParameters();
-        sp.setFill(Color.TRANSPARENT);
-        image = SwingFXUtils.fromFXImage(group.snapshot(sp, null), null);
-        return image;
     }
 
     public void finish() {
@@ -134,12 +123,14 @@ public class HandDrawing extends AbstractImageAction {
     }
 
     private void addEventHandler() {
+        Group group = getGroup();
         group.addEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
         group.addEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
         group.addEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
     }
 
     private void removeEventHandler() {
+        Group group = getGroup();
         group.removeEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
         group.removeEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
         group.removeEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);

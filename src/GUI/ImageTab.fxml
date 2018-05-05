@@ -13,10 +13,12 @@
                 <StackPane>
                     <children>
                         <Group>
-                            <Group fx:id="groupImage" scaleX="${controller.zoomRatio}" scaleY="${controller.zoomRatio}" >
-                                <children>
-                                    <ImageView fx:id="imageView" pickOnBounds="true" preserveRatio="true" />
-                                </children>
+                            <Group scaleX="${controller.zoomRatio}" scaleY="${controller.zoomRatio}">
+                                <Group fx:id="groupImage">
+                                    <children>
+                                        <ImageView fx:id="imageView" pickOnBounds="true" preserveRatio="true" />
+                                    </children>
+                                </Group>
                             </Group>
                         </Group>
                     </children>

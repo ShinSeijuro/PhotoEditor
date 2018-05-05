@@ -5,9 +5,6 @@
  */
 package Action;
 
-import History.IUndoable;
-import History.History;
-import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 
 /**
