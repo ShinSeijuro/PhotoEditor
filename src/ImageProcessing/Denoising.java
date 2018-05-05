@@ -7,9 +7,6 @@ package ImageProcessing;
 
 import Action.AbstractImageAction;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
@@ -23,6 +20,7 @@ public class Denoising extends AbstractImageAction {
 
     public Denoising(BufferedImage originalImage) {
         super(originalImage);
+        setName("Denoising");
     }
 
     @Override
@@ -34,12 +32,12 @@ public class Denoising extends AbstractImageAction {
         Imgproc.threshold(gray, mask, 70, 255, Imgproc.THRESH_BINARY_INV);
         Mat dn = new Mat(rgb.size(), CvType.CV_8UC3);
         Photo.inpaint(rgb, mask, dn, 20, Photo.INPAINT_TELEA);
-        try {
-            return Utils.toBufferedImage(dn);
-        } catch (IOException ex) {
-            Logger.getLogger(Denoising.class.getName()).log(Level.SEVERE, null, ex);
+
+        BufferedImage newImage = Utils.toBufferedImage(dn);
+        if (newImage != null) {
+            return newImage;
         }
-        return image;
+        return super.getOriginalImage();
     }
 
 }

@@ -11,6 +11,8 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -36,13 +38,18 @@ public class Utils {
         return matImage;
     }
 
-    public static BufferedImage toBufferedImage(Mat matrix) throws IOException {
+    public static BufferedImage toBufferedImage(Mat matrix) {
 
         MatOfByte mob = new MatOfByte();
         Imgcodecs.imencode(".jpg", matrix, mob);
         byte ba[] = mob.toArray();
 
-        BufferedImage bi = ImageIO.read(new ByteArrayInputStream(ba));
+        BufferedImage bi = null;
+        try {
+            bi = ImageIO.read(new ByteArrayInputStream(ba));
+        } catch (IOException ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return bi;
     }
 
