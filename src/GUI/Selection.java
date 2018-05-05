@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.Rectangle;
+import Drawing.DragContext;
 
 /**
  *
@@ -166,11 +167,4 @@ public class Selection {
             }
         }
     };
-
-    private static final class DragContext {
-
-        public double mouseAnchorX;
-        public double mouseAnchorY;
-
-    }
 }

@@ -35,7 +35,7 @@ public class Denoising extends AbstractImageAction {
         Mat dn = new Mat(rgb.size(), CvType.CV_8UC3);
         Photo.inpaint(rgb, mask, dn, 20, Photo.INPAINT_TELEA);
         try {
-            return Utils.mat2image(dn);
+            return Utils.toBufferedImage(dn);
         } catch (IOException ex) {
             Logger.getLogger(Denoising.class.getName()).log(Level.SEVERE, null, ex);
         }

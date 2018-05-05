@@ -16,7 +16,6 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
 
 /**
  *
@@ -37,7 +36,7 @@ public class Utils {
         return matImage;
     }
 
-    public static BufferedImage mat2image(Mat matrix) throws IOException {
+    public static BufferedImage toBufferedImage(Mat matrix) throws IOException {
 
         MatOfByte mob = new MatOfByte();
         Imgcodecs.imencode(".jpg", matrix, mob);

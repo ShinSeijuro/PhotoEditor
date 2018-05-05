@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package PlugIn;
+package Drawing;
 
 import Action.AbstractImageAction;
-import GUI.Selection;
 import java.awt.image.BufferedImage;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
@@ -16,13 +15,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 
 /**
  *
  * @author Admin
  */
-public class Draw extends AbstractImageAction {
+public class HandDrawing extends AbstractImageAction {
 
     private Group group;
     double initX;
@@ -31,7 +29,7 @@ public class Draw extends AbstractImageAction {
     ImageView imageView;
     double maxX;
     double maxY;
-    private final Draw.DragContext dragContext = new Draw.DragContext();
+    private final DragContext dragContext = new DragContext();
 
     private void removeLine() {
         group.getChildren().remove(1, group.getChildren().size());
@@ -84,7 +82,7 @@ public class Draw extends AbstractImageAction {
         }
     };
 
-    public Draw(BufferedImage originalImage, Group group, ImageView imageView, Line line) {
+    public HandDrawing(BufferedImage originalImage, Group group, ImageView imageView, Line line) {
         super(originalImage);
         this.group = group;
         this.line = line;
@@ -105,11 +103,5 @@ public class Draw extends AbstractImageAction {
         sp.setFill(Color.TRANSPARENT);
         image = SwingFXUtils.fromFXImage(group.snapshot(sp, null), null);
         return image;
-    }
-
-    private static final class DragContext {
-
-        public double mouseAnchorX;
-        public double mouseAnchorY;
     }
 }

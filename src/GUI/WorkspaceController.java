@@ -10,7 +10,7 @@ import Action.*;
 import Adjustment.*;
 import Transformation.*;
 import History.*;
-import PlugIn.Draw;
+import Drawing.HandDrawing;
 import PlugIn.ImageFromClipboard;
 import PlugIn.ScreenCapture;
 import PlugIn.WallpaperChanger;
@@ -674,7 +674,7 @@ public class WorkspaceController implements Initializable {
     private void onApplyDraw(ActionEvent event) {
         ImageTabController currentController = getCurrentController();
         ImageView imageView = getCurrentController().getImageView();
-        applyAction(new Draw(currentController.getBufferedImage(), currentController.getGroupImage(), imageView, line));
+        applyAction(new HandDrawing(currentController.getBufferedImage(), currentController.getGroupImage(), imageView, line));
     }
 
     @FXML
