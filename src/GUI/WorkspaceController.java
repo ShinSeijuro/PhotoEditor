@@ -180,6 +180,15 @@ public class WorkspaceController implements Initializable {
         });
         //</editor-fold>
 
+        //<editor-fold defaultstate="collapsed" desc="Draw">
+        sliderBoldnessLevel.valueProperty().addListener(boldnessAdjustChangeListener);
+        colorPicker.setOnAction((event) -> {
+            line.setStroke(colorPicker.getValue());
+            getCurrentController().setDrawing(line);
+        });
+        colorPicker.setValue(Color.BLACK);
+        //</editor-fold>
+
         //<editor-fold defaultstate="collapsed" desc="Adjustments">
         sliderBrightness.valueProperty().addListener(colorAdjustChangeListener);
         sliderHue.valueProperty().addListener(colorAdjustChangeListener);
@@ -210,6 +219,7 @@ public class WorkspaceController implements Initializable {
                 }
             }
         });
+
         //<editor-fold defaultstate="collapsed" desc="GaussianBlur">
         sliderGaussianRadius.valueProperty().addListener(gaussianBlurChangeListener);
 
@@ -314,12 +324,7 @@ public class WorkspaceController implements Initializable {
                 }
             }
         });
-        sliderBoldnessLevel.valueProperty().addListener(boldnessAdjustChangeListener);
-        colorPicker.setOnAction((event) -> {
-            line.setStroke(colorPicker.getValue());
-            getCurrentController().setDrawing(line);
-        });
-        colorPicker.setValue(Color.BLACK);
+
     }
 
     //<editor-fold defaultstate="collapsed" desc="Events, Listeners">
