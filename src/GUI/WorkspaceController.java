@@ -66,7 +66,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -1114,6 +1116,30 @@ public class WorkspaceController implements Initializable {
     @FXML
     private void onToggleFitToView(ActionEvent event) {
         getCurrentController().setFitToView(toggleFitToView.isSelected());
+    }
+
+    @FXML
+    private void onSliderZoomScroll(ScrollEvent event) {
+        if (event.isControlDown()) {
+            sliderZoom.setValue(sliderZoom.getValue() + (event.getDeltaY() > 0 ? 0.02 : -0.02));
+            ImageTabController controller = getCurrentController();
+            if (controller.isFitToView() == true) {
+                controller.setFitToView(false);
+            }
+        }
+    }
+
+    @FXML
+    private void onSliderZoomMouseClicked(MouseEvent event) {
+        if (event.getButton().equals(MouseButton.PRIMARY)) {
+            if (event.getClickCount() == 2) {
+                sliderZoom.setValue(0.5);
+            }
+            ImageTabController controller = getCurrentController();
+            if (controller.isFitToView() == true) {
+                controller.setFitToView(false);
+            }
+        }
     }
     //</editor-fold>
 

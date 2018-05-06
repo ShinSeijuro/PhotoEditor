@@ -25,7 +25,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.shape.Line;
 
 /**
  * FXML Controller class
