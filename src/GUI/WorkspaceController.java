@@ -60,10 +60,14 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -478,7 +482,7 @@ public class WorkspaceController implements Initializable {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Functions">
-    public void attachHotKeys(Scene scene) {
+    public void initializeScene(Scene scene) {
         KeyCombination keyComb = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.ALT_DOWN);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
@@ -486,6 +490,32 @@ public class WorkspaceController implements Initializable {
                 if (keyComb.match(event)) {
                     onFullScreen(null);
                 }
+            }
+        });
+
+        scene.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                if (db.hasFiles()) {
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                } else {
+                    event.consume();
+                }
+            }
+        });
+
+        scene.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasFiles()) {
+                    success = true;
+                    loadFile(db.getFiles());
+                }
+                event.setDropCompleted(success);
+                event.consume();
             }
         });
     }

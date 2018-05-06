@@ -46,7 +46,7 @@ public class PhotoEditor extends Application {
         WorkspaceController controller = (WorkspaceController) loader.getController();
 
         Scene scene = new Scene(root);
-        controller.attachHotKeys(scene);
+        controller.initializeScene(scene);
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.setTitle("PhotoEditor");
