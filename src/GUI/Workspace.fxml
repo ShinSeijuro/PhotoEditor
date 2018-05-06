@@ -160,25 +160,27 @@
                         <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#onFlipHorizontal" text="Flip horizontal">
                             <graphic>
                                 <ImageView fitHeight="15.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../Resources/flip.png" />
-                           </image></ImageView>
+                                    <image>
+                                        <Image url="@../Resources/flip.png" />
+                                    </image>
+                                </ImageView>
                             </graphic>
-                     <tooltip>
-                        <Tooltip text="Flip horizontal" />
-                     </tooltip>
+                            <tooltip>
+                                <Tooltip text="Flip horizontal" />
+                            </tooltip>
                         </Button>
                         <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#onFlipVertical" text="Flip vertical">
-                     <graphic>
-                        <ImageView fitHeight="15.0" pickOnBounds="true" preserveRatio="true" rotate="270.0">
-                           <image>
-                              <Image url="@../Resources/flip.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <tooltip>
-                        <Tooltip text="Flip vertical" />
-                     </tooltip></Button>
+                            <graphic>
+                                <ImageView fitHeight="15.0" pickOnBounds="true" preserveRatio="true" rotate="270.0">
+                                    <image>
+                                        <Image url="@../Resources/flip.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Flip vertical" />
+                            </tooltip>
+                        </Button>
                         <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Delete">
                             <graphic>
                                 <Label text="">
@@ -239,86 +241,153 @@
         </HBox>
     </bottom>
     <right>
-        <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="250.0" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
-            <panes>
-                <TitledPane fx:id="titledPaneCropAndRotate" animated="false" text="Crop &amp; Rotate">
-                    <content>
-                        <GridPane>
-                            <columnConstraints>
-                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                            </rowConstraints>
-                            <children>
-                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onRotateLeft90" prefWidth="100.0" text="Rotate left 90°" GridPane.rowIndex="1">
-                                    <graphic>
-                                        <Label scaleX="-1.0" text="">
-                                            <font>
-                                                <Font name="Segoe MDL2 Assets" size="30.0" />
-                                            </font>
-                                        </Label>
-                                    </graphic>
-                                </Button>
-                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onRotateRight90" prefWidth="100.0" text="Rotate right 90°" GridPane.rowIndex="2">
-                                    <graphic>
-                                        <Label text="">
-                                            <font>
-                                                <Font name="Segoe MDL2 Assets" size="30.0" />
-                                            </font>
-                                        </Label>
-                                    </graphic>
-                                </Button>
-                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onFlipHorizontal" prefWidth="100.0" text="Flip horizontal" GridPane.rowIndex="3">
-                           <graphic>
-                              <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../Resources/flip.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic></Button>
-                                <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onFlipVertical" prefWidth="100.0" text="Flip vertical" GridPane.rowIndex="4">
-                           <graphic>
-                              <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true" rotate="270.0">
-                                 <image>
-                                    <Image url="@../Resources/flip.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic></Button>
-                                <ToggleButton fx:id="toggleCrop" contentDisplay="TOP" mnemonicParsing="false" onAction="#onToggleCrop" prefWidth="100.0" text="Crop">
-                                    <graphic>
-                                        <Label text="">
-                                            <font>
-                                                <Font name="Segoe MDL2 Assets" size="30.0" />
-                                            </font>
-                                        </Label>
-                                    </graphic>
-                                </ToggleButton>
-                            </children>
-                        </GridPane>
-                    </content>
-                </TitledPane>
-                <TitledPane fx:id="titledPaneAdjustment" animated="false" text="Adjustments">
-                    <content>
-                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
+        <ScrollPane fx:id="scrollPaneEdit" BorderPane.alignment="CENTER">
+            <content>
+                <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="250.0" visible="${toggleEdit.selected}">
+                    <panes>
+                        <TitledPane fx:id="titledPaneCropAndRotate" animated="false" text="Crop &amp; Rotate">
+                            <content>
+                                <GridPane prefHeight="350.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onRotateLeft90" prefWidth="100.0" text="Rotate left 90°" GridPane.rowIndex="1">
+                                            <graphic>
+                                                <Label scaleX="-1.0" text="">
+                                                    <font>
+                                                        <Font name="Segoe MDL2 Assets" size="30.0" />
+                                                    </font>
+                                                </Label>
+                                            </graphic>
+                                        </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onRotateRight90" prefWidth="100.0" text="Rotate right 90°" GridPane.rowIndex="2">
+                                            <graphic>
+                                                <Label text="">
+                                                    <font>
+                                                        <Font name="Segoe MDL2 Assets" size="30.0" />
+                                                    </font>
+                                                </Label>
+                                            </graphic>
+                                        </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onFlipHorizontal" prefWidth="100.0" text="Flip horizontal" GridPane.rowIndex="3">
+                                            <graphic>
+                                                <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../Resources/flip.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                        </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onFlipVertical" prefWidth="100.0" text="Flip vertical" GridPane.rowIndex="4">
+                                            <graphic>
+                                                <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true" rotate="270.0">
+                                                    <image>
+                                                        <Image url="@../Resources/flip.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                        </Button>
+                                        <ToggleButton fx:id="toggleCrop" contentDisplay="TOP" mnemonicParsing="false" onAction="#onToggleCrop" prefWidth="100.0" text="Crop">
+                                            <graphic>
+                                                <Label text="">
+                                                    <font>
+                                                        <Font name="Segoe MDL2 Assets" size="30.0" />
+                                                    </font>
+                                                </Label>
+                                            </graphic>
+                                        </ToggleButton>
+                                    </children>
+                                </GridPane>
+                            </content>
+                        </TitledPane>
+                        <TitledPane fx:id="titledPaneAdjustment" animated="false" text="Adjustments">
+                     <content>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Label text="Brightness" />
+                              <Slider fx:id="sliderBrightness" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
+                              <Label text="Contrast" />
+                              <Slider fx:id="sliderContrast" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
+                              <Label text="Hue" />
+                              <Slider fx:id="sliderHue" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
+                              <Label text="Saturation" />
+                              <Slider fx:id="sliderSaturation" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#onApplyColorAdjust" text="Apply">
+                                       <graphic>
+                                          <Label text="">
+                                             <font>
+                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                             </font>
+                                          </Label>
+                                       </graphic>
+                                    </Button>
+                                    <Button mnemonicParsing="false" onAction="#onResetColorAdjust" text="Reset">
+                                       <graphic>
+                                          <Label text="">
+                                             <font>
+                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                             </font>
+                                          </Label>
+                                       </graphic>
+                                    </Button>
+                                 </children>
+                                 <padding>
+                                    <Insets top="10.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </content>
+                        </TitledPane>
+                        <TitledPane fx:id="titledPaneDraw" animated="false" text="Draw">
                             <content>
                                 <VBox alignment="CENTER">
                                     <children>
-                                        <Label text="Brightness" />
-                                        <Slider fx:id="sliderBrightness" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
-                                        <Label text="Contrast" />
-                                        <Slider fx:id="sliderContrast" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
-                                        <Label text="Hue" />
-                                        <Slider fx:id="sliderHue" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
-                                        <Label text="Saturation" />
-                                        <Slider fx:id="sliderSaturation" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
-                                        <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                        <HBox alignment="CENTER" spacing="5.0">
+                                            <padding>
+                                                <Insets bottom="10.0" />
+                                            </padding>
                                             <children>
-                                                <Button mnemonicParsing="false" onAction="#onApplyColorAdjust" text="Apply">
+                                                <ToggleButton fx:id="toggleHandDrawPen" mnemonicParsing="false" onAction="#onToggleHandDrawPen" selected="true" text="Pen">
+                                                    <toggleGroup>
+                                                        <ToggleGroup fx:id="handDrawTool" />
+                                                    </toggleGroup>
+                                                    <graphic>
+                                                        <Label text="">
+                                                            <font>
+                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </graphic>
+                                                </ToggleButton>
+                                                <ToggleButton fx:id="toggleHandDrawEraser" mnemonicParsing="false" onAction="#onToggleHandDrawEraser" text="Eraser" toggleGroup="$handDrawTool">
+                                                    <graphic>
+                                                        <Label text="">
+                                                            <font>
+                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </graphic>
+                                                </ToggleButton>
+                                            </children>
+                                        </HBox>
+                                        <Label alignment="CENTER" text="Thickness" />
+                                        <Slider fx:id="sliderHandDrawThickness" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" value="1.0" />
+                                        <Label text="Color" />
+                                        <ColorPicker fx:id="colorPickerHandDraw" editable="true" onAction="#onDrawColorPick" />
+                                        <HBox alignment="CENTER" spacing="5.0">
+                                            <children>
+                                                <Button mnemonicParsing="false" onAction="#onApplyHandDraw" text="Apply">
                                                     <graphic>
                                                         <Label text="">
                                                             <font>
@@ -327,7 +396,7 @@
                                                         </Label>
                                                     </graphic>
                                                 </Button>
-                                                <Button mnemonicParsing="false" onAction="#onResetColorAdjust" text="Reset">
+                                                <Button mnemonicParsing="false" onAction="#onUndoAllHandDraw" text="Undo All">
                                                     <graphic>
                                                         <Label text="">
                                                             <font>
@@ -342,290 +411,222 @@
                                             </padding>
                                         </HBox>
                                     </children>
-                                    <padding>
-                                        <Insets left="10.0" right="10.0" />
-                                    </padding>
                                 </VBox>
                             </content>
-                        </ScrollPane>
-                    </content>
-                </TitledPane>
-                <TitledPane fx:id="titledPaneDraw" animated="false" text="Draw">
-                    <content>
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                            <children>
-                                <HBox alignment="CENTER" spacing="5.0">
-                                    <padding>
-                                        <Insets bottom="10.0" />
-                                    </padding>
+                        </TitledPane>
+                        <TitledPane fx:id="titledPaneEffects" animated="false" text="Effects">
+                            <content>
+                                <Accordion fx:id="accordionEffects">
+                                    <panes>
+                                        <TitledPane fx:id="titledPaneGaussianBlur" animated="false" text="Gaussian Blur">
+                                            <content>
+                                                <VBox alignment="CENTER">
+                                                    <children>
+                                                        <Label text="Radius" />
+                                                        <Slider fx:id="sliderGaussianRadius" max="63.0" showTickLabels="true" />
+                                                        <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                                            <children>
+                                                                <Button mnemonicParsing="false" onAction="#onApplyGaussianBlur" text="Apply">
+                                                                    <graphic>
+                                                                        <Label text="">
+                                                                            <font>
+                                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                            </font>
+                                                                        </Label>
+                                                                    </graphic>
+                                                                </Button>
+                                                                <Button mnemonicParsing="false" onAction="#onResetGaussianBlur" text="Reset">
+                                                                    <graphic>
+                                                                        <Label text="">
+                                                                            <font>
+                                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                            </font>
+                                                                        </Label>
+                                                                    </graphic>
+                                                                </Button>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets top="10.0" />
+                                                            </padding>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                        <TitledPane fx:id="titledPaneBoxBlur" animated="false" text="Box Blur">
+                                            <content>
+                                                <VBox alignment="CENTER">
+                                                    <children>
+                                                        <Label text="Width" />
+                                                        <Slider fx:id="sliderBoxBlurWidth" majorTickUnit="50.0" max="255.0" showTickLabels="true" snapToTicks="true" />
+                                                        <Label text="Height" />
+                                                        <Slider fx:id="sliderBoxBlurHeight" majorTickUnit="50.0" max="255.0" showTickLabels="true" snapToTicks="true" />
+                                                        <Label text="Iteration" />
+                                                        <Slider fx:id="sliderBoxBlurIteration" blockIncrement="1.0" majorTickUnit="1.0" max="3.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="3.0" />
+                                                        <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                                            <children>
+                                                                <Button mnemonicParsing="false" onAction="#onApplyBoxBlur" text="Apply">
+                                                                    <graphic>
+                                                                        <Label text="">
+                                                                            <font>
+                                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                            </font>
+                                                                        </Label>
+                                                                    </graphic>
+                                                                </Button>
+                                                                <Button mnemonicParsing="false" onAction="#onResetBoxBlur" text="Reset">
+                                                                    <graphic>
+                                                                        <Label text="">
+                                                                            <font>
+                                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                            </font>
+                                                                        </Label>
+                                                                    </graphic>
+                                                                </Button>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets top="10.0" />
+                                                            </padding>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                        <TitledPane fx:id="titledPaneMotionBlur" animated="false" layoutX="10.0" layoutY="10.0" text="Motion Blur">
+                                            <content>
+                                                <VBox alignment="CENTER">
+                                                    <children>
+                                                        <Label text="Angle" />
+                                                        <Slider fx:id="sliderMotionBlurAngle" majorTickUnit="90.0" max="180.0" showTickLabels="true" />
+                                                        <Label text="Radius" />
+                                                        <Slider fx:id="sliderMotionBlurRadius" max="63.0" showTickLabels="true" />
+                                                        <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                                            <children>
+                                                                <Button mnemonicParsing="false" onAction="#onApplyMotionBlur" text="Apply">
+                                                                    <graphic>
+                                                                        <Label text="">
+                                                                            <font>
+                                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                            </font>
+                                                                        </Label>
+                                                                    </graphic>
+                                                                </Button>
+                                                                <Button mnemonicParsing="false" onAction="#onResetMotionBlur" text="Reset">
+                                                                    <graphic>
+                                                                        <Label text="">
+                                                                            <font>
+                                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                            </font>
+                                                                        </Label>
+                                                                    </graphic>
+                                                                </Button>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets top="10.0" />
+                                                            </padding>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                        <TitledPane animated="false" text="Sharpen">
+                                            <content>
+                                                <VBox alignment="CENTER">
+                                                    <children>
+                                                        <Label text="Sharpen" />
+                                                        <Slider fx:id="sliderSharpen" showTickLabels="true" />
+                                                    </children>
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                        <TitledPane fx:id="titledPaneGlow" animated="false" text="Glow">
+                                            <content>
+                                                <VBox alignment="CENTER">
+                                                    <children>
+                                                        <Label text="Level" />
+                                                        <Slider fx:id="sliderGlowLevel" showTickLabels="true" />
+                                                        <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                                            <children>
+                                                                <Button mnemonicParsing="false" onAction="#onApplyGlow" text="Apply">
+                                                                    <graphic>
+                                                                        <Label text="">
+                                                                            <font>
+                                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                            </font>
+                                                                        </Label>
+                                                                    </graphic>
+                                                                </Button>
+                                                                <Button mnemonicParsing="false" onAction="#onResetGlow" text="Undo all">
+                                                                    <graphic>
+                                                                        <Label text="">
+                                                                            <font>
+                                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                            </font>
+                                                                        </Label>
+                                                                    </graphic>
+                                                                </Button>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets top="10.0" />
+                                                            </padding>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                        <TitledPane fx:id="titledPaneSepiaTone" animated="false" layoutX="10.0" layoutY="110.0" text="Sepia Tone">
+                                            <content>
+                                                <VBox alignment="CENTER">
+                                                    <children>
+                                                        <Label text="Level" />
+                                                        <Slider fx:id="sliderSepiaToneLevel" showTickLabels="true" />
+                                                        <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                                            <children>
+                                                                <Button mnemonicParsing="false" onAction="#onApplySepiaTone" text="Apply">
+                                                                    <graphic>
+                                                                        <Label text="">
+                                                                            <font>
+                                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                            </font>
+                                                                        </Label>
+                                                                    </graphic>
+                                                                </Button>
+                                                                <Button mnemonicParsing="false" onAction="#onResetSepiaTone" text="Reset">
+                                                                    <graphic>
+                                                                        <Label text="">
+                                                                            <font>
+                                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                            </font>
+                                                                        </Label>
+                                                                    </graphic>
+                                                                </Button>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets top="10.0" />
+                                                            </padding>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                    </panes>
+                                </Accordion>
+                            </content>
+                        </TitledPane>
+                        <TitledPane animated="false" text="Filter">
+                            <content>
+                                <VBox>
                                     <children>
-                                        <ToggleButton fx:id="toggleHandDrawPen" mnemonicParsing="false" onAction="#onToggleHandDrawPen" selected="true" text="Pen">
-                                            <toggleGroup>
-                                                <ToggleGroup fx:id="handDrawTool" />
-                                            </toggleGroup>
-                                            <graphic>
-                                                <Label text="">
-                                                    <font>
-                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                    </font>
-                                                </Label>
-                                            </graphic>
-                                        </ToggleButton>
-                                        <ToggleButton fx:id="toggleHandDrawEraser" mnemonicParsing="false" onAction="#onToggleHandDrawEraser" text="Eraser" toggleGroup="$handDrawTool">
-                                            <graphic>
-                                                <Label text="">
-                                                    <font>
-                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                    </font>
-                                                </Label>
-                                            </graphic>
-                                        </ToggleButton>
+                                        <Button mnemonicParsing="false" onAction="#onFixRedEye" text="Fix Red Eye" />
+                                        <Button mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
+                                        <Button mnemonicParsing="false" onAction="#onDenoising" text="Denoising" />
                                     </children>
-                                </HBox>
-                                <Label alignment="CENTER" text="Thickness" />
-                                <Slider fx:id="sliderHandDrawThickness" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" value="1.0" />
-                                <Label text="Color" />
-                                <ColorPicker fx:id="colorPickerHandDraw" editable="true" onAction="#onDrawColorPick" />
-                                <HBox alignment="CENTER" spacing="5.0">
-                                    <children>
-                                        <Button mnemonicParsing="false" onAction="#onApplyHandDraw" text="Apply">
-                                            <graphic>
-                                                <Label text="">
-                                                    <font>
-                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                    </font>
-                                                </Label>
-                                            </graphic>
-                                        </Button>
-                                        <Button mnemonicParsing="false" onAction="#onUndoAllHandDraw" text="Undo All">
-                                            <graphic>
-                                                <Label text="">
-                                                    <font>
-                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                    </font>
-                                                </Label>
-                                            </graphic>
-                                        </Button>
-                                    </children>
-                                    <padding>
-                                        <Insets top="10.0" />
-                                    </padding>
-                                </HBox>
-                            </children>
-                        </VBox>
-                    </content>
-                </TitledPane>
-                <TitledPane fx:id="titledPaneEffects" animated="false" text="Effects">
-                    <content>
-                        <Accordion fx:id="accordionEffects">
-                            <panes>
-                                <TitledPane fx:id="titledPaneGaussianBlur" animated="false" text="Gaussian Blur">
-                                    <content>
-                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                            <children>
-                                                <Label text="Radius" />
-                                                <Slider fx:id="sliderGaussianRadius" max="63.0" showTickLabels="true" />
-                                                <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
-                                                    <children>
-                                                        <Button mnemonicParsing="false" onAction="#onApplyGaussianBlur" text="Apply">
-                                                            <graphic>
-                                                                <Label text="">
-                                                                    <font>
-                                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                                    </font>
-                                                                </Label>
-                                                            </graphic>
-                                                        </Button>
-                                                        <Button mnemonicParsing="false" onAction="#onResetGaussianBlur" text="Reset">
-                                                            <graphic>
-                                                                <Label text="">
-                                                                    <font>
-                                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                                    </font>
-                                                                </Label>
-                                                            </graphic>
-                                                        </Button>
-                                                    </children>
-                                                    <padding>
-                                                        <Insets top="10.0" />
-                                                    </padding>
-                                                </HBox>
-                                            </children>
-                                        </VBox>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane fx:id="titledPaneBoxBlur" animated="false" text="Box Blur">
-                                    <content>
-                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                            <children>
-                                                <Label text="Width" />
-                                                <Slider fx:id="sliderBoxBlurWidth" majorTickUnit="50.0" max="255.0" showTickLabels="true" snapToTicks="true" />
-                                                <Label text="Height" />
-                                                <Slider fx:id="sliderBoxBlurHeight" majorTickUnit="50.0" max="255.0" showTickLabels="true" snapToTicks="true" />
-                                                <Label text="Iteration" />
-                                                <Slider fx:id="sliderBoxBlurIteration" blockIncrement="1.0" majorTickUnit="1.0" max="3.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="3.0" />
-                                                <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
-                                                    <children>
-                                                        <Button mnemonicParsing="false" onAction="#onApplyBoxBlur" text="Apply">
-                                                            <graphic>
-                                                                <Label text="">
-                                                                    <font>
-                                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                                    </font>
-                                                                </Label>
-                                                            </graphic>
-                                                        </Button>
-                                                        <Button mnemonicParsing="false" onAction="#onResetBoxBlur" text="Reset">
-                                                            <graphic>
-                                                                <Label text="">
-                                                                    <font>
-                                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                                    </font>
-                                                                </Label>
-                                                            </graphic>
-                                                        </Button>
-                                                    </children>
-                                                    <padding>
-                                                        <Insets top="10.0" />
-                                                    </padding>
-                                                </HBox>
-                                            </children>
-                                        </VBox>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane fx:id="titledPaneMotionBlur" animated="false" layoutX="10.0" layoutY="10.0" text="Motion Blur">
-                                    <content>
-                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                            <children>
-                                                <Label text="Angle" />
-                                                <Slider fx:id="sliderMotionBlurAngle" majorTickUnit="90.0" max="180.0" showTickLabels="true" />
-                                                <Label text="Radius" />
-                                                <Slider fx:id="sliderMotionBlurRadius" max="63.0" showTickLabels="true" />
-                                                <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
-                                                    <children>
-                                                        <Button mnemonicParsing="false" onAction="#onApplyMotionBlur" text="Apply">
-                                                            <graphic>
-                                                                <Label text="">
-                                                                    <font>
-                                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                                    </font>
-                                                                </Label>
-                                                            </graphic>
-                                                        </Button>
-                                                        <Button mnemonicParsing="false" onAction="#onResetMotionBlur" text="Reset">
-                                                            <graphic>
-                                                                <Label text="">
-                                                                    <font>
-                                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                                    </font>
-                                                                </Label>
-                                                            </graphic>
-                                                        </Button>
-                                                    </children>
-                                                    <padding>
-                                                        <Insets top="10.0" />
-                                                    </padding>
-                                                </HBox>
-                                            </children>
-                                        </VBox>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane animated="false" prefHeight="200.0" prefWidth="200.0" text="Sharpen">
-                                    <content>
-                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                            <children>
-                                                <Label text="Sharpen" />
-                                                <Slider fx:id="sliderSharpen" showTickLabels="true" />
-                                            </children>
-                                        </VBox>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane fx:id="titledPaneGlow" animated="false" prefHeight="200.0" prefWidth="200.0" text="Reset">
-                                    <content>
-                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                            <children>
-                                                <Label text="Level" />
-                                                <Slider fx:id="sliderGlowLevel" showTickLabels="true" />
-                                                <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
-                                                    <children>
-                                                        <Button mnemonicParsing="false" onAction="#onApplyGlow" text="Apply">
-                                                            <graphic>
-                                                                <Label text="">
-                                                                    <font>
-                                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                                    </font>
-                                                                </Label>
-                                                            </graphic>
-                                                        </Button>
-                                                        <Button mnemonicParsing="false" onAction="#onResetGlow" text="Undo all">
-                                                            <graphic>
-                                                                <Label text="">
-                                                                    <font>
-                                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                                    </font>
-                                                                </Label>
-                                                            </graphic>
-                                                        </Button>
-                                                    </children>
-                                                    <padding>
-                                                        <Insets top="10.0" />
-                                                    </padding>
-                                                </HBox>
-                                            </children>
-                                        </VBox>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane fx:id="titledPaneSepiaTone" animated="false" layoutX="10.0" layoutY="110.0" prefHeight="200.0" prefWidth="200.0" text="Sepia Tone">
-                                    <content>
-                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                            <children>
-                                                <Label text="Level" />
-                                                <Slider fx:id="sliderSepiaToneLevel" showTickLabels="true" />
-                                                <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
-                                                    <children>
-                                                        <Button mnemonicParsing="false" onAction="#onApplySepiaTone" text="Apply">
-                                                            <graphic>
-                                                                <Label text="">
-                                                                    <font>
-                                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                                    </font>
-                                                                </Label>
-                                                            </graphic>
-                                                        </Button>
-                                                        <Button mnemonicParsing="false" onAction="#onResetSepiaTone" text="Reset">
-                                                            <graphic>
-                                                                <Label text="">
-                                                                    <font>
-                                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                                    </font>
-                                                                </Label>
-                                                            </graphic>
-                                                        </Button>
-                                                    </children>
-                                                    <padding>
-                                                        <Insets top="10.0" />
-                                                    </padding>
-                                                </HBox>
-                                            </children>
-                                        </VBox>
-                                    </content>
-                                </TitledPane>
-                            </panes>
-                        </Accordion>
-                    </content>
-                </TitledPane>
-                <TitledPane animated="false" prefHeight="200.0" prefWidth="200.0" text="Filter">
-                    <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
-                            <children>
-                                <Button mnemonicParsing="false" onAction="#onFixRedEye" text="Fix Red Eye" />
-                                <Button mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
-                                <Button mnemonicParsing="false" onAction="#onDenoising" text="Denoising" />
-                            </children>
-                        </VBox>
-                    </content>
-                </TitledPane>
-            </panes>
-        </Accordion>
+                                </VBox>
+                            </content>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+            </content>
+        </ScrollPane>
     </right>
 </BorderPane>

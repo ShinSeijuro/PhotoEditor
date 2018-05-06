@@ -50,6 +50,8 @@ public class PhotoEditor extends Application {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.setTitle("PhotoEditor");
+        stage.setMinWidth(500.0);
+        stage.setMinHeight(400.0);
         stage.show();
     }
 

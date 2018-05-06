@@ -169,7 +169,7 @@ public class WorkspaceController implements Initializable {
             }
         });
 
-        accordionEdit.setManaged(false);
+        scrollPaneEdit.setManaged(false);
 
         //<editor-fold defaultstate="collapsed" desc="Crop & Rotate">
         titledPaneCropAndRotate.expandedProperty().addListener(new ChangeListener<Boolean>() {
@@ -913,7 +913,7 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onToggleEdit(ActionEvent event) {
-        accordionEdit.setManaged(toggleEdit.isSelected());
+        scrollPaneEdit.setManaged(toggleEdit.isSelected());
     }
 
     @FXML
@@ -1132,6 +1132,8 @@ public class WorkspaceController implements Initializable {
     private Label labelZoom;
     @FXML
     private ToggleButton toggleFitToView;
+    @FXML
+    private ScrollPane scrollPaneEdit;
     @FXML
     private Accordion accordionEdit;
     @FXML
