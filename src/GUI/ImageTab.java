@@ -106,6 +106,9 @@ public class ImageTab extends Tab {
         this.name = name;
         originalDimension2D = new Dimension2D(image.getWidth(), image.getHeight());
         controller.setBufferedImage(image);
+
+        // Set fit to view = true by default
+        controller.setFitToView(true);
     }
 
     public ImageTab(BufferedImage image) throws IOException, IllegalArgumentException {

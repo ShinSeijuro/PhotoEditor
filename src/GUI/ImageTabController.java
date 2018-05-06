@@ -48,6 +48,10 @@ public class ImageTabController extends Tab implements Initializable {
 
     public void setBufferedImage(BufferedImage image) {
         imageView.setImage(SwingFXUtils.toFXImage(image, null));
+
+        if (isFitToView()) {
+            doFitToView();
+        }
     }
 
     private Selection selection;
@@ -132,7 +136,7 @@ public class ImageTabController extends Tab implements Initializable {
         return fitToView;
     }
 
-    public boolean getFitToView() {
+    public boolean isFitToView() {
         return fitToView.get();
     }
 
@@ -161,6 +165,11 @@ public class ImageTabController extends Tab implements Initializable {
         Image image = imageView.getImage();
         double widthRatio = scrollPane.getWidth() / image.getWidth();
         double heightRatio = scrollPane.getHeight() / image.getHeight();
+
+        if (widthRatio == 0.0 || heightRatio == 0.0) {
+            return;
+        }
+
         if (widthRatio > heightRatio) {
             setZoomRatio(heightRatio - 0.005);
         } else {
@@ -179,7 +188,7 @@ public class ImageTabController extends Tab implements Initializable {
             public void handle(ScrollEvent event) {
                 if (event.isControlDown() && !event.isAltDown()) {
                     setZoomRatio(getZoomRatio() + (event.getDeltaY() / 1000.0));
-                    if (getFitToView() == true) {
+                    if (isFitToView() == true) {
                         setFitToView(false);
                     }
                     event.consume();
