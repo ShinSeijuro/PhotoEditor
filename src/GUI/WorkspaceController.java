@@ -356,25 +356,22 @@ public class WorkspaceController implements Initializable {
     private EventHandler<WindowEvent> onWindowCloseRequest = new EventHandler<WindowEvent>() {
         @Override
         public void handle(WindowEvent event) {
-            int leftovers = 0;
             ObservableList<Tab> tabList = tabPane.getTabs();
-            while (!tabList.isEmpty() && leftovers < tabList.size()) {
-                ImageTab tab = (ImageTab) tabList.get(leftovers);
+            for (int i = tabList.size() - 1; i >= 0; i--) {
+                ImageTab tab = (ImageTab) tabList.get(i);
                 EventHandler<Event> handler = tab.getOnCloseRequest();
                 if (handler != null) {
                     Event e = new Event(tab, null, Tab.TAB_CLOSE_REQUEST_EVENT);
                     handler.handle(e);
-                    if (e.isConsumed()) {
-                        leftovers++;
-                    } else {
-                        tabList.remove(leftovers);
+                    if (!e.isConsumed()) {
+                        tabList.remove(i);
                     }
                 } else {
-                    tabList.remove(leftovers);
+                    tabList.remove(i);
                 }
             }
 
-            if (leftovers > 0) {
+            if (tabList.size() > 0) {
                 event.consume();
             }
         }
