@@ -224,7 +224,7 @@ public class WorkspaceController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue == false) {
-                    onUndoAllColorAdjust(null);
+                    onResetColorAdjust(null);
                 }
             }
         });
@@ -252,7 +252,7 @@ public class WorkspaceController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue == false) {
-                    onUndoAllGaussianBlur(null);
+                    onResetGaussianBlur(null);
                 }
             }
         });
@@ -267,7 +267,7 @@ public class WorkspaceController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue == false) {
-                    onUndoAllBoxBlur(null);
+                    onResetBoxBlur(null);
                 }
             }
         });
@@ -281,7 +281,7 @@ public class WorkspaceController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue == false) {
-                    onUndoAllMotionBlur(null);
+                    onResetMotionBlur(null);
                 }
             }
         });
@@ -294,7 +294,7 @@ public class WorkspaceController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue == false) {
-                    onUndoAllGlow(null);
+                    onResetGlow(null);
                 }
             }
         });
@@ -307,7 +307,7 @@ public class WorkspaceController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue == false) {
-                    onUndoAllSepiaTone(null);
+                    onResetSepiaTone(null);
                 }
             }
         });
@@ -754,7 +754,7 @@ public class WorkspaceController implements Initializable {
     private void onApplyColorAdjust(ActionEvent event) {
         ImageView imageView = getCurrentController().getImageView();
         applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
-        onUndoAllColorAdjust(null);
+        onResetColorAdjust(null);
         imageView.setEffect(null);
     }
 
@@ -786,7 +786,7 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    private void onUndoAllColorAdjust(ActionEvent event) {
+    private void onResetColorAdjust(ActionEvent event) {
         sliderBrightness.setValue(0);
         sliderContrast.setValue(0);
         sliderHue.setValue(0);
@@ -797,12 +797,12 @@ public class WorkspaceController implements Initializable {
     private void onApplyGaussianBlur(ActionEvent event) {
         ImageView imageView = getCurrentController().getImageView();
         applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
-        onUndoAllGaussianBlur(null);
+        onResetGaussianBlur(null);
         imageView.setEffect(null);
     }
 
     @FXML
-    private void onUndoAllGaussianBlur(ActionEvent event) {
+    private void onResetGaussianBlur(ActionEvent event) {
         sliderGaussianRadius.setValue(0);
     }
 
@@ -810,12 +810,12 @@ public class WorkspaceController implements Initializable {
     private void onApplyBoxBlur(ActionEvent event) {
         ImageView imageView = getCurrentController().getImageView();
         applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
-        onUndoAllBoxBlur(null);
+        onResetBoxBlur(null);
         imageView.setEffect(null);
     }
 
     @FXML
-    private void onUndoAllBoxBlur(ActionEvent event) {
+    private void onResetBoxBlur(ActionEvent event) {
         sliderBoxBlurWidth.setValue(0);
         sliderBoxBlurHeight.setValue(0);
     }
@@ -824,12 +824,12 @@ public class WorkspaceController implements Initializable {
     private void onApplyMotionBlur(ActionEvent event) {
         ImageView imageView = getCurrentController().getImageView();
         applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
-        onUndoAllMotionBlur(null);
+        onResetMotionBlur(null);
         imageView.setEffect(null);
     }
 
     @FXML
-    private void onUndoAllMotionBlur(ActionEvent event) {
+    private void onResetMotionBlur(ActionEvent event) {
         sliderMotionBlurAngle.setValue(0);
         sliderMotionBlurRadius.setValue(0);
     }
@@ -838,12 +838,12 @@ public class WorkspaceController implements Initializable {
     private void onApplyGlow(ActionEvent event) {
         ImageView imageView = getCurrentController().getImageView();
         applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
-        onUndoAllGlow(null);
+        onResetGlow(null);
         imageView.setEffect(null);
     }
 
     @FXML
-    private void onUndoAllGlow(ActionEvent event) {
+    private void onResetGlow(ActionEvent event) {
         sliderGlowLevel.setValue(0);
     }
 
@@ -851,12 +851,12 @@ public class WorkspaceController implements Initializable {
     private void onApplySepiaTone(ActionEvent event) {
         ImageView imageView = getCurrentController().getImageView();
         applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
-        onUndoAllSepiaTone(null);
+        onResetSepiaTone(null);
         imageView.setEffect(null);
     }
 
     @FXML
-    private void onUndoAllSepiaTone(ActionEvent event) {
+    private void onResetSepiaTone(ActionEvent event) {
         sliderSepiaToneLevel.setValue(0);
     }
 

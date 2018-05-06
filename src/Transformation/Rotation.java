@@ -39,7 +39,7 @@ public class Rotation extends AbstractImageAction {
                         : (image.getHeight() - image.getWidth()))
                 / 2;
         transform.translate(offset, offset);
-        AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+        AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 
         BufferedImage newImage = null;
         switch (getAngle()) {
