@@ -741,7 +741,10 @@ public class WorkspaceController implements Initializable {
         History currentHistory = getCurrentHistory();
         currentHistory.undo();
         BufferedImage image = currentHistory.getCurrentImage();
-        getCurrentController().setBufferedImage(image);
+
+        if (image != null) {
+            getCurrentController().setBufferedImage(image);
+        }
     }
 
     @FXML
@@ -749,7 +752,10 @@ public class WorkspaceController implements Initializable {
         History currentHistory = getCurrentHistory();
         currentHistory.redo();
         BufferedImage image = currentHistory.getCurrentImage();
-        getCurrentController().setBufferedImage(image);
+
+        if (image != null) {
+            getCurrentController().setBufferedImage(image);
+        }
     }
 
     @FXML

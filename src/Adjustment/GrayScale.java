@@ -6,6 +6,7 @@
 package Adjustment;
 
 import Action.AbstractImageAction;
+import java.awt.Graphics;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
@@ -24,13 +25,11 @@ public class GrayScale extends AbstractImageAction {
 
     @Override
     protected BufferedImage applyTransform(BufferedImage image) {
-        ColorConvertOp op = new ColorConvertOp(
-                image.getColorModel().getColorSpace(),
-                ColorSpace.getInstance(ColorSpace.CS_GRAY),
-                null);
-
-        image = op.filter(image, null);
-        return image;
+        BufferedImage output = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        Graphics graphics = output.getGraphics();
+        graphics.drawImage(image, 0, 0, null);
+        graphics.dispose();
+        return output;
     }
 
 }

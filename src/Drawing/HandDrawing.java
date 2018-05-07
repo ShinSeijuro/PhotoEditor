@@ -150,6 +150,8 @@ public class HandDrawing extends ImageSnapshotAction {
             }
 
             Path path = new Path();
+            path.setStroke(stroke);
+            path.setStrokeWidth(strokeWidth);
             path.getElements().clear();
             path.getElements().add(new MoveTo(event.getX(), event.getY()));
 
