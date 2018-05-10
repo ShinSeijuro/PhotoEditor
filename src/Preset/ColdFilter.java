@@ -13,11 +13,11 @@ import java.awt.image.BufferedImage;
  *
  * @author Admin
  */
-public class WarmFilter extends ImageColorAction {
+public class ColdFilter extends ImageColorAction {
 
     private static final int AMOUNT = 128;
 
-    public WarmFilter(BufferedImage originalImage) {
+    public ColdFilter(BufferedImage originalImage) {
         super(originalImage);
     }
 
@@ -26,13 +26,13 @@ public class WarmFilter extends ImageColorAction {
         int red = color.getRed();
         int blue = color.getBlue();
 
-        red += AMOUNT;
-        if (red > 255) {
-            red = 255;
+        red -= AMOUNT;
+        if (red < 0) {
+            red = 0;
         }
-        blue -= AMOUNT;
-        if (blue < 0) {
-            blue = 0;
+        blue += AMOUNT;
+        if (blue > 255) {
+            blue = 255;
         }
 
         return new Color(red, color.getGreen(), blue);

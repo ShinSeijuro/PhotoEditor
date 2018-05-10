@@ -16,6 +16,7 @@ import History.*;
 import PlugIn.ImageFromClipboard;
 import PlugIn.ScreenCapture;
 import PlugIn.WallpaperChanger;
+import Preset.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
@@ -60,6 +61,7 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
@@ -71,6 +73,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
+
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
@@ -1146,6 +1149,16 @@ public class WorkspaceController implements Initializable {
                 controller.setFitToView(false);
             }
         }
+    }
+
+    @FXML
+    private void onWarmFilter(ActionEvent event) {
+        applyAction(new WarmFilter(getCurrentImage()));
+    }
+
+    @FXML
+    private void onColdFilter(ActionEvent event) {
+        applyAction(new ColdFilter(getCurrentImage()));
     }
     //</editor-fold>
 
