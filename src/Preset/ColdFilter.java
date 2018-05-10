@@ -15,8 +15,6 @@ import java.awt.image.BufferedImage;
  */
 public class ColdFilter extends ImageColorAction {
 
-    private static final int AMOUNT = 128;
-
     public ColdFilter(BufferedImage originalImage) {
         super(originalImage);
     }
@@ -26,11 +24,13 @@ public class ColdFilter extends ImageColorAction {
         int red = color.getRed();
         int blue = color.getBlue();
 
-        red -= AMOUNT;
+        int temp = (int) ((red + blue) / 4.0d);
+
+        red -= temp;
         if (red < 0) {
             red = 0;
         }
-        blue += AMOUNT;
+        blue += temp;
         if (blue > 255) {
             blue = 255;
         }
