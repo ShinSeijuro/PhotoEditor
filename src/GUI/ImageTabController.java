@@ -17,6 +17,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -43,18 +44,23 @@ public class ImageTabController extends Tab implements Initializable {
         return groupImage;
     }
 
+    private boolean presetPreviewUpdated;
+
+    public boolean isPresetPreviewUpdated() {
+        return presetPreviewUpdated;
+    }
+
     public BufferedImage getBufferedImage() {
         return SwingFXUtils.fromFXImage(imageView.getImage(), null);
     }
 
     public void setBufferedImage(BufferedImage image) {
+        this.presetPreviewUpdated = false;
         imageView.setImage(SwingFXUtils.toFXImage(image, null));
 
         if (isFitToView()) {
             doFitToView();
         }
-
-        getPresetPreview().setThumbnail(image);
     }
 
     private Selection selection;
@@ -180,6 +186,8 @@ public class ImageTabController extends Tab implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        presetPreviewUpdated = false;
+
         scrollPane.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
             @Override
             public void handle(ScrollEvent event) {
@@ -210,6 +218,33 @@ public class ImageTabController extends Tab implements Initializable {
             setZoomRatio(heightRatio - 0.005);
         } else {
             setZoomRatio(widthRatio - 0.005);
+        }
+    }
+
+    public Task<Void> getUpdatePresetPreviewTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                if (isPresetPreviewUpdated()) {
+                    return null;
+                }
+                updateMessage("Updating preset preview images...");
+                getPresetPreview().setThumbnail(getBufferedImage());
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                presetPreviewUpdated = true;
+            }
+        };
+    }
+
+    public final void updatePresetPreview() {
+        if (!presetPreviewUpdated) {
+            getPresetPreview().setThumbnail(getBufferedImage());
+            presetPreviewUpdated = true;
         }
     }
 

@@ -17,6 +17,7 @@ public class ColdFilter extends ImageColorAction {
 
     public ColdFilter(BufferedImage originalImage) {
         super(originalImage);
+        setName("Cold Filter");
     }
 
     @Override

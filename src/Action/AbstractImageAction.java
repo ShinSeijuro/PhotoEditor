@@ -6,6 +6,7 @@
 package Action;
 
 import java.awt.image.BufferedImage;
+import javafx.concurrent.Task;
 
 /**
  *
@@ -50,5 +51,16 @@ public abstract class AbstractImageAction implements INameable {
         return modifiedImage;
     }
 
+    public Task<BufferedImage> getApplyTransformTask() {
+        return new Task<BufferedImage>() {
+            @Override
+            protected BufferedImage call() throws Exception {
+                updateMessage("Applying " + getName() + "...");
+                return applyTransform();
+            }
+        };
+    }
+
     protected abstract BufferedImage applyTransform(BufferedImage image);
+
 }

@@ -17,6 +17,7 @@ public class WarmFilter extends ImageColorAction {
 
     public WarmFilter(BufferedImage originalImage) {
         super(originalImage);
+        setName("Warm Filter");
     }
 
     @Override

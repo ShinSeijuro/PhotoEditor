@@ -55,7 +55,11 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
@@ -72,6 +76,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 import javafx.stage.Stage;
@@ -161,6 +166,22 @@ public class WorkspaceController implements Initializable {
         return actualZoomRatio;
     }
 
+    private final ObjectProperty<Task> currentTask = new SimpleObjectProperty<>(null);
+
+    public Task getCurrentTask() {
+        return currentTask.get();
+    }
+
+    public void setCurrentTask(Task value) {
+        currentTask.set(value);
+        hBoxProgress.setManaged(value != null);
+        hBoxProgress.setVisible(value != null);
+    }
+
+    public ObjectProperty currentTaskProperty() {
+        return currentTask;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -175,6 +196,8 @@ public class WorkspaceController implements Initializable {
         });
 
         scrollPaneEdit.setManaged(false);
+        hBoxProgress.setManaged(false);
+        hBoxProgress.setVisible(false);
 
         //<editor-fold defaultstate="collapsed" desc="Crop & Rotate">
         titledPaneCropAndRotate.expandedProperty().addListener(new ChangeListener<Boolean>() {
@@ -194,9 +217,7 @@ public class WorkspaceController implements Initializable {
         sliderHandDrawThickness.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if (!sliderHandDrawThickness.isValueChanging()) {
-                    getCurrentController().getHandDrawing().setStrokeWidth(newValue.doubleValue());
-                }
+                getCurrentController().getHandDrawing().setStrokeWidth(newValue.doubleValue());
             }
         });
         colorPickerHandDraw.setValue(Color.BLACK);
@@ -337,6 +358,20 @@ public class WorkspaceController implements Initializable {
         //</editor-fold>
         //</editor-fold>
 
+        //<editor-fold defaultstate="collapsed" desc="Presets">
+        titledPanePresets.expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == true) {
+                    ImageTabController controller = getCurrentController();
+                    if (!controller.isPresetPreviewUpdated()) {
+                        runTask(controller.getUpdatePresetPreviewTask());
+                    }
+                }
+            }
+        });
+        //</editor-fold>
+
         currentController.addListener(new ChangeListener<ImageTabController>() {
             @Override
             public void changed(ObservableValue<? extends ImageTabController> observable, ImageTabController oldValue, ImageTabController newValue) {
@@ -348,6 +383,10 @@ public class WorkspaceController implements Initializable {
                 if (newValue != null) {
                     actualZoomRatioProperty().bindBidirectional(newValue.zoomRatioProperty());
                     toggleFitToView.selectedProperty().bindBidirectional(newValue.fitToViewProperty());
+
+                    if (titledPanePresets.isExpanded() && !newValue.isPresetPreviewUpdated()) {
+                        runTask(newValue.getUpdatePresetPreviewTask());
+                    }
                 } else {
                     setActualZoom(1.0);
                     toggleFitToView.setSelected(false);
@@ -540,10 +579,39 @@ public class WorkspaceController implements Initializable {
         return alert;
     }
 
+    public void runTask(Task task) {
+        EventHandler<WorkerStateEvent> handler = new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                task.removeEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, this);
+                task.removeEventHandler(WorkerStateEvent.WORKER_STATE_FAILED, this);
+                task.removeEventHandler(WorkerStateEvent.WORKER_STATE_CANCELLED, this);
+                setCurrentTask(null);
+            }
+        };
+
+        task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, handler);
+        task.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED, handler);
+        task.addEventHandler(WorkerStateEvent.WORKER_STATE_CANCELLED, handler);
+        setCurrentTask(task);
+
+        new Thread(task).start();
+    }
+
     public void applyAction(AbstractImageAction action) {
-        BufferedImage image = action.applyTransform();
-        getCurrentController().setBufferedImage(image);
-        getCurrentHistory().add(action);
+        if (action instanceof ImageSnapshotAction) {
+            BufferedImage image = action.applyTransform();
+            getCurrentController().setBufferedImage(image);
+            getCurrentHistory().add(action);
+        } else {
+            Task task = action.getApplyTransformTask();
+            task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
+                BufferedImage image = action.getModifiedImage();
+                getCurrentController().setBufferedImage(image);
+                getCurrentHistory().add(action);
+            });
+            runTask(task);
+        }
     }
 
     public void loadFile(File file) {
@@ -1172,6 +1240,8 @@ public class WorkspaceController implements Initializable {
     @FXML
     private ToggleButton toggleEdit;
     @FXML
+    private HBox hBoxProgress;
+    @FXML
     private Slider sliderZoom;
     @FXML
     private Label labelZoom;
@@ -1237,5 +1307,7 @@ public class WorkspaceController implements Initializable {
     private Slider sliderHandDrawThickness;
     @FXML
     private ColorPicker colorPickerHandDraw;
+    @FXML
+    private TitledPane titledPanePresets;
     //</editor-fold>
 }
