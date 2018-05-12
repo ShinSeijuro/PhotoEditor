@@ -406,7 +406,7 @@
                                         <Label alignment="CENTER" layoutX="116.0" layoutY="55.0" text="Preview" />
                                         <StackPane maxHeight="20.0" maxWidth="20.0" prefHeight="20.0" prefWidth="20.0">
                                             <children>
-                                                <Circle radius="${sliderHandDrawThickness.value}" stroke="${colorPickerHandDraw.value}" strokeType="INSIDE" fill="${colorPickerHandDraw.value}" />
+                                                <Circle fill="${colorPickerHandDraw.value}" radius="${sliderHandDrawThickness.value}" stroke="${colorPickerHandDraw.value}" strokeType="INSIDE" />
                                             </children>
                                         </StackPane>
                                         <Label alignment="CENTER" text="Thickness" />
@@ -557,16 +557,6 @@
                                                 </VBox>
                                             </content>
                                         </TitledPane>
-                                        <TitledPane animated="false" text="Sharpen">
-                                            <content>
-                                                <VBox alignment="CENTER">
-                                                    <children>
-                                                        <Label text="Sharpen" />
-                                                        <Slider fx:id="sliderSharpen" showTickLabels="true" />
-                                                    </children>
-                                                </VBox>
-                                            </content>
-                                        </TitledPane>
                                         <TitledPane fx:id="titledPaneGlow" animated="false" text="Glow">
                                             <content>
                                                 <VBox alignment="CENTER">
@@ -669,7 +659,8 @@
                                 <VBox spacing="10.0">
                                     <children>
                                         <Button mnemonicParsing="false" onAction="#onFixRedEye" text="Fix Red Eye" />
-                                        <Button mnemonicParsing="false" onAction="#onDenoising" text="Denoise" />
+                                        <Button mnemonicParsing="false" onAction="#onSharpen" text="Sharpen" />
+                                        <Button mnemonicParsing="false" onAction="#onDenoise" text="Denoise" />
                                     </children>
                                 </VBox>
                             </content>

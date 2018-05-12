@@ -16,11 +16,11 @@ import org.opencv.photo.Photo;
  *
  * @author Admin
  */
-public class Denoising extends AbstractImageAction {
+public class Denoise extends AbstractImageAction {
 
-    public Denoising(BufferedImage originalImage) {
+    public Denoise(BufferedImage originalImage) {
         super(originalImage);
-        setName("Denoising");
+        setName("Denoise");
     }
 
     @Override

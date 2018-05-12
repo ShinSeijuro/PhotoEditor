@@ -813,7 +813,6 @@ public class WorkspaceController implements Initializable {
     @FXML
     public void onSharpen(ActionEvent event) {
         applyAction(new Sharpen(getCurrentImage()));
-        //Sharpen s = new Sharp();
     }
 
     @FXML
@@ -869,8 +868,8 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    private void onDenoising(ActionEvent event) {
-        applyAction(new Denoising(getCurrentImage()));
+    private void onDenoise(ActionEvent event) {
+        applyAction(new Denoise(getCurrentImage()));
     }
 
     @FXML
@@ -1310,8 +1309,6 @@ public class WorkspaceController implements Initializable {
     private Slider sliderGaussianRadius;
     @FXML
     private Slider sliderSepiaToneLevel;
-    @FXML
-    private Slider sliderSharpen;
     @FXML
     private Slider sliderHandDrawThickness;
     @FXML
