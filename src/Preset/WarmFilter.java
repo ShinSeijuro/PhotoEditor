@@ -36,7 +36,7 @@ public class WarmFilter extends ImageColorAction {
             blue = 0;
         }
 
-        return new Color(red, color.getGreen(), blue);
+        return new Color(red, color.getGreen(), blue, color.getAlpha());
     }
 
 }

@@ -36,7 +36,7 @@ public class ColdFilter extends ImageColorAction {
             blue = 255;
         }
 
-        return new Color(red, color.getGreen(), blue);
+        return new Color(red, color.getGreen(), blue, color.getAlpha());
     }
 
 }

@@ -25,13 +25,14 @@ public abstract class ImageColorAction extends AbstractImageAction {
 
         for (int i = 0, width = newImage.getWidth(); i < width; i++) {
             for (int j = 0, height = newImage.getHeight(); j < height; j++) {
-                int rgb = newImage.getRGB(i, j);
+                int argb = newImage.getRGB(i, j);
 
-                int red = (rgb >> 16) & 0x000000FF;
-                int green = (rgb >> 8) & 0x000000FF;
-                int blue = (rgb) & 0x000000FF;
+                int alpha = 0xFF & (argb >> 24);
+                int red = 0xFF & (argb >> 16);
+                int green = 0xFF & (argb >> 8);
+                int blue = 0xFF & (argb >> 0);
 
-                Color color = new Color(red, green, blue);
+                Color color = new Color(red, green, blue, alpha);
                 color = convertColor(color);
 
                 newImage.setRGB(i, j, color.getRGB());

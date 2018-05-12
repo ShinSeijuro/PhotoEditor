@@ -601,16 +601,25 @@ public class WorkspaceController implements Initializable {
     public void applyAction(AbstractImageAction action) {
         if (action instanceof ImageSnapshotAction) {
             BufferedImage image = action.applyTransform();
-            getCurrentController().setBufferedImage(image);
+            updateImage(image);
             getCurrentHistory().add(action);
         } else {
             Task task = action.getApplyTransformTask();
             task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
                 BufferedImage image = action.getModifiedImage();
-                getCurrentController().setBufferedImage(image);
+                updateImage(image);
                 getCurrentHistory().add(action);
+
             });
             runTask(task);
+        }
+    }
+
+    public void updateImage(BufferedImage image) {
+        getCurrentController().setBufferedImage(image);
+
+        if (titledPanePresets.isExpanded()) {
+            runTask(getCurrentController().getUpdatePresetPreviewTask());
         }
     }
 
@@ -814,7 +823,7 @@ public class WorkspaceController implements Initializable {
         BufferedImage image = currentHistory.getCurrentImage();
 
         if (image != null) {
-            getCurrentController().setBufferedImage(image);
+            updateImage(image);
         }
     }
 
@@ -825,7 +834,7 @@ public class WorkspaceController implements Initializable {
         BufferedImage image = currentHistory.getCurrentImage();
 
         if (image != null) {
-            getCurrentController().setBufferedImage(image);
+            updateImage(image);
         }
     }
 
