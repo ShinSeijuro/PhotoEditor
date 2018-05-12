@@ -59,9 +59,8 @@ public class Utils {
     }
 
     public static BufferedImage toBufferedImage(Mat matrix) {
-
         MatOfByte mob = new MatOfByte();
-        Imgcodecs.imencode(".jpg", matrix, mob);
+        Imgcodecs.imencode(".bmp", matrix, mob);
         byte ba[] = mob.toArray();
 
         BufferedImage bi = null;
@@ -74,7 +73,9 @@ public class Utils {
     }
 
     public static Image toImage(Mat matrix) {
-        return SwingFXUtils.toFXImage(toBufferedImage(matrix), null);
+        MatOfByte byteMat = new MatOfByte();
+        Imgcodecs.imencode(".bmp", matrix, byteMat);
+        return new Image(new ByteArrayInputStream(byteMat.toArray()));
     }
 
     public static BufferedImage deepCopy(BufferedImage bi) {
