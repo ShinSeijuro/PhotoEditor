@@ -838,6 +838,12 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onCopy(ActionEvent event) {
+        ImageFromClipboard.set(getCurrentController().getImageView().getImage());
+        makeDialog("Copy", null, "Image copied to clipboard!", AlertType.INFORMATION).show();
+    }
+
+    @FXML
     private void onApplyColorAdjust(ActionEvent event) {
         ImageView imageView = getCurrentController().getImageView();
         applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));

@@ -5,12 +5,11 @@
  */
 package PlugIn;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 
 /**
  *
@@ -19,18 +18,18 @@ import java.io.IOException;
 public class ImageFromClipboard {
 
     public static BufferedImage get() {
-        Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-        if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
-            try {
-                return (BufferedImage) transferable.getTransferData(DataFlavor.imageFlavor);
-            } catch (UnsupportedFlavorException | IOException e) {
-                // handle this as desired
-                e.printStackTrace();
-            }
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        if (clipboard.hasImage()) {
+            Image image = clipboard.getImage();
+            return SwingFXUtils.fromFXImage(image, null);
         }
-        //else {
-        // System.err.println("getImageFromClipboard: Not an image!");
-        //}
         return null;
+    }
+
+    public static void set(Image image) {
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putImage(image);
+        clipboard.setContent(content);
     }
 }
