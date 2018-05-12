@@ -20,6 +20,8 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 
 /**
  *
@@ -83,7 +85,7 @@ public class HandDrawing extends ImageSnapshotAction {
         this.pathList = FXCollections.observableArrayList();
         this.tool = Tool.PEN;
         this.stroke = Color.BLACK;
-        this.strokeWidth = 1.0;
+        this.strokeWidth = 10.0;
         maxX = originalImage.getWidth();
         maxY = originalImage.getHeight();
         addEventHandler();
@@ -149,11 +151,17 @@ public class HandDrawing extends ImageSnapshotAction {
                 return;
             }
 
+            double x = event.getX();
+            double y = event.getY();
+
             Path path = new Path();
             path.setStroke(stroke);
             path.setStrokeWidth(strokeWidth);
+            path.setStrokeLineCap(StrokeLineCap.ROUND);
+            path.setStrokeLineJoin(StrokeLineJoin.ROUND);
             path.getElements().clear();
-            path.getElements().add(new MoveTo(event.getX(), event.getY()));
+            path.getElements().add(new MoveTo(x, y));
+            path.getElements().add(new LineTo(x, y));
 
             switch (tool) {
                 case PEN:

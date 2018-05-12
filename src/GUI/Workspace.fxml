@@ -26,7 +26,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
@@ -401,6 +403,12 @@
                                                 </ToggleButton>
                                             </children>
                                         </HBox>
+                                        <Label alignment="CENTER" layoutX="116.0" layoutY="55.0" text="Preview" />
+                                        <StackPane maxHeight="20.0" maxWidth="20.0" prefHeight="20.0" prefWidth="20.0">
+                                            <children>
+                                                <Circle radius="${sliderHandDrawThickness.value}" stroke="${colorPickerHandDraw.value}" strokeType="INSIDE" fill="${colorPickerHandDraw.value}" />
+                                            </children>
+                                        </StackPane>
                                         <Label alignment="CENTER" text="Thickness" />
                                         <Slider fx:id="sliderHandDrawThickness" blockIncrement="1.0" majorTickUnit="5.0" max="15.0" min="1.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" value="10.0" />
                                         <Label text="Color" />
