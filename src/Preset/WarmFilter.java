@@ -6,8 +6,8 @@
 package Preset;
 
 import Action.ImageColorAction;
-import java.awt.Color;
-import java.awt.image.BufferedImage;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -15,28 +15,28 @@ import java.awt.image.BufferedImage;
  */
 public class WarmFilter extends ImageColorAction {
 
-    public WarmFilter(BufferedImage originalImage) {
+    public WarmFilter(Image originalImage) {
         super(originalImage);
         setName("Warm Filter");
     }
 
     @Override
     protected Color convertColor(Color color) {
-        int red = color.getRed();
-        int blue = color.getBlue();
+        double red = color.getRed();
+        double blue = color.getBlue();
 
-        int temp = (int) ((red + blue) / 4.0d);
+        double temp = (red + blue) / 4.0;
 
         red += temp;
-        if (red > 255) {
-            red = 255;
+        if (red > 1.0) {
+            red = 1.0;
         }
         blue -= temp;
-        if (blue < 0) {
-            blue = 0;
+        if (blue < 0.0) {
+            blue = 0.0;
         }
 
-        return new Color(red, color.getGreen(), blue, color.getAlpha());
+        return new Color(red, color.getGreen(), blue, color.getOpacity());
     }
 
 }

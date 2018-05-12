@@ -11,34 +11,11 @@ package PlugIn;
  */
 import java.awt.*;
 import java.awt.image.*;
-import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.*;
 
 public class ScreenCapture {
 
-//    public static void main(String[] args) throws Exception {
-//
-//        try {
-//            System.out.println("...");
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            System.exit(1);
-//        }
-//
-//        String outFileName = "screen.jpg";
-//
-//        Toolkit toolkit = Toolkit.getDefaultToolkit();
-//        Dimension screenSize = toolkit.getScreenSize();
-//        Rectangle screenRect = new Rectangle(screenSize);
-//        Robot robot = new Robot();
-//
-//        BufferedImage image = robot.createScreenCapture(screenRect);
-//
-//        ImageIO.write(image, "jpg", new File(outFileName));
-//        System.out.println("Da luu vao file \"" + outFileName + "\".");
-//    }
     public static Dimension getScreenSize() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();

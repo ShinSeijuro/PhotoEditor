@@ -6,7 +6,8 @@
 package Transformation;
 
 import Action.AbstractImageAction;
-import java.awt.image.BufferedImage;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Rectangle;
 
 /**
@@ -27,7 +28,7 @@ public class Crop extends AbstractImageAction {
         return invalid;
     }
 
-    public Crop(BufferedImage originalImage, Rectangle rect) {
+    public Crop(Image originalImage, Rectangle rect) {
         super(originalImage);
         this.rect = rect;
         this.invalid = !validateRect();
@@ -79,12 +80,18 @@ public class Crop extends AbstractImageAction {
     }
 
     @Override
-    protected BufferedImage applyTransform(BufferedImage image) {
+    protected Image applyTransform(Image image) {
         if (isInvalid()) {
             return getOriginalImage();
         }
 
-        BufferedImage dest = image.getSubimage((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
-        return dest;
+        WritableImage output = new WritableImage(
+                image.getPixelReader(),
+                (int) rect.getX(),
+                (int) rect.getY(),
+                (int) rect.getWidth(),
+                (int) rect.getHeight());
+
+        return output;
     }
 }

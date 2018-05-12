@@ -6,14 +6,22 @@
 package GUI;
 
 import History.History;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.awt.print.PageFormat;
+import static java.awt.print.Printable.NO_SUCH_PAGE;
+import static java.awt.print.Printable.PAGE_EXISTS;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -96,7 +104,7 @@ public class ImageTab extends Tab {
         savePivot = 0;
     }
 
-    private ImageTab(BufferedImage image, String name) throws IOException, IllegalArgumentException {
+    private ImageTab(Image image, String name) throws IOException, IllegalArgumentException {
         this();
 
         if (image == null) {
@@ -105,20 +113,20 @@ public class ImageTab extends Tab {
 
         this.name = name;
         originalDimension2D = new Dimension2D(image.getWidth(), image.getHeight());
-        controller.setBufferedImage(image);
+        controller.setImage(image);
 
         // Set fit to view = true by default
         controller.setFitToView(true);
     }
 
-    public ImageTab(BufferedImage image) throws IOException, IllegalArgumentException {
+    public ImageTab(Image image) throws IOException, IllegalArgumentException {
         this(image, "new");
         modified = true;
         updateText();
     }
 
     public ImageTab(File file) throws IOException, IllegalArgumentException {
-        this(ImageIO.read(file), file.getName());
+        this(new Image(file.toURI().toString()), file.getName());
         this.file = file;
         modified = false;
         updateText();
@@ -163,15 +171,14 @@ public class ImageTab extends Tab {
 
     private void writeImage() throws IOException {
         String extension = getExtension();
-
+        BufferedImage output = SwingFXUtils.fromFXImage(getController().getImage(), null);
         if (extension.equals("jpg") || extension.equals("jpeg")) {
             // Eliminate bug: confusion between ARGB & CYMK
             // Create a new fixed image with only RGB channel
-            BufferedImage originalImage = controller.getBufferedImage();
-            int width = originalImage.getWidth();
-            int height = originalImage.getHeight();
+            int width = output.getWidth();
+            int height = output.getHeight();
             BufferedImage fixedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            int[] rgb = originalImage.getRGB(0, 0, width, height, null, 0, width);
+            int[] rgb = output.getRGB(0, 0, width, height, null, 0, width);
             fixedImage.setRGB(0, 0, width, height, rgb, 0, width);
 
             // maximize quality
@@ -184,7 +191,27 @@ public class ImageTab extends Tab {
                 writer.write(null, new IIOImage(fixedImage, null, null), param);
             }
         } else {
-            ImageIO.write(controller.getBufferedImage(), extension, file);
+            ImageIO.write(output, extension, file);
+        }
+    }
+
+    public void print() {
+        BufferedImage output = SwingFXUtils.fromFXImage(getController().getImage(), null);
+        PrinterJob printJob = PrinterJob.getPrinterJob();
+        printJob.setPrintable((Graphics graphics, PageFormat pageFormat, int pageIndex) -> {
+            // Get the upper left corner that it printable
+            int x = (int) Math.ceil(pageFormat.getImageableX());
+            int y = (int) Math.ceil(pageFormat.getImageableY());
+            if (pageIndex != 0) {
+                return NO_SUCH_PAGE;
+            }
+            graphics.drawImage(output, x, y, output.getWidth(), output.getHeight(), null);
+            return PAGE_EXISTS;
+        });
+        try {
+            printJob.print();
+        } catch (PrinterException ex) {
+            Logger.getLogger(ImageTab.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -6,7 +6,7 @@
 package Adjustment;
 
 import Action.ImageSnapshotAction;
-import java.awt.image.BufferedImage;
+import javafx.scene.image.Image;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.ImageView;
 
@@ -22,11 +22,21 @@ public class ImageViewEffectAction extends ImageSnapshotAction {
         return effect;
     }
 
-    public ImageViewEffectAction(BufferedImage originalImage, ImageView node) {
+    public ImageView getImageView() {
+        return (ImageView) getNode();
+    }
+
+    public ImageViewEffectAction(Image originalImage, ImageView node) {
         super(originalImage, node);
         this.effect = node.getEffect();
 
         setName(effect.getClass().getSimpleName().replaceAll("(.)([A-Z])", "$1 $2"));
     }
 
+    @Override
+    protected Image applyTransform(Image image) {
+        Image output = takeSnapShot();
+        getImageView().setEffect(null);
+        return output;
+    }
 }

@@ -14,6 +14,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -39,6 +41,10 @@ public class Utils {
         return matImage;
     }
 
+    public static Mat toMat(Image image) {
+        return toMat(SwingFXUtils.fromFXImage(image, null));
+    }
+
     public static BufferedImage toBufferedImage(Mat matrix) {
 
         MatOfByte mob = new MatOfByte();
@@ -54,6 +60,10 @@ public class Utils {
         return bi;
     }
 
+    public static Image toImage(Mat matrix) {
+        return SwingFXUtils.toFXImage(toBufferedImage(matrix), null);
+    }
+
     public static BufferedImage deepCopy(BufferedImage bi) {
         ColorModel cm = bi.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
@@ -62,9 +72,14 @@ public class Utils {
     }
 
     public static BufferedImage getThumbnail(BufferedImage image, int width, int height) {
-        return image;
-        //java.awt.Image scaledImage = image.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
-        //return toBufferedImage(scaledImage);
+        java.awt.Image scaledImage = image.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
+        return toBufferedImage(scaledImage);
+    }
+
+    public static Image getThumbnail(Image image, int width, int height) {
+        return SwingFXUtils.toFXImage(
+                getThumbnail(SwingFXUtils.fromFXImage(image, null), width, height),
+                null);
     }
 
     public static BufferedImage toBufferedImage(java.awt.Image image) {

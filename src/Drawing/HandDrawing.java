@@ -6,13 +6,13 @@
 package Drawing;
 
 import Action.ImageSnapshotAction;
-import java.awt.image.BufferedImage;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -79,7 +79,7 @@ public class HandDrawing extends ImageSnapshotAction {
     private double maxX;
     private double maxY;
 
-    public HandDrawing(BufferedImage originalImage, Group node) {
+    public HandDrawing(Image originalImage, Group node) {
         super(originalImage, node);
         setName("Hand Drawing");
         this.pathList = FXCollections.observableArrayList();

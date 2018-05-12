@@ -9,6 +9,8 @@ import Action.AbstractImageAction;
 import GUI.PhotoEditor;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
@@ -29,13 +31,13 @@ public class FixRedEye extends AbstractImageAction {
         return supported;
     }
 
-    public FixRedEye(BufferedImage originalImage) {
+    public FixRedEye(Image originalImage) {
         super(originalImage);
         this.setName("Fix Red Eye");
     }
 
     @Override
-    protected BufferedImage applyTransform(BufferedImage image) {
+    protected Image applyTransform(Image image) {
         if (!supported) {
             return super.getOriginalImage();
         }
@@ -45,7 +47,7 @@ public class FixRedEye extends AbstractImageAction {
             return super.getOriginalImage();
         }
 
-        BufferedImage fixedImage = Utils.deepCopy(image);
+        BufferedImage fixedImage = SwingFXUtils.fromFXImage(image, null);
 
         MatOfRect eyeDetections = new MatOfRect();
         eyeDetector.detectMultiScale(matImage, eyeDetections);
@@ -74,6 +76,6 @@ public class FixRedEye extends AbstractImageAction {
             }
         }
 
-        return fixedImage;
+        return SwingFXUtils.toFXImage(fixedImage, null);
     }
 }

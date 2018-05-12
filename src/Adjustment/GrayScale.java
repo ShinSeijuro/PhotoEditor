@@ -9,6 +9,8 @@ import Action.AbstractImageAction;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 
 /**
  *
@@ -16,20 +18,21 @@ import java.awt.image.ColorConvertOp;
  */
 public class GrayScale extends AbstractImageAction {
 
-    public GrayScale(BufferedImage originalImage) {
+    public GrayScale(Image originalImage) {
         super(originalImage);
 
         setName("Black&White");
     }
 
     @Override
-    protected BufferedImage applyTransform(BufferedImage image) {
+    protected Image applyTransform(Image image) {
+        BufferedImage newImage = SwingFXUtils.fromFXImage(image, null);
         ColorConvertOp op = new ColorConvertOp(
                 ColorSpace.getInstance(ColorSpace.CS_GRAY),
                 null);
 
-        image = op.filter(image, null);
-        return image;
+        newImage = op.filter(newImage, null);
+        return SwingFXUtils.toFXImage(newImage, null);
     }
 
 }

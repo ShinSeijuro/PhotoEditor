@@ -73,11 +73,6 @@ public class Selection {
     }
 
     private void removeRect() {
-        rect.setX(0);
-        rect.setY(0);
-        rect.setWidth(0);
-        rect.setHeight(0);
-
         group.getChildren().remove(rect);
     }
 

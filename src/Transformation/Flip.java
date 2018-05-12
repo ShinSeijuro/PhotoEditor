@@ -6,17 +6,16 @@
  */
 package Transformation;
 
-import Action.AbstractImageAction;
 import Action.INameable;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
+import Action.ImageSnapshotAction;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  *
  * @author CMQ
  */
-public class Flip extends AbstractImageAction {
+public class Flip extends ImageSnapshotAction {
 
     public enum Orientation implements INameable {
         Horizontal {
@@ -50,32 +49,29 @@ public class Flip extends AbstractImageAction {
         return orientation;
     }
 
-    public Flip(BufferedImage originalImage, Orientation orientation) {
-        super(originalImage);
+    public Flip(Image originalImage, ImageView node, Orientation orientation) {
+        super(originalImage, node);
         this.orientation = orientation;
         setName("Flip " + orientation.getName());
     }
 
     @Override
-    protected BufferedImage applyTransform(BufferedImage image) {
+    protected Image applyTransform(Image image) {
+        Image output = null;
         switch (orientation) {
             case Horizontal:
-                AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
-                tx.translate(-image.getWidth(), 0);
-                AffineTransformOp op = new AffineTransformOp(tx,
-                        AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-                image = op.filter(image, null);
+                getNode().setScaleX(-1.0);
+                output = takeSnapShot();
+                getNode().setScaleX(1.0);
                 break;
             case Vertical:
-                tx = AffineTransform.getScaleInstance(1, -1);
-                tx.translate(0, -image.getHeight());
-                op = new AffineTransformOp(tx,
-                        AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-                image = op.filter(image, null);
+                getNode().setScaleY(-1.0);
+                output = takeSnapShot();
+                getNode().setScaleY(1.0);
                 break;
         }
 
-        return image;
+        return output;
     }
 
 }

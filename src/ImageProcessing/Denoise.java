@@ -6,7 +6,7 @@
 package ImageProcessing;
 
 import Action.AbstractImageAction;
-import java.awt.image.BufferedImage;
+import javafx.scene.image.Image;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
@@ -18,13 +18,13 @@ import org.opencv.photo.Photo;
  */
 public class Denoise extends AbstractImageAction {
 
-    public Denoise(BufferedImage originalImage) {
+    public Denoise(Image originalImage) {
         super(originalImage);
         setName("Denoise");
     }
 
     @Override
-    protected BufferedImage applyTransform(BufferedImage image) {
+    protected Image applyTransform(Image image) {
         Mat rgb = Utils.toMat(image);
         Mat gray = new Mat(rgb.size(), CvType.CV_8U);
         Imgproc.cvtColor(rgb, gray, Imgproc.COLOR_BGR2GRAY);
@@ -33,7 +33,7 @@ public class Denoise extends AbstractImageAction {
         Mat dn = new Mat(rgb.size(), CvType.CV_8UC3);
         Photo.inpaint(rgb, mask, dn, 20, Photo.INPAINT_TELEA);
 
-        BufferedImage newImage = Utils.toBufferedImage(dn);
+        Image newImage = Utils.toImage(dn);
         if (newImage != null) {
             return newImage;
         }

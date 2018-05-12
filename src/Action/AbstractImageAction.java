@@ -5,8 +5,8 @@
  */
 package Action;
 
-import java.awt.image.BufferedImage;
 import javafx.concurrent.Task;
+import javafx.scene.image.Image;
 
 /**
  *
@@ -26,24 +26,24 @@ public abstract class AbstractImageAction implements INameable {
         this.name = newName;
     }
 
-    private BufferedImage originalImage;
+    private Image originalImage;
 
-    public BufferedImage getOriginalImage() {
+    public Image getOriginalImage() {
         return originalImage;
     }
 
-    private BufferedImage modifiedImage;
+    private Image modifiedImage;
 
-    public BufferedImage getModifiedImage() {
+    public Image getModifiedImage() {
         return modifiedImage;
     }
 
-    public AbstractImageAction(BufferedImage originalImage) {
+    public AbstractImageAction(Image originalImage) {
         this.originalImage = originalImage;
         this.name = "";
     }
 
-    public final BufferedImage applyTransform() {
+    public final Image applyTransform() {
         if (modifiedImage == null) {
             modifiedImage = applyTransform(originalImage);
         }
@@ -51,16 +51,16 @@ public abstract class AbstractImageAction implements INameable {
         return modifiedImage;
     }
 
-    public Task<BufferedImage> getApplyTransformTask() {
-        return new Task<BufferedImage>() {
+    public Task<Image> getApplyTransformTask() {
+        return new Task<Image>() {
             @Override
-            protected BufferedImage call() throws Exception {
+            protected Image call() throws Exception {
                 updateMessage("Applying " + getName() + "...");
                 return applyTransform();
             }
         };
     }
 
-    protected abstract BufferedImage applyTransform(BufferedImage image);
+    protected abstract Image applyTransform(Image image);
 
 }

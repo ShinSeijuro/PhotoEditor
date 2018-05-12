@@ -60,6 +60,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
@@ -134,8 +135,12 @@ public class WorkspaceController implements Initializable {
         return getCurrentTab().getHistory();
     }
 
-    public BufferedImage getCurrentImage() {
-        return getCurrentController().getBufferedImage();
+    public Image getCurrentImage() {
+        return getCurrentImageView().getImage();
+    }
+
+    public ImageView getCurrentImageView() {
+        return getCurrentController().getImageView();
     }
 
     private BooleanProperty empty = new SimpleBooleanProperty(true);
@@ -468,7 +473,7 @@ public class WorkspaceController implements Initializable {
                     sliderSaturation.getValue() / 100.0,
                     sliderBrightness.getValue() / 100.0,
                     sliderContrast.getValue() / 100.0);
-            getCurrentController().getImageView().setEffect(colorAdjust);
+            getCurrentImageView().setEffect(colorAdjust);
         }
     };
 
@@ -477,7 +482,7 @@ public class WorkspaceController implements Initializable {
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             GaussianBlur gaussianBlur = new GaussianBlur(
                     sliderGaussianRadius.getValue());
-            getCurrentController().getImageView().setEffect(gaussianBlur);
+            getCurrentImageView().setEffect(gaussianBlur);
         }
 
     };
@@ -489,7 +494,7 @@ public class WorkspaceController implements Initializable {
                     sliderBoxBlurWidth.getValue(),
                     sliderBoxBlurHeight.getValue(),
                     (int) sliderBoxBlurIteration.getValue());
-            getCurrentController().getImageView().setEffect(boxBlur);
+            getCurrentImageView().setEffect(boxBlur);
         }
     };
 
@@ -499,7 +504,7 @@ public class WorkspaceController implements Initializable {
             MotionBlur motionBlur = new MotionBlur(
                     sliderMotionBlurAngle.getValue(),
                     sliderMotionBlurRadius.getValue());
-            getCurrentController().getImageView().setEffect(motionBlur);
+            getCurrentImageView().setEffect(motionBlur);
         }
     };
 
@@ -508,7 +513,7 @@ public class WorkspaceController implements Initializable {
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             Glow glow = new Glow(
                     sliderGlowLevel.getValue() / 100.0);
-            getCurrentController().getImageView().setEffect(glow);
+            getCurrentImageView().setEffect(glow);
         }
     };
 
@@ -517,7 +522,7 @@ public class WorkspaceController implements Initializable {
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             SepiaTone sepiaTone = new SepiaTone(
                     sliderSepiaToneLevel.getValue() / 100.0);
-            getCurrentController().getImageView().setEffect(sepiaTone);
+            getCurrentImageView().setEffect(sepiaTone);
         }
     };
     //</editor-fold>
@@ -600,13 +605,13 @@ public class WorkspaceController implements Initializable {
 
     public void applyAction(AbstractImageAction action) {
         if (action instanceof ImageSnapshotAction) {
-            BufferedImage image = action.applyTransform();
+            Image image = action.applyTransform();
             updateImage(image);
             getCurrentHistory().add(action);
         } else {
             Task task = action.getApplyTransformTask();
             task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
-                BufferedImage image = action.getModifiedImage();
+                Image image = action.getModifiedImage();
                 updateImage(image);
                 getCurrentHistory().add(action);
 
@@ -615,8 +620,8 @@ public class WorkspaceController implements Initializable {
         }
     }
 
-    public void updateImage(BufferedImage image) {
-        getCurrentController().setBufferedImage(image);
+    public void updateImage(Image image) {
+        getCurrentController().setImage(image);
 
         if (titledPanePresets.isExpanded()) {
             runTask(getCurrentController().getUpdatePresetPreviewTask());
@@ -657,24 +662,6 @@ public class WorkspaceController implements Initializable {
     public void loadFile(List<File> files) {
         for (File file : files) {
             loadFile(file);
-        }
-    }
-
-    public void printImage(BufferedImage image) {
-        PrinterJob printJob = PrinterJob.getPrinterJob();
-        printJob.setPrintable((Graphics graphics, PageFormat pageFormat, int pageIndex) -> {
-            // Get the upper left corner that it printable
-            int x = (int) Math.ceil(pageFormat.getImageableX());
-            int y = (int) Math.ceil(pageFormat.getImageableY());
-            if (pageIndex != 0) {
-                return NO_SUCH_PAGE;
-            }
-            graphics.drawImage(image, x, y, image.getWidth(), image.getHeight(), null);
-            return PAGE_EXISTS;
-        });
-        try {
-            printJob.print();
-        } catch (PrinterException e1) {
         }
     }
 
@@ -773,31 +760,31 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onRotateRight90(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), Math.toRadians(90)));
+        applyAction(new Rotation(getCurrentImage(), getCurrentImageView(), 90.0));
     }
 
     @FXML
     public void onRotateLeft90(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), Math.toRadians(-90)));
+        applyAction(new Rotation(getCurrentImage(), getCurrentImageView(), -90));
     }
 
     @FXML
     public void onRotateRight180(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), Math.toRadians(180)));
+        applyAction(new Rotation(getCurrentImage(), getCurrentImageView(), 180));
     }
 
     @FXML
     public void onRotateLeft180(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), Math.toRadians(-180)));
+        applyAction(new Rotation(getCurrentImage(), getCurrentImageView(), -180));
     }
 
     @FXML
     public void onFlipHorizontal(ActionEvent event) {
-        applyAction(new Flip(getCurrentImage(), Flip.Orientation.Horizontal));
+        applyAction(new Flip(getCurrentImage(), getCurrentImageView(), Flip.Orientation.Horizontal));
     }
 
     public void onFlipVertical(ActionEvent event) {
-        applyAction(new Flip(getCurrentImage(), Flip.Orientation.Vertical));
+        applyAction(new Flip(getCurrentImage(), getCurrentImageView(), Flip.Orientation.Vertical));
     }
 
     @FXML
@@ -806,8 +793,8 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onPrint(ActionEvent event) throws FileNotFoundException, PrintException, IOException {
-        printImage(this.getCurrentImage());
+    public void onPrint(ActionEvent event) {
+        getCurrentTab().print();
     }
 
     @FXML
@@ -819,7 +806,7 @@ public class WorkspaceController implements Initializable {
     public void onUndo(ActionEvent event) {
         History currentHistory = getCurrentHistory();
         currentHistory.undo();
-        BufferedImage image = currentHistory.getCurrentImage();
+        Image image = currentHistory.getCurrentImage();
 
         if (image != null) {
             updateImage(image);
@@ -830,7 +817,7 @@ public class WorkspaceController implements Initializable {
     public void onRedo(ActionEvent event) {
         History currentHistory = getCurrentHistory();
         currentHistory.redo();
-        BufferedImage image = currentHistory.getCurrentImage();
+        Image image = currentHistory.getCurrentImage();
 
         if (image != null) {
             updateImage(image);
@@ -839,16 +826,14 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onCopy(ActionEvent event) {
-        ImageFromClipboard.set(getCurrentController().getImageView().getImage());
+        ImageFromClipboard.set(getCurrentImageView().getImage());
         makeDialog("Copy", null, "Image copied to clipboard!", AlertType.INFORMATION).show();
     }
 
     @FXML
     private void onApplyColorAdjust(ActionEvent event) {
-        ImageView imageView = getCurrentController().getImageView();
-        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
         onResetColorAdjust(null);
-        imageView.setEffect(null);
     }
 
     @FXML
@@ -888,10 +873,10 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyGaussianBlur(ActionEvent event) {
-        ImageView imageView = getCurrentController().getImageView();
-        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+
+        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
         onResetGaussianBlur(null);
-        imageView.setEffect(null);
+
     }
 
     @FXML
@@ -901,10 +886,10 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyBoxBlur(ActionEvent event) {
-        ImageView imageView = getCurrentController().getImageView();
-        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+
+        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
         onResetBoxBlur(null);
-        imageView.setEffect(null);
+
     }
 
     @FXML
@@ -915,10 +900,10 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyMotionBlur(ActionEvent event) {
-        ImageView imageView = getCurrentController().getImageView();
-        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+
+        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
         onResetMotionBlur(null);
-        imageView.setEffect(null);
+
     }
 
     @FXML
@@ -929,10 +914,10 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyGlow(ActionEvent event) {
-        ImageView imageView = getCurrentController().getImageView();
-        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+
+        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
         onResetGlow(null);
-        imageView.setEffect(null);
+
     }
 
     @FXML
@@ -942,10 +927,10 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplySepiaTone(ActionEvent event) {
-        ImageView imageView = getCurrentController().getImageView();
-        applyAction(new ImageViewEffectAction(getCurrentImage(), imageView));
+
+        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
         onResetSepiaTone(null);
-        imageView.setEffect(null);
+
     }
 
     @FXML
@@ -1094,7 +1079,7 @@ public class WorkspaceController implements Initializable {
         // Set delay
         PauseTransition wait = new PauseTransition(Duration.seconds(timer));
         wait.setOnFinished(e -> {
-            BufferedImage image = ScreenCapture.Capture();
+            Image image = SwingFXUtils.toFXImage(ScreenCapture.Capture(), null);
 
             // Restore window;
             if (stage.isIconified()) {
@@ -1147,7 +1132,7 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onPasteFromClipboard(ActionEvent event) {
-        BufferedImage image = ImageFromClipboard.get();
+        Image image = ImageFromClipboard.get();
         if (image != null) {
             ImageTab tab = null;
             try {
@@ -1196,7 +1181,7 @@ public class WorkspaceController implements Initializable {
                 }
             });
 
-            controller.setupImageView(getCurrentController().getImageView(), stage);
+            controller.setupImageView(getCurrentImageView(), stage);
 
             stage.show();
         } catch (IOException e) {

@@ -5,8 +5,7 @@
  */
 package Action;
 
-import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.paint.Color;
@@ -23,17 +22,20 @@ public class ImageSnapshotAction extends AbstractImageAction {
         return node;
     }
 
-    public ImageSnapshotAction(BufferedImage originalImage, Node node) {
+    public ImageSnapshotAction(Image originalImage, Node node) {
         super(originalImage);
         this.node = node;
     }
 
     @Override
-    protected final BufferedImage applyTransform(BufferedImage image) {
+    protected Image applyTransform(Image image) {
+        return takeSnapShot();
+    }
+
+    protected final Image takeSnapShot() {
         SnapshotParameters sp = new SnapshotParameters();
         sp.setFill(Color.TRANSPARENT);
-        image = SwingFXUtils.fromFXImage(node.snapshot(sp, null), null);
-        return image;
+        return node.snapshot(sp, null);
     }
 
 }

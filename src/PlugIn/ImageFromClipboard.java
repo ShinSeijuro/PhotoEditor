@@ -5,8 +5,6 @@
  */
 package PlugIn;
 
-import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -17,11 +15,10 @@ import javafx.scene.input.ClipboardContent;
  */
 public class ImageFromClipboard {
 
-    public static BufferedImage get() {
+    public static Image get() {
         Clipboard clipboard = Clipboard.getSystemClipboard();
         if (clipboard.hasImage()) {
-            Image image = clipboard.getImage();
-            return SwingFXUtils.fromFXImage(image, null);
+            return clipboard.getImage();
         }
         return null;
     }

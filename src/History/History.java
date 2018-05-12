@@ -6,7 +6,7 @@
 package History;
 
 import Action.AbstractImageAction;
-import java.awt.image.BufferedImage;
+import javafx.scene.image.Image;
 import javafx.event.EventHandler;
 import java.util.ArrayDeque;
 import javafx.event.Event;
@@ -32,7 +32,7 @@ public class History {
         return redoDeque;
     }
 
-    public BufferedImage getCurrentImage() {
+    public Image getCurrentImage() {
         if (undoDeque.size() > 0) {
             return undoDeque.getFirst().getModifiedImage();
         } else if (redoDeque.size() > 0) {

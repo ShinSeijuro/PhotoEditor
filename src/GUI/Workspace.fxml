@@ -101,9 +101,10 @@
                                 </MenuItem>
                                 <SeparatorMenuItem mnemonicParsing="false" />
                                 <MenuItem mnemonicParsing="false" onAction="#onCopy" text="Copy">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator></MenuItem>
+                                    <accelerator>
+                                        <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                    </accelerator>
+                                </MenuItem>
                                 <MenuItem mnemonicParsing="false" text="Delete" />
                             </items>
                         </Menu>
@@ -266,9 +267,9 @@
         </BorderPane>
     </bottom>
     <right>
-        <ScrollPane fx:id="scrollPaneEdit" BorderPane.alignment="CENTER">
+        <ScrollPane fx:id="scrollPaneEdit" BorderPane.alignment="CENTER" visible="${toggleEdit.selected}">
             <content>
-                <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="265.0" visible="${toggleEdit.selected}">
+                <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="265.0" >
                     <panes>
                         <TitledPane fx:id="titledPaneCropAndRotate" animated="false" text="Crop &amp; Rotate">
                             <content>

@@ -6,8 +6,11 @@
 package Action;
 
 import ImageProcessing.Utils;
-import java.awt.Color;
-import java.awt.image.BufferedImage;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -15,27 +18,21 @@ import java.awt.image.BufferedImage;
  */
 public abstract class ImageColorAction extends AbstractImageAction {
 
-    public ImageColorAction(BufferedImage originalImage) {
+    public ImageColorAction(Image originalImage) {
         super(originalImage);
     }
 
     @Override
-    protected final BufferedImage applyTransform(BufferedImage image) {
-        BufferedImage newImage = Utils.deepCopy(image);
+    protected final Image applyTransform(Image image) {
+        WritableImage newImage = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
+        PixelWriter pixelWriter = newImage.getPixelWriter();
+        PixelReader pixelReader = newImage.getPixelReader();
 
-        for (int i = 0, width = newImage.getWidth(); i < width; i++) {
-            for (int j = 0, height = newImage.getHeight(); j < height; j++) {
-                int argb = newImage.getRGB(i, j);
-
-                int alpha = 0xFF & (argb >> 24);
-                int red = 0xFF & (argb >> 16);
-                int green = 0xFF & (argb >> 8);
-                int blue = 0xFF & (argb >> 0);
-
-                Color color = new Color(red, green, blue, alpha);
+        for (int i = 0, width = (int) newImage.getRequestedWidth(); i < width; i++) {
+            for (int j = 0, height = (int) newImage.getHeight(); j < height; j++) {
+                Color color = pixelReader.getColor(i, j);
                 color = convertColor(color);
-
-                newImage.setRGB(i, j, color.getRGB());
+                pixelWriter.setColor(i, j, color);
             }
         }
 

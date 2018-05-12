@@ -9,10 +9,8 @@ import Action.AbstractImageAction;
 import Adjustment.GrayScale;
 import ImageProcessing.Utils;
 import Preset.*;
-import java.awt.image.BufferedImage;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
 /**
@@ -62,13 +60,13 @@ public class PresetPreview {
         return blackAndWhite;
     }
 
-    private BufferedImage thumbnail;
+    private Image thumbnail;
 
-    public BufferedImage getThumbnail() {
+    public Image getThumbnail() {
         return thumbnail;
     }
 
-    public void setThumbnail(BufferedImage originalImage) {
+    public void setThumbnail(Image originalImage) {
         if (originalImage == null) {
             this.thumbnail = null;
             setWarmFilter(null);
@@ -77,7 +75,7 @@ public class PresetPreview {
             return;
         }
 
-        this.thumbnail = Utils.getThumbnail(originalImage, 100, 100);
+        this.thumbnail = Utils.getThumbnail(originalImage, 100, -1);
         setWarmFilter(getImageFromAction(new WarmFilter(thumbnail)));
         setColdFilter(getImageFromAction(new ColdFilter(thumbnail)));
         setBlackAndWhite(getImageFromAction(new GrayScale(thumbnail)));
@@ -87,6 +85,6 @@ public class PresetPreview {
     }
 
     private Image getImageFromAction(AbstractImageAction action) {
-        return SwingFXUtils.toFXImage(action.applyTransform(), null);
+        return action.applyTransform();
     }
 }

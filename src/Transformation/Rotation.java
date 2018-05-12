@@ -5,60 +5,35 @@
  */
 package Transformation;
 
-import Action.AbstractImageAction;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
+import Action.ImageSnapshotAction;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  *
  * @author CMQ
  */
-public class Rotation extends AbstractImageAction {
+public class Rotation extends ImageSnapshotAction {
 
-    private double radian;
+    private double angle;
 
-    public double getRadian() {
-        return radian;
+    public double getAngle() {
+        return angle;
     }
 
-    public Rotation(BufferedImage originalImage, double radian) {
-        super(originalImage);
-        this.radian = radian;
+    public Rotation(Image originalImage, ImageView node, double angle) {
+        super(originalImage, node);
+        this.angle = angle;
 
-        setName("Rotate " + (radian < 0 ? "left" : "right") + " " + Math.abs(Math.toDegrees(radian)) + "°");
+        setName("Rotate " + (angle < 0 ? "left" : "right") + " " + Math.abs(angle) + "°");
     }
 
     @Override
-    public BufferedImage applyTransform(BufferedImage image) {
-        AffineTransform transform = new AffineTransform();
-        transform.rotate(radian, (double) image.getWidth() / 2.0, (double) image.getHeight() / 2.0);
-        double offset
-                = (radian >= 0
-                        ? (image.getWidth() - image.getHeight())
-                        : (image.getHeight() - image.getWidth()))
-                / 2;
-        transform.translate(offset, offset);
-        AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-
-        BufferedImage newImage = null;
-        switch (getAngle()) {
-            case -90:
-            case 90:
-                newImage = new BufferedImage(image.getHeight(), image.getWidth(), image.getType());
-                break;
-            case -180:
-            case 180:
-                newImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-                break;
-        }
-
-        op.filter(image, newImage);
-        return newImage;
-    }
-
-    public int getAngle() {
-        return (int) Math.toDegrees(radian);
+    public Image applyTransform(Image image) {
+        getNode().setRotate(angle);
+        Image output = takeSnapShot();
+        getNode().setRotate(0.0);
+        return output;
     }
 
 }

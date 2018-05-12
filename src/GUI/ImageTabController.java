@@ -50,13 +50,13 @@ public class ImageTabController extends Tab implements Initializable {
         return presetPreviewUpdated;
     }
 
-    public BufferedImage getBufferedImage() {
-        return SwingFXUtils.fromFXImage(imageView.getImage(), null);
+    public Image getImage() {
+        return imageView.getImage();
     }
 
-    public void setBufferedImage(BufferedImage image) {
+    public void setImage(Image image) {
         this.presetPreviewUpdated = false;
-        imageView.setImage(SwingFXUtils.toFXImage(image, null));
+        imageView.setImage(image);
 
         if (isFitToView()) {
             doFitToView();
@@ -109,7 +109,7 @@ public class ImageTabController extends Tab implements Initializable {
 
         if (drawing) {
             if (handDrawing == null) {
-                handDrawing = new HandDrawing(getBufferedImage(), groupImage);
+                handDrawing = new HandDrawing(getImage(), groupImage);
             }
         } else {
             if (handDrawing != null) {
@@ -229,7 +229,7 @@ public class ImageTabController extends Tab implements Initializable {
                     return null;
                 }
                 updateMessage("Updating preset preview images...");
-                getPresetPreview().setThumbnail(getBufferedImage());
+                getPresetPreview().setThumbnail(getImage());
                 return null;
             }
 
@@ -243,7 +243,7 @@ public class ImageTabController extends Tab implements Initializable {
 
     public final void updatePresetPreview() {
         if (!presetPreviewUpdated) {
-            getPresetPreview().setThumbnail(getBufferedImage());
+            getPresetPreview().setThumbnail(getImage());
             presetPreviewUpdated = true;
         }
     }
