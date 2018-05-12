@@ -7,10 +7,13 @@ package ImageProcessing;
 
 import Action.AbstractImageAction;
 import GUI.PhotoEditor;
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
@@ -47,7 +50,9 @@ public class FixRedEye extends AbstractImageAction {
             return super.getOriginalImage();
         }
 
-        BufferedImage fixedImage = SwingFXUtils.fromFXImage(image, null);
+        WritableImage fixedImage = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
+        PixelReader pixelReader = fixedImage.getPixelReader();
+        PixelWriter pixelWriter = fixedImage.getPixelWriter();
 
         MatOfRect eyeDetections = new MatOfRect();
         eyeDetector.detectMultiScale(matImage, eyeDetections);
@@ -57,25 +62,24 @@ public class FixRedEye extends AbstractImageAction {
             int height = eyeRect.y + eyeRect.height;
             for (int x = eyeRect.x; x <= width; x++) {
                 for (int y = eyeRect.y; y <= height; y++) {
-                    Color color = new Color(fixedImage.getRGB(x, y));
+                    Color color = pixelReader.getColor(x, y);
 
                     // Color values from 0 to 255
-                    int red = color.getRed();
-                    int green = color.getGreen();
-                    int blue = color.getBlue();
+                    double red = color.getRed();
+                    double green = color.getGreen();
+                    double blue = color.getBlue();
 
-                    if ((red > 80) && (green < 60)) {
+                    if ((red > (80.0 / 255.0)) && (green < (60.0 / 255.0))) {
                         // Decreases the red to the average of the green and blue
-                        red = (green + blue) / 2;
+                        red = (green + blue) / 2.0;
                         // Create new color for this pixel that is not so red
-                        color = new Color(red, green, blue);
+                        color = new Color(red, green, blue, color.getOpacity());
+                        pixelWriter.setColor(x, y, color);
                     }
-
-                    fixedImage.setRGB(x, y, color.getRGB());
                 }
             }
         }
 
-        return SwingFXUtils.toFXImage(fixedImage, null);
+        return fixedImage;
     }
 }

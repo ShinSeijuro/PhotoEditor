@@ -12,10 +12,13 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritablePixelFormat;
 import javax.imageio.ImageIO;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -42,7 +45,17 @@ public class Utils {
     }
 
     public static Mat toMat(Image image) {
-        return toMat(SwingFXUtils.fromFXImage(image, null));
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+        byte[] buffer = new byte[width * height * 4];
+
+        PixelReader reader = image.getPixelReader();
+        WritablePixelFormat<ByteBuffer> format = WritablePixelFormat.getByteBgraInstance();
+        reader.getPixels(0, 0, width, height, format, buffer, 0, width * 4);
+
+        Mat mat = new Mat(height, width, CvType.CV_8UC4);
+        mat.put(0, 0, buffer);
+        return mat;
     }
 
     public static BufferedImage toBufferedImage(Mat matrix) {
