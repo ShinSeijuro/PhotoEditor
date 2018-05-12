@@ -1216,6 +1216,11 @@ public class WorkspaceController implements Initializable {
     private void onColdFilter(ActionEvent event) {
         applyAction(new ColdFilter(getCurrentImage()));
     }
+
+    @FXML
+    private void onInvert(ActionEvent event) {
+        applyAction(new Invert(getCurrentImage()));
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Controls">

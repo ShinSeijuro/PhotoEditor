@@ -60,6 +60,20 @@ public class PresetPreview {
         return blackAndWhite;
     }
 
+    private final ObjectProperty<Image> invert = new SimpleObjectProperty<>(null);
+
+    public Image getInvert() {
+        return invert.get();
+    }
+
+    public void setInvert(Image value) {
+        invert.set(value);
+    }
+
+    public ObjectProperty invertProperty() {
+        return invert;
+    }
+
     private Image thumbnail;
 
     public Image getThumbnail() {
@@ -79,6 +93,7 @@ public class PresetPreview {
         setWarmFilter(getImageFromAction(new WarmFilter(thumbnail)));
         setColdFilter(getImageFromAction(new ColdFilter(thumbnail)));
         setBlackAndWhite(getImageFromAction(new GrayScale(thumbnail)));
+        setInvert(getImageFromAction(new Invert(thumbnail)));
     }
 
     public PresetPreview() {

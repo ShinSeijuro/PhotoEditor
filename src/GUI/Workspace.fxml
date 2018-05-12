@@ -654,6 +654,11 @@
                                                 <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.blackAndWhite}" pickOnBounds="true" preserveRatio="true" />
                                             </graphic>
                                         </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onInvert" prefWidth="116.0" text="Invert">
+                                            <graphic>
+                                                <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.invert}" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </Button>
                                     </children>
                                 </FlowPane>
                             </content>
