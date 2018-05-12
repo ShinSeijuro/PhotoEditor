@@ -11,6 +11,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -51,6 +53,8 @@ public class ImageTabController extends Tab implements Initializable {
         if (isFitToView()) {
             doFitToView();
         }
+
+        getPresetPreview().setThumbnail(image);
     }
 
     private Selection selection;
@@ -153,28 +157,22 @@ public class ImageTabController extends Tab implements Initializable {
         }
     }
 
+    private final ReadOnlyObjectProperty<PresetPreview> presetPreview = new ReadOnlyObjectWrapper<>(new PresetPreview());
+
+    public PresetPreview getPresetPreview() {
+        return presetPreview.get();
+    }
+
+    public ReadOnlyObjectProperty presetPreviewProperty() {
+        return presetPreview;
+    }
+
     private final ChangeListener<Number> scrollPaneChangeListener = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             doFitToView();
         }
     };
-
-    public void doFitToView() {
-        Image image = imageView.getImage();
-        double widthRatio = scrollPane.getWidth() / image.getWidth();
-        double heightRatio = scrollPane.getHeight() / image.getHeight();
-
-        if (widthRatio == 0.0 || heightRatio == 0.0) {
-            return;
-        }
-
-        if (widthRatio > heightRatio) {
-            setZoomRatio(heightRatio - 0.005);
-        } else {
-            setZoomRatio(widthRatio - 0.005);
-        }
-    }
 
     /**
      * Initializes the controller class.
@@ -197,6 +195,22 @@ public class ImageTabController extends Tab implements Initializable {
                 }
             }
         });
+    }
+
+    public void doFitToView() {
+        Image image = imageView.getImage();
+        double widthRatio = scrollPane.getWidth() / image.getWidth();
+        double heightRatio = scrollPane.getHeight() / image.getHeight();
+
+        if (widthRatio == 0.0 || heightRatio == 0.0) {
+            return;
+        }
+
+        if (widthRatio > heightRatio) {
+            setZoomRatio(heightRatio - 0.005);
+        } else {
+            setZoomRatio(widthRatio - 0.005);
+        }
     }
 
     @FXML

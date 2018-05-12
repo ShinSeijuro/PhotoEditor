@@ -5,6 +5,7 @@
  */
 package ImageProcessing;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DataBufferByte;
@@ -58,5 +59,19 @@ public class Utils {
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
         WritableRaster raster = bi.copyData(bi.getRaster().createCompatibleWritableRaster());
         return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
+
+    public static BufferedImage getThumbnail(BufferedImage image, int width, int height) {
+        return image;
+        //java.awt.Image scaledImage = image.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
+        //return toBufferedImage(scaledImage);
+    }
+
+    public static BufferedImage toBufferedImage(java.awt.Image image) {
+        BufferedImage output = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Graphics graphics = output.getGraphics();
+        graphics.drawImage(image, 0, 0, null);
+        graphics.dispose();
+        return output;
     }
 }

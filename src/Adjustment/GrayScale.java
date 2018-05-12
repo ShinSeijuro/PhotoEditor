@@ -7,9 +7,7 @@ package Adjustment;
 
 import Action.AbstractImageAction;
 import java.awt.Graphics;
-import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorConvertOp;
 
 /**
  *

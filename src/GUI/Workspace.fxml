@@ -21,13 +21,14 @@
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
+<BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
     <center>
         <TabPane fx:id="tabPane" prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
     </center>
@@ -243,7 +244,7 @@
     <right>
         <ScrollPane fx:id="scrollPaneEdit" BorderPane.alignment="CENTER">
             <content>
-                <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="250.0" visible="${toggleEdit.selected}">
+                <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="265.0" visible="${toggleEdit.selected}">
                     <panes>
                         <TitledPane fx:id="titledPaneCropAndRotate" animated="false" text="Crop &amp; Rotate">
                             <content>
@@ -309,45 +310,45 @@
                             </content>
                         </TitledPane>
                         <TitledPane fx:id="titledPaneAdjustment" animated="false" text="Adjustments">
-                     <content>
-                        <VBox alignment="CENTER">
-                           <children>
-                              <Label text="Brightness" />
-                              <Slider fx:id="sliderBrightness" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
-                              <Label text="Contrast" />
-                              <Slider fx:id="sliderContrast" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
-                              <Label text="Hue" />
-                              <Slider fx:id="sliderHue" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
-                              <Label text="Saturation" />
-                              <Slider fx:id="sliderSaturation" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
-                              <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
-                                 <children>
-                                    <Button mnemonicParsing="false" onAction="#onApplyColorAdjust" text="Apply">
-                                       <graphic>
-                                          <Label text="">
-                                             <font>
-                                                <Font name="Segoe MDL2 Assets" size="12.0" />
-                                             </font>
-                                          </Label>
-                                       </graphic>
-                                    </Button>
-                                    <Button mnemonicParsing="false" onAction="#onResetColorAdjust" text="Reset">
-                                       <graphic>
-                                          <Label text="">
-                                             <font>
-                                                <Font name="Segoe MDL2 Assets" size="12.0" />
-                                             </font>
-                                          </Label>
-                                       </graphic>
-                                    </Button>
-                                 </children>
-                                 <padding>
-                                    <Insets top="10.0" />
-                                 </padding>
-                              </HBox>
-                           </children>
-                        </VBox>
-                     </content>
+                            <content>
+                                <VBox alignment="CENTER">
+                                    <children>
+                                        <Label text="Brightness" />
+                                        <Slider fx:id="sliderBrightness" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
+                                        <Label text="Contrast" />
+                                        <Slider fx:id="sliderContrast" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
+                                        <Label text="Hue" />
+                                        <Slider fx:id="sliderHue" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
+                                        <Label text="Saturation" />
+                                        <Slider fx:id="sliderSaturation" majorTickUnit="50.0" min="-100.0" showTickLabels="true" />
+                                        <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
+                                            <children>
+                                                <Button mnemonicParsing="false" onAction="#onApplyColorAdjust" text="Apply">
+                                                    <graphic>
+                                                        <Label text="">
+                                                            <font>
+                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </graphic>
+                                                </Button>
+                                                <Button mnemonicParsing="false" onAction="#onResetColorAdjust" text="Reset">
+                                                    <graphic>
+                                                        <Label text="">
+                                                            <font>
+                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </graphic>
+                                                </Button>
+                                            </children>
+                                            <padding>
+                                                <Insets top="10.0" />
+                                            </padding>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </content>
                         </TitledPane>
                         <TitledPane fx:id="titledPaneDraw" animated="false" text="Draw">
                             <content>
@@ -613,28 +614,39 @@
                                 </Accordion>
                             </content>
                         </TitledPane>
-                        <TitledPane animated="false" text="Filter">
+                        <TitledPane animated="false" text="Presets">
                             <content>
-                                <VBox>
+                                <FlowPane hgap="10.0" prefWrapLength="0.0" vgap="10.0">
+                                    <children>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onWarmFilter" text="Warm">
+                                            <graphic>
+                                                <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.warmFilter}" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onColdFilter" text="Cold">
+                                            <graphic>
+                                                <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.coldFilter}" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White">
+                                            <graphic>
+                                                <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.blackAndWhite}" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </Button>
+                                    </children>
+                                </FlowPane>
+                            </content>
+                        </TitledPane>
+                        <TitledPane animated="false" text="Others">
+                            <content>
+                                <VBox spacing="10.0">
                                     <children>
                                         <Button mnemonicParsing="false" onAction="#onFixRedEye" text="Fix Red Eye" />
-                                        <Button mnemonicParsing="false" onAction="#onBlackAndWhite" text="Black &amp; White" />
-                                        <Button mnemonicParsing="false" onAction="#onDenoising" text="Denoising" />
+                                        <Button mnemonicParsing="false" onAction="#onDenoising" text="Denoise" />
                                     </children>
                                 </VBox>
                             </content>
                         </TitledPane>
-                  <TitledPane animated="false" text="Scene">
-                     <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#onWarmFilter" text="Warm" />
-                              <Button mnemonicParsing="false" onAction="#onColdFilter" text="Cold" />
-                              <Button mnemonicParsing="false" text="Old" />
-                           </children>
-                        </VBox>
-                     </content>
-                  </TitledPane>
                     </panes>
                 </Accordion>
             </content>
