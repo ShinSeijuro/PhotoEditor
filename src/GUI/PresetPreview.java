@@ -46,6 +46,20 @@ public class PresetPreview {
         return coldFilter;
     }
 
+    private final ObjectProperty<Image> greenFilter = new SimpleObjectProperty<>(null);
+
+    public Image getGreenFilter() {
+        return greenFilter.get();
+    }
+
+    public void setGreenFilter(Image value) {
+        greenFilter.set(value);
+    }
+
+    public ObjectProperty greenFilterProperty() {
+        return greenFilter;
+    }
+
     private final ObjectProperty<Image> blackAndWhite = new SimpleObjectProperty<>(null);
 
     public Image getBlackAndWhite() {
@@ -92,6 +106,7 @@ public class PresetPreview {
         this.thumbnail = Utils.getThumbnail(originalImage, 100, -1);
         setWarmFilter(getImageFromAction(new WarmFilter(thumbnail)));
         setColdFilter(getImageFromAction(new ColdFilter(thumbnail)));
+        setGreenFilter(getImageFromAction(new GreenFilter(thumbnail)));
         setBlackAndWhite(getImageFromAction(new GrayScale(thumbnail)));
         setInvert(getImageFromAction(new Invert(thumbnail)));
     }

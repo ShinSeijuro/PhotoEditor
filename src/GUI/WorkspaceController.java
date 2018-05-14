@@ -1218,6 +1218,11 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onGreenFilter(ActionEvent event) {
+        applyAction(new GreenFilter(getCurrentImage()));
+    }
+
+    @FXML
     private void onInvert(ActionEvent event) {
         applyAction(new Invert(getCurrentImage()));
     }

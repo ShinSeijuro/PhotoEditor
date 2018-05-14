@@ -10,13 +10,12 @@ import javafx.scene.paint.Color;
 
 /**
  *
- * @author Admin
+ * @author CMQ
  */
-public class ColdFilter extends ImageBlendAction {
+public class GreenFilter extends ImageBlendAction {
 
-    public ColdFilter(Image originalImage) {
-        super(originalImage, Color.web("#006dff"), 0.25);
-        setName("Cold Filter");
+    public GreenFilter(Image originalImage) {
+        super(originalImage, Color.web("#19c919"), 0.25);
+        setName("Green Filter");
     }
-
 }
