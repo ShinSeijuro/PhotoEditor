@@ -17,6 +17,7 @@ import PlugIn.ImageFromClipboard;
 import PlugIn.ScreenCapture;
 import PlugIn.WallpaperChanger;
 import Preset.*;
+import java.awt.print.PrinterException;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
@@ -783,7 +784,11 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onPrint(ActionEvent event) {
-        getCurrentTab().print();
+        try {
+            getCurrentTab().print();
+        } catch (PrinterException ex) {
+            makeDialog("Print", null, "Unable to print.\n\nDetails: " + ex.getMessage(), AlertType.ERROR).show();
+        }
     }
 
     @FXML
@@ -817,6 +822,28 @@ public class WorkspaceController implements Initializable {
     private void onCopy(ActionEvent event) {
         ImageFromClipboard.set(getCurrentImageView().getImage());
         makeDialog("Copy", null, "Image copied to clipboard!", AlertType.INFORMATION).show();
+    }
+
+    @FXML
+    private void onDelete(ActionEvent event) {
+        Alert confirm = makeDialog(
+                "Delete",
+                null,
+                "Are you sure you want to delete \"" + getCurrentTab().getName() + "\"?",
+                AlertType.CONFIRMATION,
+                ButtonType.YES,
+                ButtonType.NO);
+        if (confirm.showAndWait().get() == ButtonType.YES) {
+            try {
+                getCurrentTab().delete();
+            } catch (IOException ex) {
+                makeDialog("Delete",
+                        null,
+                        "Unable to delete file. The tab will now close.\n\nDetails: " + ex.getMessage(),
+                        AlertType.ERROR).show();
+            }
+            tabPane.getTabs().remove(getTabs().remove(getCurrentTab().getName()));
+        }
     }
 
     @FXML

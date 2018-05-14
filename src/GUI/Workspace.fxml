@@ -105,7 +105,10 @@
                                         <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                     </accelerator>
                                 </MenuItem>
-                                <MenuItem mnemonicParsing="false" text="Delete" />
+                                <MenuItem mnemonicParsing="false" onAction="#onDelete" text="Delete">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="DELETE" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Extras">
@@ -189,7 +192,7 @@
                                 <Tooltip text="Flip vertical" />
                             </tooltip>
                         </Button>
-                        <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Delete">
+                        <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#onDelete" text="Delete">
                             <graphic>
                                 <Label text="">
                                     <font>
@@ -267,9 +270,9 @@
         </BorderPane>
     </bottom>
     <right>
-        <ScrollPane fx:id="scrollPaneEdit" BorderPane.alignment="CENTER" visible="${toggleEdit.selected}">
+        <ScrollPane fx:id="scrollPaneEdit" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
             <content>
-                <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="265.0" >
+                <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="265.0">
                     <panes>
                         <TitledPane fx:id="titledPaneCropAndRotate" animated="false" text="Crop &amp; Rotate">
                             <content>

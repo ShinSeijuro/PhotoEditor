@@ -6,6 +6,7 @@
 package GUI;
 
 import History.History;
+import PlugIn.RecycleBin;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
@@ -69,6 +70,12 @@ public class ImageTab extends Tab {
 
     public boolean isModified() {
         return modified;
+    }
+
+    private boolean deleteRequested;
+
+    public boolean isDeleteRequested() {
+        return deleteRequested;
     }
 
     private int savePivot;
@@ -195,7 +202,7 @@ public class ImageTab extends Tab {
         }
     }
 
-    public void print() {
+    public void print() throws PrinterException {
         BufferedImage output = SwingFXUtils.fromFXImage(getController().getImage(), null);
         PrinterJob printJob = PrinterJob.getPrinterJob();
         printJob.setPrintable((Graphics graphics, PageFormat pageFormat, int pageIndex) -> {
@@ -212,6 +219,14 @@ public class ImageTab extends Tab {
             printJob.print();
         } catch (PrinterException ex) {
             Logger.getLogger(ImageTab.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        }
+    }
+
+    public void delete() throws IOException {
+        deleteRequested = true;
+        if (file != null) {
+            RecycleBin.delete(file);
         }
     }
 }
