@@ -11,6 +11,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -61,6 +63,19 @@ public class FullScreenController implements Initializable {
             public void handle(ScrollEvent event) {
                 setZoomRatio(getZoomRatio() + (event.getDeltaY() / 1000.0));
                 event.consume();
+            }
+        });
+    }
+
+    public void initStage(Stage stage) {
+        stage.setTitle("PhotoEditor - Fullscreen");
+        stage.setFullScreen(true);
+        stage.fullScreenProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == false) {
+                    stage.close();
+                }
             }
         });
     }

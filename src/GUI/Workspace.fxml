@@ -31,7 +31,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
     <center>
         <TabPane fx:id="tabPane" prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
     </center>
@@ -106,9 +106,10 @@
                                     </accelerator>
                                 </MenuItem>
                                 <MenuItem mnemonicParsing="false" onAction="#onDelete" text="Delete">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="DELETE" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator></MenuItem>
+                                    <accelerator>
+                                        <KeyCodeCombination alt="UP" code="DELETE" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                    </accelerator>
+                                </MenuItem>
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Extras">
@@ -118,8 +119,11 @@
                                         <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                                     </accelerator>
                                 </MenuItem>
+                                <SeparatorMenuItem mnemonicParsing="false" />
                                 <MenuItem mnemonicParsing="false" onAction="#onScreenCapture" text="Screen capture" />
                                 <MenuItem mnemonicParsing="false" onAction="#onScreenCaptureWithTimer" text="Screen capture with timer..." />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" onAction="#onTakeAPicture" text="Take a picture..." />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">

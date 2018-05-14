@@ -73,7 +73,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-//</editor-fold>
 
 /**
  *
@@ -1147,6 +1146,54 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onTakeAPicture(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Webcam.fxml"));
+            Parent root = loader.load();
+            WebcamController controller = loader.getController();
+
+            if (controller.getCurrentWebcam() == null) {
+                makeDialog("Take a picture...", null, "There are no cameras found.", AlertType.WARNING).show();
+                return;
+            }
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            controller.initStage(stage);
+            stage.showAndWait();
+
+            Image image = controller.getImage();
+
+            // No picture taken
+            if (image == null) {
+                return;
+            }
+
+            // Add to workspace
+            ImageTab tab = null;
+            try {
+                tab = new ImageTab(image);
+            } catch (IOException | IllegalArgumentException ex) {
+                makeDialog("Take a picture...",
+                        null,
+                        "Failed to take a picture." + "\n\nDetails:\n" + ex.getMessage(),
+                        AlertType.ERROR).show();
+            }
+
+            if (tab == null) {
+                return;
+            }
+
+            tab.setOnCloseRequest(onTabCloseRequest);
+            tabPane.getTabs().add(tab);
+            tabPane.getSelectionModel().selectLast();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void onPasteFromClipboard(ActionEvent event) {
         Image image = ImageFromClipboard.get();
         if (image != null) {
@@ -1186,20 +1233,11 @@ public class WorkspaceController implements Initializable {
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setScene(scene);
-            stage.setTitle("PhotoEditor - Fullscreen");
-            stage.setFullScreen(true);
-            stage.fullScreenProperty().addListener(new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    if (newValue == false) {
-                        stage.close();
-                    }
-                }
-            });
 
+            controller.initStage(stage);
             controller.setupImageView(getCurrentImageView(), stage);
 
-            stage.show();
+            stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
