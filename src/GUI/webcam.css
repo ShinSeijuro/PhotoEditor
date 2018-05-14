@@ -1,0 +1,19 @@
+/*
+ * Webcam Stylesheet file.
+ */
+
+.button-control{
+    -fx-background-radius: 90;
+    -fx-background-color: rgba(128, 128, 128, 0.5);
+}
+
+.button-control:hover {
+    -fx-background-radius: 90;
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+}
+
+/*.button:pressed {
+    -fx-border-color: white;
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}*/

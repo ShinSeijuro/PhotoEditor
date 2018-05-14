@@ -69,10 +69,10 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+//</editor-fold>
 
 /**
  *
@@ -80,6 +80,7 @@ import javafx.util.Duration;
  */
 public class WorkspaceController implements Initializable {
 
+    //<editor-fold defaultstate="collapsed" desc="Properties">
     private final HashMap<String, ImageTab> tabs = new HashMap<>();
 
     public HashMap<String, ImageTab> getTabs() {
@@ -175,6 +176,7 @@ public class WorkspaceController implements Initializable {
     public ObjectProperty currentTaskProperty() {
         return currentTask;
     }
+    //</editor-fold>
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -1188,6 +1190,10 @@ public class WorkspaceController implements Initializable {
             tab.setOnCloseRequest(onTabCloseRequest);
             tabPane.getTabs().add(tab);
             tabPane.getSelectionModel().selectLast();
+
+            if (controller.isMirrored()) {
+                onFlipHorizontal(null);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
