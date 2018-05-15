@@ -36,6 +36,8 @@ import javax.imageio.stream.ImageOutputStream;
  */
 public class ImageTab extends Tab {
 
+    public static final String NEWFILE_TABNAME_STRING = "new";
+
     private ImageTabController controller;
 
     public ImageTabController getController() {
@@ -127,7 +129,7 @@ public class ImageTab extends Tab {
     }
 
     public ImageTab(Image image) throws IOException, IllegalArgumentException {
-        this(image, "new");
+        this(image, NEWFILE_TABNAME_STRING);
         modified = true;
         updateText();
     }
@@ -145,6 +147,13 @@ public class ImageTab extends Tab {
         } else {
             setText(name);
         }
+    }
+
+    public String getFileName() {
+        if (file == null) {
+            return NEWFILE_TABNAME_STRING;
+        }
+        return name.substring(0, name.lastIndexOf('.'));
     }
 
     public String getExtension() {
@@ -198,7 +207,9 @@ public class ImageTab extends Tab {
                 writer.write(null, new IIOImage(fixedImage, null, null), param);
             }
         } else {
-            ImageIO.write(output, extension, file);
+            if (!ImageIO.write(output, extension, file)) {
+                throw new IOException("No appropriate writer.");
+            }
         }
     }
 

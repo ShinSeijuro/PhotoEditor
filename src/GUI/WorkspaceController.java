@@ -40,8 +40,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -557,18 +555,13 @@ public class WorkspaceController implements Initializable {
         });
     }
 
-    public Alert makeDialog(String title, String header, String content, AlertType alertType) {
+    public Alert makeDialog(String title, String header, String content, AlertType alertType, ButtonType... buttonTypes) {
         final Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
 
-        return alert;
-    }
-
-    public Alert makeDialog(String title, String header, String content, AlertType alertType, ButtonType... buttonTypes) {
-        final Alert alert = makeDialog(title, header, content, alertType);
-        if (buttonTypes != null) {
+        if (buttonTypes.length > 0) {
             alert.getButtonTypes().clear();
             alert.getButtonTypes().addAll(buttonTypes);
         }
@@ -707,9 +700,8 @@ public class WorkspaceController implements Initializable {
         try {
             getCurrentTab().saveFile();
         } catch (IOException ex) {
-            Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
             makeDialog("Save",
-                    "ERROR: Unable to save file",
+                    null,
                     "Unable to save file: " + outputFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
                     AlertType.ERROR).show();
         }
@@ -719,25 +711,24 @@ public class WorkspaceController implements Initializable {
     public void onFileSaveAs(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+                new ExtensionFilter("PNG file", "*.png"),
+                new ExtensionFilter("JPG/JPEG file", "*.jpg"),
+                new ExtensionFilter("GIF file", "*.gif"),
                 new ExtensionFilter("All Files", "*.*"));
         fileChooser.setTitle("Save file");
-        fileChooser.setInitialFileName(getCurrentTab().getText());
-        File savedFile = fileChooser.showSaveDialog(PhotoEditor.getPrimaryStage());
-
+        fileChooser.setInitialFileName(getCurrentTab().getFileName() + ".png");
         if (lastDirectory != null) {
             fileChooser.setInitialDirectory(lastDirectory);
         }
 
-        if (savedFile != null) {
-
+        File outputFile = fileChooser.showSaveDialog(PhotoEditor.getPrimaryStage());
+        if (outputFile != null) {
             try {
-                getCurrentTab().saveFile(savedFile);
+                getCurrentTab().saveFile(outputFile);
             } catch (IOException ex) {
-                Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
                 makeDialog("Save as...",
-                        "ERROR: Unable to save file",
-                        "Unable to save file: " + savedFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
+                        null,
+                        "Unable to save file: " + outputFile.getPath() + "\n\nDetails:\n" + ex.getMessage(),
                         AlertType.ERROR).show();
             }
         }
@@ -788,7 +779,10 @@ public class WorkspaceController implements Initializable {
         try {
             getCurrentTab().print();
         } catch (PrinterException ex) {
-            makeDialog("Print", null, "Unable to print.\n\nDetails: " + ex.getMessage(), AlertType.ERROR).show();
+            makeDialog("Print",
+                    null,
+                    "Unable to print.\n\nDetails:\n" + ex.getMessage(),
+                    AlertType.ERROR).show();
         }
     }
 
@@ -835,15 +829,21 @@ public class WorkspaceController implements Initializable {
                 ButtonType.YES,
                 ButtonType.NO);
         if (confirm.showAndWait().get() == ButtonType.YES) {
+            ImageTab tab = getCurrentTab();
+
             try {
-                getCurrentTab().delete();
+                tab.delete();
             } catch (IOException ex) {
                 makeDialog("Delete",
                         null,
-                        "Unable to delete file. The tab will now close.\n\nDetails: " + ex.getMessage(),
-                        AlertType.ERROR).show();
+                        "Unable to delete file. The tab will now close.\n\nDetails:\n" + ex.getMessage(),
+                        AlertType.ERROR).showAndWait();
             }
-            tabPane.getTabs().remove(getTabs().remove(getCurrentTab().getName()));
+
+            if (tab.getFile() != null) {
+                tabs.remove(tab.getName());
+            }
+            tabPane.getTabs().remove(tab);
         }
     }
 

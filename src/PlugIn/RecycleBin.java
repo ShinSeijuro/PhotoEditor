@@ -8,8 +8,6 @@ package PlugIn;
 import com.sun.jna.platform.FileUtils;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -23,7 +21,6 @@ public class RecycleBin {
             try {
                 fileUtils.moveToTrash(files);
             } catch (IOException ex) {
-                Logger.getLogger(RecycleBin.class.getName()).log(Level.SEVERE, null, ex);
                 throw ex;
             }
         } else {
