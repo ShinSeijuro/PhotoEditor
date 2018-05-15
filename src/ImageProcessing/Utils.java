@@ -32,6 +32,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 public class Utils {
 
     public static Mat toMat(BufferedImage image) {
+        System.out.println(image.getColorModel().getColorSpace().getNumComponents());
         BufferedImage convertImg = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
         convertImg.getGraphics().drawImage(image, 0, 0, null);
         byte[] pixels = ((DataBufferByte) convertImg.getRaster().getDataBuffer()).getData();
@@ -60,7 +61,7 @@ public class Utils {
 
     public static BufferedImage toBufferedImage(Mat matrix) {
         MatOfByte mob = new MatOfByte();
-        Imgcodecs.imencode(".bmp", matrix, mob);
+        Imgcodecs.imencode(matrix.channels() > 3 ? ".png" : ".bmp", matrix, mob);
         byte ba[] = mob.toArray();
 
         BufferedImage bi = null;
@@ -74,7 +75,7 @@ public class Utils {
 
     public static Image toImage(Mat matrix) {
         MatOfByte byteMat = new MatOfByte();
-        Imgcodecs.imencode(".bmp", matrix, byteMat);
+        Imgcodecs.imencode(matrix.channels() > 3 ? ".png" : ".bmp", matrix, byteMat);
         return new Image(new ByteArrayInputStream(byteMat.toArray()));
     }
 

@@ -646,6 +646,11 @@
                             <content>
                                 <FlowPane hgap="10.0" prefWrapLength="0.0" vgap="10.0">
                                     <children>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onAutoBalance" prefWidth="116.0" text="Auto Balance">
+                                            <graphic>
+                                                <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.autoBalance}" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </Button>
                                         <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onWarmFilter" prefWidth="116.0" text="Warm">
                                             <graphic>
                                                 <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.warmFilter}" pickOnBounds="true" preserveRatio="true" />
@@ -664,6 +669,11 @@
                                         <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onBlackAndWhite" prefWidth="116.0" text="Black &amp; White">
                                             <graphic>
                                                 <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.blackAndWhite}" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onBWContrast" prefWidth="116.0" text="BW Contrast">
+                                            <graphic>
+                                                <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.bwContrast}" pickOnBounds="true" preserveRatio="true" />
                                             </graphic>
                                         </Button>
                                         <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onInvert" prefWidth="116.0" text="Invert">

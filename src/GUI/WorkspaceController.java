@@ -13,7 +13,7 @@ import Adjustment.*;
 import Drawing.*;
 import Transformation.*;
 import History.*;
-import PlugIn.ImageFromClipboard;
+import PlugIn.ClipboardWrapper;
 import PlugIn.ScreenCapture;
 import PlugIn.WallpaperChanger;
 import Preset.*;
@@ -518,12 +518,26 @@ public class WorkspaceController implements Initializable {
 
     //<editor-fold defaultstate="collapsed" desc="Functions">
     public void initializeScene(Scene scene) {
-        KeyCombination keyComb = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.ALT_DOWN);
+        KeyCombination fullscreenKeyComb = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.ALT_DOWN);
+        KeyCombination closeTabKeyComb = new KeyCodeCombination(KeyCode.W, KeyCodeCombination.CONTROL_DOWN);
+        KeyCombination nextTabKeyComb = new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
+        KeyCombination previousTabKeyComb = new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN);
+
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (keyComb.match(event)) {
+                if (fullscreenKeyComb.match(event)) {
                     onFullScreen(null);
+                } else if (!tabPane.getTabs().isEmpty()) {
+                    if (closeTabKeyComb.match(event)) {
+                        // TODO
+                    } else if (tabPane.getTabs().size() > 1) {
+                        if (nextTabKeyComb.match(event)) {
+                            tabPane.getSelectionModel().selectNext();
+                        } else if (previousTabKeyComb.match(event)) {
+                            tabPane.getSelectionModel().selectPrevious();
+                        }
+                    }
                 }
             }
         });
@@ -548,6 +562,9 @@ public class WorkspaceController implements Initializable {
                 if (db.hasFiles()) {
                     success = true;
                     loadFile(db.getFiles());
+                } else if (db.hasUrl()) {
+                    success = true;
+                    // TODO
                 }
                 event.setDropCompleted(success);
                 event.consume();
@@ -770,11 +787,6 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onBlackAndWhite(ActionEvent event) {
-        applyAction(new GrayScale(getCurrentImage()));
-    }
-
-    @FXML
     public void onPrint(ActionEvent event) {
         try {
             getCurrentTab().print();
@@ -815,7 +827,7 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onCopy(ActionEvent event) {
-        ImageFromClipboard.set(getCurrentImageView().getImage());
+        ClipboardWrapper.set(getCurrentImageView().getImage());
         makeDialog("Copy", null, "Image copied to clipboard!", AlertType.INFORMATION).show();
     }
 
@@ -1201,7 +1213,7 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onPasteFromClipboard(ActionEvent event) {
-        Image image = ImageFromClipboard.get();
+        Image image = ClipboardWrapper.get();
         if (image != null) {
             ImageTab tab = null;
             try {
@@ -1279,6 +1291,11 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onAutoBalance(ActionEvent event) {
+        applyAction(new AutoBalance(getCurrentImage()));
+    }
+
+    @FXML
     private void onWarmFilter(ActionEvent event) {
         applyAction(new WarmFilter(getCurrentImage()));
     }
@@ -1291,6 +1308,16 @@ public class WorkspaceController implements Initializable {
     @FXML
     private void onGreenFilter(ActionEvent event) {
         applyAction(new GreenFilter(getCurrentImage()));
+    }
+
+    @FXML
+    public void onBlackAndWhite(ActionEvent event) {
+        applyAction(new GrayScale(getCurrentImage()));
+    }
+
+    @FXML
+    public void onBWContrast(ActionEvent event) {
+        applyAction(new GrayScaleBalance(getCurrentImage()));
     }
 
     @FXML

@@ -13,12 +13,16 @@ import javafx.scene.input.ClipboardContent;
  *
  * @author CMQ
  */
-public class ImageFromClipboard {
+public class ClipboardWrapper {
 
     public static Image get() {
         Clipboard clipboard = Clipboard.getSystemClipboard();
         if (clipboard.hasImage()) {
             return clipboard.getImage();
+        } else if (clipboard.hasUrl()) {
+            return new Image(clipboard.getUrl());
+        } else if (clipboard.hasString()) {
+            return new Image(clipboard.getString());
         }
         return null;
     }
