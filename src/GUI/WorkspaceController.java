@@ -868,6 +868,16 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onMenuZoom(ActionEvent event) {
+        MenuItem menu = (MenuItem) event.getSource();
+        if (menu != null) {
+            String menuText = menu.getText();
+            double percent = Double.valueOf(menuText.substring(0, menuText.length() - 1)) / 100.0;
+            getCurrentController().setZoomRatio(percent);
+        }
+    }
+
+    @FXML
     private void onApplyColorAdjust(ActionEvent event) {
         applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
         onResetColorAdjust(null);

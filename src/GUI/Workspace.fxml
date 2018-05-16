@@ -126,6 +126,14 @@
                                     </accelerator>
                                 </MenuItem>
                                 <CheckMenuItem fx:id="menuFitToView" mnemonicParsing="false" onAction="#onToggleFitToView" text="Fit to View" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="10%" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="50%" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="100%" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="200%" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="400%" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="800%" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="1600%" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Extras">
