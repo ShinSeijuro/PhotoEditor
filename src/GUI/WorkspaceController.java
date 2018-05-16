@@ -561,7 +561,7 @@ public class WorkspaceController implements Initializable {
                 boolean success = false;
                 if (db.hasFiles()) {
                     success = true;
-                    loadFile(db.getFiles());
+                    openFile(db.getFiles());
                 } else if (db.hasUrl()) {
                     success = true;
                     // TODO
@@ -629,40 +629,46 @@ public class WorkspaceController implements Initializable {
         }
     }
 
-    public void loadFile(File file) {
-        String tabName = file.getName();
+    public void openNewTab(ImageTab tab) {
+        if (tab == null) {
+            return;
+        }
+
+        tab.setOnClosed((e) -> {
+            if (tab.getActualName() != null) {
+                tabs.remove(tab.getActualName());
+            }
+        });
+        tab.setOnCloseRequest(onTabCloseRequest);
+
+        if (tab.getActualName() != null) {
+            tabs.put(tab.getActualName(), tab);
+        }
+
+        tabPane.getTabs().add(tab);
+        tabPane.getSelectionModel().selectLast();
+    }
+
+    public void openFile(File file) {
+        String tabName = file.getAbsolutePath();
 
         if (tabs.containsKey(tabName)) {
             tabPane.getSelectionModel().select(tabs.get(tabName));
         } else {
-            ImageTab tab = null;
             try {
-                tab = new ImageTab(file);
+                openNewTab(new ImageTab(file));
             } catch (IOException | IllegalArgumentException ex) {
                 makeDialog("Open image...",
                         "ERROR: Unable to open file",
                         "Unable to open file: " + file.getPath() + "\n\nDetails:\n" + ex.getMessage(),
                         AlertType.ERROR).show();
             }
-
-            if (tab == null) {
-                return;
-            }
-
-            tab.setOnClosed((e) -> {
-                tabs.remove(tabName);
-            });
-            tab.setOnCloseRequest(onTabCloseRequest);
-
-            tabPane.getTabs().add(tab);
-            tabs.put(tabName, tab);
-            tabPane.getSelectionModel().selectLast();
         }
     }
 
-    public void loadFile(List<File> files) {
+    public void openFile(List<File> files) {
         for (File file : files) {
-            loadFile(file);
+            openFile(file);
         }
     }
 
@@ -701,7 +707,7 @@ public class WorkspaceController implements Initializable {
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(PhotoEditor.getPrimaryStage());
 
         if (selectedFiles != null) {
-            loadFile(selectedFiles);
+            openFile(selectedFiles);
             lastDirectory = selectedFiles.get(0).getParentFile();
         }
     }
@@ -741,7 +747,15 @@ public class WorkspaceController implements Initializable {
         File outputFile = fileChooser.showSaveDialog(PhotoEditor.getPrimaryStage());
         if (outputFile != null) {
             try {
+                ImageTab tab = getCurrentTab();
+                String oldName = tab.getActualName();
+
                 getCurrentTab().saveFile(outputFile);
+
+                if (oldName != null) {
+                    tabs.remove(oldName);
+                }
+                tabs.put(tab.getActualName(), tab);
             } catch (IOException ex) {
                 makeDialog("Save as...",
                         null,
@@ -1116,23 +1130,14 @@ public class WorkspaceController implements Initializable {
             }
 
             // Add to workspace
-            ImageTab tab = null;
             try {
-                tab = new ImageTab(image);
+                openNewTab(new ImageTab(image));
             } catch (IOException | IllegalArgumentException ex) {
                 makeDialog("Screen capture",
                         null,
                         "Failed to capture screen." + "\n\nDetails:\n" + ex.getMessage(),
                         AlertType.ERROR).show();
             }
-
-            if (tab == null) {
-                return;
-            }
-
-            tab.setOnCloseRequest(onTabCloseRequest);
-            tabPane.getTabs().add(tab);
-            tabPane.getSelectionModel().selectLast();
         });
 
         wait.play();
@@ -1185,23 +1190,14 @@ public class WorkspaceController implements Initializable {
             }
 
             // Add to workspace
-            ImageTab tab = null;
             try {
-                tab = new ImageTab(image);
+                openNewTab(new ImageTab(image));
             } catch (IOException | IllegalArgumentException ex) {
                 makeDialog("Take a picture...",
                         null,
                         "Failed to take a picture." + "\n\nDetails:\n" + ex.getMessage(),
                         AlertType.ERROR).show();
             }
-
-            if (tab == null) {
-                return;
-            }
-
-            tab.setOnCloseRequest(onTabCloseRequest);
-            tabPane.getTabs().add(tab);
-            tabPane.getSelectionModel().selectLast();
 
             if (controller.isMirrored()) {
                 onFlipHorizontal(null);
@@ -1215,24 +1211,14 @@ public class WorkspaceController implements Initializable {
     private void onPasteFromClipboard(ActionEvent event) {
         Image image = ClipboardWrapper.get();
         if (image != null) {
-            ImageTab tab = null;
             try {
-                tab = new ImageTab(image);
+                openNewTab(new ImageTab(image));
             } catch (IOException | IllegalArgumentException ex) {
                 makeDialog("Paste from Clipboard",
                         null,
                         "Unable to paste from clipboard." + "\n\nDetails:\n" + ex.getMessage(),
                         AlertType.ERROR).show();
             }
-
-            if (tab == null) {
-                return;
-            }
-
-            tab.setOnCloseRequest(onTabCloseRequest);
-
-            tabPane.getTabs().add(tab);
-            tabPane.getSelectionModel().selectLast();
         } else {
             makeDialog("Paste from Clipboard",
                     null,

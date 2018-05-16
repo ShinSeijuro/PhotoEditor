@@ -36,7 +36,7 @@ import javax.imageio.stream.ImageOutputStream;
  */
 public class ImageTab extends Tab {
 
-    public static final String NEWFILE_TABNAME_STRING = "new";
+    private static int newFileCount = 0;
 
     private ImageTabController controller;
 
@@ -129,7 +129,7 @@ public class ImageTab extends Tab {
     }
 
     public ImageTab(Image image) throws IOException, IllegalArgumentException {
-        this(image, NEWFILE_TABNAME_STRING);
+        this(image, "new (" + ++newFileCount + ")");
         modified = true;
         updateText();
     }
@@ -139,6 +139,13 @@ public class ImageTab extends Tab {
         this.file = file;
         modified = false;
         updateText();
+    }
+
+    public String getActualName() {
+        if (file == null) {
+            return null;
+        }
+        return file.getAbsolutePath();
     }
 
     private void updateText() {
@@ -151,7 +158,7 @@ public class ImageTab extends Tab {
 
     public String getFileName() {
         if (file == null) {
-            return NEWFILE_TABNAME_STRING;
+            return name;
         }
         return name.substring(0, name.lastIndexOf('.'));
     }
