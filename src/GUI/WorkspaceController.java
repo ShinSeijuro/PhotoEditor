@@ -182,6 +182,8 @@ public class WorkspaceController implements Initializable {
 
         PhotoEditor.getPrimaryStage().setOnCloseRequest(onWindowCloseRequest);
 
+        menuFitToView.selectedProperty().bindBidirectional(toggleFitToView.selectedProperty());
+
         tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
@@ -518,7 +520,6 @@ public class WorkspaceController implements Initializable {
 
     //<editor-fold defaultstate="collapsed" desc="Functions">
     public void initializeScene(Scene scene) {
-        KeyCombination fullscreenKeyComb = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.ALT_DOWN);
         KeyCombination closeTabKeyComb = new KeyCodeCombination(KeyCode.W, KeyCodeCombination.CONTROL_DOWN);
         KeyCombination nextTabKeyComb = new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
         KeyCombination previousTabKeyComb = new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN);
@@ -526,9 +527,7 @@ public class WorkspaceController implements Initializable {
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (fullscreenKeyComb.match(event)) {
-                    onFullScreen(null);
-                } else if (!tabPane.getTabs().isEmpty()) {
+                if (!tabPane.getTabs().isEmpty()) {
                     if (closeTabKeyComb.match(event)) {
                         // TODO
                     } else if (tabPane.getTabs().size() > 1) {
@@ -1319,6 +1318,8 @@ public class WorkspaceController implements Initializable {
     private MenuItem menuUndo;
     @FXML
     private MenuItem menuRedo;
+    @FXML
+    private CheckMenuItem menuFitToView;
     @FXML
     private ToggleButton toggleEdit;
     @FXML
