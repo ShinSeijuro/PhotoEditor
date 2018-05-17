@@ -81,7 +81,12 @@
                                     </accelerator>
                                 </MenuItem>
                                 <SeparatorMenuItem mnemonicParsing="false" />
-                                <MenuItem mnemonicParsing="false" onAction="#onFileClose" text="Close">
+                                <MenuItem disable="${controller.empty}" mnemonicParsing="false" onAction="#onClose" text="Close">
+                                    <accelerator>
+                                        <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                    </accelerator>
+                                </MenuItem>
+                                <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit">
                                     <accelerator>
                                         <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                     </accelerator>
@@ -121,6 +126,14 @@
                                     </accelerator>
                                 </MenuItem>
                                 <CheckMenuItem fx:id="menuFitToView" mnemonicParsing="false" onAction="#onToggleFitToView" text="Fit to View" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="10%" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="50%" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="100%" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="200%" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="400%" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="800%" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="1600%" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Extras">

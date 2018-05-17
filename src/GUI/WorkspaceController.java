@@ -452,6 +452,10 @@ public class WorkspaceController implements Initializable {
                     return;
                 }
             }
+
+            if (tab.getActualName() != null) {
+                tabs.remove(tab.getActualName());
+            }
         }
     };
 
@@ -520,26 +524,6 @@ public class WorkspaceController implements Initializable {
 
     //<editor-fold defaultstate="collapsed" desc="Functions">
     public void initializeScene(Scene scene) {
-        KeyCombination closeTabKeyComb = new KeyCodeCombination(KeyCode.W, KeyCodeCombination.CONTROL_DOWN);
-        KeyCombination nextTabKeyComb = new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
-        KeyCombination previousTabKeyComb = new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN);
-
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (!tabPane.getTabs().isEmpty()) {
-                    if (closeTabKeyComb.match(event)) {
-                        // TODO
-                    } else if (tabPane.getTabs().size() > 1) {
-                        if (nextTabKeyComb.match(event)) {
-                            tabPane.getSelectionModel().selectNext();
-                        } else if (previousTabKeyComb.match(event)) {
-                            tabPane.getSelectionModel().selectPrevious();
-                        }
-                    }
-                }
-            }
-        });
 
         scene.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
@@ -633,11 +617,6 @@ public class WorkspaceController implements Initializable {
             return;
         }
 
-        tab.setOnClosed((e) -> {
-            if (tab.getActualName() != null) {
-                tabs.remove(tab.getActualName());
-            }
-        });
         tab.setOnCloseRequest(onTabCloseRequest);
 
         if (tab.getActualName() != null) {
@@ -771,7 +750,23 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    public void onFileClose(ActionEvent event) {
+    private void onClose(ActionEvent event) {
+        ImageTab tab = getCurrentTab();
+
+        EventHandler<Event> handler = tab.getOnCloseRequest();
+        if (handler != null) {
+            Event e = new Event(tab, null, Tab.TAB_CLOSE_REQUEST_EVENT);
+            handler.handle(e);
+            if (!e.isConsumed()) {
+                tabPane.getTabs().remove(tab);
+            }
+        } else {
+            tabPane.getTabs().remove(tab);
+        }
+    }
+
+    @FXML
+    public void onExit(ActionEvent event) {
         PhotoEditor.getPrimaryStage().close();
     }
 
@@ -874,6 +869,16 @@ public class WorkspaceController implements Initializable {
                 tabs.remove(tab.getName());
             }
             tabPane.getTabs().remove(tab);
+        }
+    }
+
+    @FXML
+    private void onMenuZoom(ActionEvent event) {
+        MenuItem menu = (MenuItem) event.getSource();
+        if (menu != null) {
+            String menuText = menu.getText();
+            double percent = Double.valueOf(menuText.substring(0, menuText.length() - 1)) / 100.0;
+            getCurrentController().setZoomRatio(percent);
         }
     }
 
