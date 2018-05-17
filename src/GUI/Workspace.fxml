@@ -32,7 +32,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
     <center>
         <TabPane fx:id="tabPane" prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
     </center>
@@ -120,7 +120,7 @@
                                         <KeyCodeCombination alt="DOWN" code="ENTER" control="UP" meta="UP" shift="UP" shortcut="UP" />
                                     </accelerator>
                                 </MenuItem>
-                                <CheckMenuItem fx:id="menuFitToView" mnemonicParsing="false" onAction="#onToggleFitToView" text="Fit to View"/>
+                                <CheckMenuItem fx:id="menuFitToView" mnemonicParsing="false" onAction="#onToggleFitToView" text="Fit to View" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Extras">
@@ -401,36 +401,40 @@
                                             <padding>
                                                 <Insets bottom="10.0" />
                                             </padding>
-                                            <children>
-                                                <ToggleButton fx:id="toggleHandDrawPen" mnemonicParsing="false" onAction="#onToggleHandDrawPen" selected="true" text="Pen">
-                                                    <toggleGroup>
-                                                        <ToggleGroup fx:id="handDrawTool" />
-                                                    </toggleGroup>
-                                                    <graphic>
-                                                        <Label text="">
-                                                            <font>
-                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                            </font>
-                                                        </Label>
-                                                    </graphic>
-                                                </ToggleButton>
-                                                <ToggleButton fx:id="toggleHandDrawEraser" mnemonicParsing="false" onAction="#onToggleHandDrawEraser" text="Eraser" toggleGroup="$handDrawTool">
-                                                    <graphic>
-                                                        <Label text="">
-                                                            <font>
-                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                            </font>
-                                                        </Label>
-                                                    </graphic>
-                                                </ToggleButton>
-                                            </children>
                                         </HBox>
-                                        <Label alignment="CENTER" layoutX="116.0" layoutY="55.0" text="Preview" />
                                         <StackPane maxHeight="20.0" maxWidth="20.0" prefHeight="20.0" prefWidth="20.0">
                                             <children>
                                                 <Circle fill="${colorPickerHandDraw.value}" radius="${sliderHandDrawThickness.value}" stroke="${colorPickerHandDraw.value}" strokeType="INSIDE" />
+                                    <FlowPane>
+                                       <children>
+                                                      <ToggleButton fx:id="toggleHandDrawPen" mnemonicParsing="false" onAction="#onToggleHandDrawPen" selected="true" text="Pen">
+                                                          <toggleGroup>
+                                                              <ToggleGroup fx:id="handDrawTool" />
+                                                          </toggleGroup>
+                                                          <graphic>
+                                                              <Label text="">
+                                                                  <font>
+                                                                      <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                  </font>
+                                                              </Label>
+                                                          </graphic>
+                                                      </ToggleButton>
+                                                      <ToggleButton fx:id="toggleHandDrawEraser" mnemonicParsing="false" onAction="#onToggleHandDrawEraser" text="Eraser" toggleGroup="$handDrawTool">
+                                                          <graphic>
+                                                              <Label text="">
+                                                                  <font>
+                                                                      <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                  </font>
+                                                              </Label>
+                                                          </graphic>
+                                                      </ToggleButton>
+                                          <ToggleButton mnemonicParsing="false" onAction="#onToggleHandDrawCircle" text="Circle" toggleGroup="$handDrawTool" />
+                                          <ToggleButton mnemonicParsing="false" onAction="#onToggleHandDrawRectangle" text="Rectangle" toggleGroup="$handDrawTool" />
+                                       </children>
+                                    </FlowPane>
                                             </children>
                                         </StackPane>
+                                        <Label alignment="CENTER" layoutX="116.0" layoutY="55.0" text="Preview" />
                                         <Label alignment="CENTER" text="Thickness" />
                                         <Slider fx:id="sliderHandDrawThickness" blockIncrement="1.0" majorTickUnit="5.0" max="15.0" min="1.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" value="10.0" />
                                         <Label text="Color" />

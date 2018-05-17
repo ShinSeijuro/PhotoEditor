@@ -692,6 +692,11 @@ public class WorkspaceController implements Initializable {
     private File lastDirectory;
 
     @FXML
+    public void onCircle(ActionEvent event) {
+
+    }
+
+    @FXML
     public void onFileOpen(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -898,6 +903,16 @@ public class WorkspaceController implements Initializable {
     @FXML
     private void onToggleHandDrawEraser(ActionEvent event) {
         getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.ERASER);
+    }
+
+    @FXML
+    private void onToggleHandDrawRectangle(ActionEvent event) {
+        getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.RECTANGLE);
+    }
+
+    @FXML
+    private void onToggleHandDrawCircle(ActionEvent event) {
+        getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.CIRCLE);
     }
 
     @FXML
