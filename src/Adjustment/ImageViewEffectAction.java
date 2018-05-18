@@ -29,8 +29,14 @@ public class ImageViewEffectAction extends ImageSnapshotAction {
     public ImageViewEffectAction(Image originalImage, ImageView node) {
         super(originalImage, node);
         this.effect = node.getEffect();
+        setActionName();
+    }
 
-        setName(effect.getClass().getSimpleName().replaceAll("(.)([A-Z])", "$1 $2"));
+    public ImageViewEffectAction(Image originalImage, ImageView node, Effect effect) {
+        super(originalImage, node);
+        this.effect = effect;
+        node.setEffect(effect);
+        setActionName();
     }
 
     @Override
@@ -38,5 +44,13 @@ public class ImageViewEffectAction extends ImageSnapshotAction {
         Image output = takeSnapShot();
         getImageView().setEffect(null);
         return output;
+    }
+
+    private void setActionName() {
+        if (effect != null) {
+            setName(effect.getClass().getSimpleName().replaceAll("(.)([A-Z])", "$1 $2"));
+        } else {
+            setName("Image Effect");
+        }
     }
 }

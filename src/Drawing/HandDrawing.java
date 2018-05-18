@@ -6,6 +6,10 @@
 package Drawing;
 
 import Action.ImageSnapshotAction;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -30,7 +34,7 @@ import javafx.scene.shape.StrokeLineJoin;
  *
  * @author Admin
  */
-public class HandDrawing extends ImageSnapshotAction {
+public class HandDrawing {
 
     public enum Tool {
         PEN,
@@ -42,36 +46,61 @@ public class HandDrawing extends ImageSnapshotAction {
 
     private final DragContext dragContext = new DragContext();
 
+    private Group group;
+
     public Group getGroup() {
-        return (Group) getNode();
+        return group;
     }
 
-    private Paint stroke;
+    public void setGroup(Group group) {
+        if (this.group != null) {
+            shapeList.clear();
+            removeEventHandler();
+        }
+
+        this.group = group;
+
+        if (group != null) {
+            addEventHandler();
+        }
+    }
+
+    public void setGroup(Group group, Image image) {
+        setGroup(group);
+        maxX = image.getWidth();
+        maxY = image.getHeight();
+    }
+
+    private final ObjectProperty<Paint> stroke = new SimpleObjectProperty<>(Color.BLACK);
 
     public Paint getStroke() {
+        return stroke.get();
+    }
+
+    public void setStroke(Paint value) {
+        stroke.set(value);
+    }
+
+    public ObjectProperty strokeProperty() {
         return stroke;
     }
 
-    public void setStroke(Paint stroke) {
-        this.stroke = stroke;
-    }
-
-    private double strokeWidth;
+    private final DoubleProperty strokeWidth = new SimpleDoubleProperty(10.0);
 
     public double getStrokeWidth() {
-        return strokeWidth;
+        return strokeWidth.get();
     }
 
-    public void setStrokeWidth(double strokeWidth) {
-        if (this.strokeWidth < strokeWidth) {
-            this.maxX -= strokeWidth - this.strokeWidth;
-            this.maxY -= strokeWidth - this.strokeWidth;
-        } else if (this.strokeWidth > strokeWidth) {
-            this.maxX += strokeWidth - this.strokeWidth;
-            this.maxY += strokeWidth - this.strokeWidth;
-        }
+    public void setStrokeWidth(double value) {
+        double offset = value - getStrokeWidth();
+        this.maxX += offset;
+        this.maxY += offset;
 
-        this.strokeWidth = strokeWidth;
+        strokeWidth.set(value);
+    }
+
+    public DoubleProperty strokeWidthProperty() {
+        return strokeWidth;
     }
 
     private final ObservableList<Shape> shapeList;
@@ -80,56 +109,51 @@ public class HandDrawing extends ImageSnapshotAction {
         return shapeList;
     }
 
-    private Tool tool;
+    private final ObjectProperty<Tool> tool = new SimpleObjectProperty<>(Tool.PEN);
 
     public Tool getTool() {
-        return tool;
+        return tool.get();
     }
 
-    public void setTool(Tool tool) {
-        this.tool = tool;
+    public void setTool(Tool value) {
+        tool.set(value);
+    }
+
+    public ObjectProperty toolProperty() {
+        return tool;
     }
 
     private final Path eraserPath = new Path();
 
     private double maxX;
+
+    public double getMaxX() {
+        return maxX;
+    }
+
+    public void setMaxX(double maxX) {
+        this.maxX = maxX;
+    }
+
     private double maxY;
 
-    public HandDrawing(Image originalImage, Group node) {
-        super(originalImage, node);
-        setName("Hand Drawing");
+    public double getMaxY() {
+        return maxY;
+    }
 
+    public void setMaxY(double maxY) {
+        this.maxY = maxY;
+    }
+
+    public HandDrawing() {
         this.shapeList = FXCollections.observableArrayList();
-        this.tool = Tool.PEN;
-        this.stroke = Color.BLACK;
-        this.strokeWidth = 10.0;
-        maxX = originalImage.getWidth();
-        maxY = originalImage.getHeight();
-        addEventHandler();
-
-        this.shapeList.addListener(new ListChangeListener<Shape>() {
-            @Override
-            public void onChanged(ListChangeListener.Change<? extends Shape> c) {
-                while (c.next()) {
-                    if (c.wasAdded()) {
-                        node.getChildren().addAll(c.getAddedSubList());
-                    } else if (c.wasRemoved()) {
-                        node.getChildren().removeAll(c.getRemoved());
-                    }
-                }
-            }
-        });
 
         eraserPath.setStroke(Color.RED);
         eraserPath.setStrokeLineCap(StrokeLineCap.ROUND);
     }
 
-    public void finish() {
-        removeEventHandler();
-    }
-
     private void erase() {
-        if (tool == Tool.ERASER
+        if (getTool() == Tool.ERASER
                 && eraserPath != null
                 && shapeList.size() > 0) {
             for (int i = shapeList.size() - 1; i >= 0; i--) {
@@ -143,23 +167,41 @@ public class HandDrawing extends ImageSnapshotAction {
     }
 
     private void addEventHandler() {
-        Group group = getGroup();
-        group.addEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
-        group.addEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
-        group.addEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
+        if (group != null) {
+            shapeList.addListener(shapeListChangeListener);
+            group.addEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
+            group.addEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
+            group.addEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
+        }
     }
 
     private void removeEventHandler() {
-        Group group = getGroup();
-        group.removeEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
-        group.removeEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
-        group.removeEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
+        if (group != null) {
+            shapeList.removeListener(shapeListChangeListener);
+            group.removeEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
+            group.removeEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
+            group.removeEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
+        }
     }
+
+    private final ListChangeListener<Shape> shapeListChangeListener
+            = new ListChangeListener<Shape>() {
+        @Override
+        public void onChanged(ListChangeListener.Change<? extends Shape> c) {
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    group.getChildren().addAll(c.getAddedSubList());
+                } else if (c.wasRemoved()) {
+                    group.getChildren().removeAll(c.getRemoved());
+                }
+            }
+        }
+    };
 
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        finish();
+        removeEventHandler();
     }
 
     private final EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
@@ -174,11 +216,11 @@ public class HandDrawing extends ImageSnapshotAction {
             double x = event.getX();
             double y = event.getY();
 
-            switch (tool) {
+            switch (getTool()) {
                 case PEN:
                     Path path = new Path();
-                    path.setStroke(stroke);
-                    path.setStrokeWidth(strokeWidth);
+                    path.setStroke(getStroke());
+                    path.setStrokeWidth(getStrokeWidth());
                     path.setStrokeLineCap(StrokeLineCap.ROUND);
                     path.setStrokeLineJoin(StrokeLineJoin.ROUND);
                     path.getElements().clear();
@@ -188,15 +230,15 @@ public class HandDrawing extends ImageSnapshotAction {
 
                     break;
                 case ERASER:
-                    eraserPath.setStrokeWidth(strokeWidth);
+                    eraserPath.setStrokeWidth(getStrokeWidth());
                     eraserPath.getElements().add(new MoveTo(x, y));
                     eraserPath.getElements().add(new LineTo(x, y));
                     getGroup().getChildren().add(eraserPath);
                     break;
                 case LINE:
                     Line line = new Line(x, y, x, y);
-                    line.setStroke(stroke);
-                    line.setStrokeWidth(strokeWidth);
+                    line.setStroke(getStroke());
+                    line.setStrokeWidth(getStrokeWidth());
                     line.setStrokeLineCap(StrokeLineCap.ROUND);
                     line.setStrokeLineJoin(StrokeLineJoin.ROUND);
                     shapeList.add(line);
@@ -206,8 +248,8 @@ public class HandDrawing extends ImageSnapshotAction {
                     dragContext.mouseAnchorY = event.getY();
 
                     Rectangle rect = new Rectangle(x, y, 0, 0);
-                    rect.setStroke(stroke);
-                    rect.setStrokeWidth(strokeWidth);
+                    rect.setStroke(getStroke());
+                    rect.setStrokeWidth(getStrokeWidth());
                     rect.setStrokeLineCap(StrokeLineCap.ROUND);
                     rect.setFill(Color.TRANSPARENT);
                     shapeList.add(rect);
@@ -217,8 +259,8 @@ public class HandDrawing extends ImageSnapshotAction {
                     dragContext.mouseAnchorY = event.getY();
 
                     Ellipse ellipse = new Ellipse(x, y, 0, 0);
-                    ellipse.setStroke(stroke);
-                    ellipse.setStrokeWidth(strokeWidth);
+                    ellipse.setStroke(getStroke());
+                    ellipse.setStrokeWidth(getStrokeWidth());
                     ellipse.setStrokeLineCap(StrokeLineCap.ROUND);
                     ellipse.setFill(Color.TRANSPARENT);
                     shapeList.add(ellipse);
@@ -251,7 +293,7 @@ public class HandDrawing extends ImageSnapshotAction {
                 y = maxY;
             }
 
-            switch (tool) {
+            switch (getTool()) {
                 case PEN:
                     ((Path) shapeList.get(shapeList.size() - 1)).getElements().add(new LineTo(x, y));
                     break;
@@ -320,7 +362,7 @@ public class HandDrawing extends ImageSnapshotAction {
                 return;
             }
 
-            switch (tool) {
+            switch (getTool()) {
                 case ERASER:
                     erase();
                     eraserPath.getElements().clear();

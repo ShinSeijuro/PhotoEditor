@@ -5,7 +5,6 @@
  */
 package GUI;
 
-import Drawing.HandDrawing;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
@@ -38,6 +37,10 @@ public class ImageTabController extends Tab implements Initializable {
         return imageView;
     }
 
+    public ScrollPane getScrollPane() {
+        return scrollPane;
+    }
+
     public Group getGroupImage() {
         return groupImage;
     }
@@ -58,62 +61,6 @@ public class ImageTabController extends Tab implements Initializable {
 
         if (isFitToView()) {
             doFitToView();
-        }
-    }
-
-    private Selection selection;
-
-    public Selection getSelection() {
-        return selection;
-    }
-
-    private boolean selecting = false;
-
-    public boolean isSelecting() {
-        return selecting;
-    }
-
-    public void setSelecting(boolean selecting) {
-        this.selecting = selecting;
-        scrollPane.setPannable(!selecting);
-
-        if (selecting) {
-            if (selection == null) {
-                selection = new Selection(groupImage);
-            }
-            selection.setDisabled(false);
-        } else {
-            if (selection != null) {
-                selection.setDisabled(true);
-            }
-        }
-    }
-
-    private HandDrawing handDrawing;
-
-    public HandDrawing getHandDrawing() {
-        return handDrawing;
-    }
-
-    private boolean drawing = false;
-
-    public boolean isDrawing() {
-        return drawing;
-    }
-
-    public void setDrawing(boolean drawing) {
-        this.drawing = drawing;
-        scrollPane.setPannable(!drawing);
-
-        if (drawing) {
-            if (handDrawing == null) {
-                handDrawing = new HandDrawing(getImage(), groupImage);
-            }
-        } else {
-            if (handDrawing != null) {
-                handDrawing.finish();
-                handDrawing = null;
-            }
         }
     }
 
