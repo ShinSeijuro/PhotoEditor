@@ -67,6 +67,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
@@ -225,7 +226,7 @@ public class WorkspaceController implements Initializable {
                 if (controller != null) {
                     if (newValue == false) {
                         toggleHandDrawPen.setSelected(true);
-                        if (controller.getHandDrawing().getPathList().size() > 0) {
+                        if (controller.getHandDrawing().getShapeList().size() > 0) {
                             onApplyHandDraw(null);
                         }
                     }
@@ -892,12 +893,20 @@ public class WorkspaceController implements Initializable {
     private void onApplyHandDraw(ActionEvent event) {
         ImageTabController controller = getCurrentController();
         applyAction(controller.getHandDrawing());
-        controller.getHandDrawing().getPathList().clear();
+        controller.getHandDrawing().getShapeList().clear();
+    }
+
+    @FXML
+    private void onUndoHandDraw(ActionEvent event) {
+        ObservableList<Shape> shapeList = getCurrentController().getHandDrawing().getShapeList();
+        if (!shapeList.isEmpty()) {
+            shapeList.remove(shapeList.size() - 1);
+        }
     }
 
     @FXML
     private void onUndoAllHandDraw(ActionEvent event) {
-        getCurrentController().getHandDrawing().getPathList().clear();
+        getCurrentController().getHandDrawing().getShapeList().clear();
     }
 
     @FXML
@@ -911,13 +920,18 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onToggleHandDrawLine(ActionEvent event) {
+        getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.LINE);
+    }
+
+    @FXML
     private void onToggleHandDrawRectangle(ActionEvent event) {
         getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.RECTANGLE);
     }
 
     @FXML
     private void onToggleHandDrawCircle(ActionEvent event) {
-        getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.CIRCLE);
+        getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.ELLIPSE);
     }
 
     @FXML

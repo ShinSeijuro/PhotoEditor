@@ -16,8 +16,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -32,14 +32,15 @@ import javafx.scene.shape.StrokeLineJoin;
  */
 public class HandDrawing extends ImageSnapshotAction {
 
-    private final DragContext dragContext = new DragContext();
-
     public enum Tool {
         PEN,
         ERASER,
-        CIRCLE,
+        LINE,
+        ELLIPSE,
         RECTANGLE
     }
+
+    private final DragContext dragContext = new DragContext();
 
     public Group getGroup() {
         return (Group) getNode();
@@ -75,7 +76,7 @@ public class HandDrawing extends ImageSnapshotAction {
 
     private final ObservableList<Shape> shapeList;
 
-    public ObservableList<Shape> getPathList() {
+    public ObservableList<Shape> getShapeList() {
         return shapeList;
     }
 
@@ -165,8 +166,7 @@ public class HandDrawing extends ImageSnapshotAction {
             if (event.isSecondaryButtonDown()) {
                 return;
             }
-            dragContext.mouseAnchorX = event.getX();
-            dragContext.mouseAnchorY = event.getY();
+
             double x = event.getX();
             double y = event.getY();
 
@@ -189,7 +189,18 @@ public class HandDrawing extends ImageSnapshotAction {
                     }
 
                     break;
+                case LINE:
+                    Line line = new Line(x, y, x, y);
+                    line.setStroke(stroke);
+                    line.setStrokeWidth(strokeWidth);
+                    line.setStrokeLineCap(StrokeLineCap.ROUND);
+                    line.setStrokeLineJoin(StrokeLineJoin.ROUND);
+                    shapeList.add(line);
+                    break;
                 case RECTANGLE:
+                    dragContext.mouseAnchorX = event.getX();
+                    dragContext.mouseAnchorY = event.getY();
+
                     Rectangle rect = new Rectangle(x, y, 0, 0);
                     rect.setStroke(stroke);
                     rect.setStrokeWidth(strokeWidth);
@@ -197,19 +208,16 @@ public class HandDrawing extends ImageSnapshotAction {
                     rect.setFill(Color.TRANSPARENT);
                     shapeList.add(rect);
                     break;
-                case CIRCLE:
+                case ELLIPSE:
+                    dragContext.mouseAnchorX = event.getX();
+                    dragContext.mouseAnchorY = event.getY();
 
-                    Circle circle = new Circle(x, y, 0);
-                    circle.setStroke(stroke);
-                    circle.setStrokeWidth(strokeWidth);
-                    circle.setStrokeLineCap(StrokeLineCap.ROUND);
-                    circle.setFill(Color.TRANSPARENT);
-//                    circle.setCenterX(rect.getX() + rect.getWidth() / 2);
-//                    circle.setCenterY(rect.getY() + rect.getHeight() / 2);
-                    shapeList.add(circle);
-                    //shapeList.add(rect);
-                    //Path circle = new Path();
-                    //circle.getElements().clear();
+                    Ellipse ellipse = new Ellipse(x, y, 0, 0);
+                    ellipse.setStroke(stroke);
+                    ellipse.setStrokeWidth(strokeWidth);
+                    ellipse.setStrokeLineCap(StrokeLineCap.ROUND);
+                    ellipse.setFill(Color.TRANSPARENT);
+                    shapeList.add(ellipse);
                     break;
             }
         }
@@ -223,8 +231,6 @@ public class HandDrawing extends ImageSnapshotAction {
             if (event.isSecondaryButtonDown()) {
                 return;
             }
-            double offsetX = event.getX() - dragContext.mouseAnchorX;
-            double offsetY = event.getY() - dragContext.mouseAnchorY;
 
             double x = event.getX();
             double y = event.getY();
@@ -249,39 +255,54 @@ public class HandDrawing extends ImageSnapshotAction {
                     eraserPath.getElements().add(new LineTo(x, y));
                     erase();
                     break;
-                case RECTANGLE:
-                    //Circle circle = (Circle) shapeList.get(shapeList.size() - 1);
-                    Rectangle rect = (Rectangle) shapeList.get(shapeList.size() - 1);
-                    rect.setWidth(Math.abs(x - rect.getX()));
-                    rect.setHeight(Math.abs(y - rect.getY()));
+                case LINE:
+                    Line line = (Line) shapeList.get(shapeList.size() - 1);
+                    line.setEndX(x);
+                    line.setEndY(y);
                     break;
-                case CIRCLE:
-                    Circle circle = (Circle) shapeList.get(shapeList.size() - 1);
-                    double startX = circle.getCenterX();
-                    double startY = circle.getCenterY();
-                    if (x > dragContext.mouseAnchorX) {
-                        circle.setCenterX(((x - dragContext.mouseAnchorX) / 2.0) + dragContext.mouseAnchorX);
-                    } else if (x < dragContext.mouseAnchorX) {
-                        circle.setCenterX((dragContext.mouseAnchorX - x) / 2.0 + x);
+                case RECTANGLE:
+                    Rectangle rect = (Rectangle) shapeList.get(shapeList.size() - 1);
+
+                    if (x >= dragContext.mouseAnchorX) {
+                        rect.setWidth(x - rect.getX());
+                    } else {
+                        rect.setX(x);
+                        rect.setWidth(dragContext.mouseAnchorX - x);
                     }
-                    if (y > dragContext.mouseAnchorY) {
-                        circle.setCenterY((y - dragContext.mouseAnchorY) / 2.0 + dragContext.mouseAnchorY);
-                    } else if (y < dragContext.mouseAnchorY) {
-                        circle.setCenterY((dragContext.mouseAnchorY - y) / 2.0 + y);
+
+                    if (y >= dragContext.mouseAnchorY) {
+                        rect.setHeight(y - rect.getY());
+                    } else {
+                        rect.setY(y);
+                        rect.setHeight(dragContext.mouseAnchorY - y);
                     }
-//                    if (offsetX > 0) {
-//                        circle.setRadius(offsetX / 2);
-//                    } else {
-//                        circle.setCenterX(event.getX());
-//                        circle.setRadius((dragContext.mouseAnchorX - circle.getCenterX()) / 2);
-//                    }
-//                    if (offsetY > 0) {
-//                        circle.setRadius(offsetY / 2);
-//                    } else {
-//                        circle.setCenterX(event.getY());
-//                        circle.setRadius((dragContext.mouseAnchorX - circle.getCenterY()) / 2);
-//                    }
-                    circle.setRadius(Math.abs(dragContext.mouseAnchorX - startX) / 2);
+
+                    break;
+                case ELLIPSE:
+                    Ellipse ellipse = (Ellipse) shapeList.get(shapeList.size() - 1);
+
+                    if (x >= dragContext.mouseAnchorX) {
+                        ellipse.setCenterX(
+                                ((x - dragContext.mouseAnchorX) / 2.0)
+                                + dragContext.mouseAnchorX);
+                    } else {
+                        ellipse.setCenterX(
+                                (dragContext.mouseAnchorX - x) / 2.0
+                                + x);
+                    }
+
+                    if (y >= dragContext.mouseAnchorY) {
+                        ellipse.setCenterY(
+                                (y - dragContext.mouseAnchorY) / 2.0
+                                + dragContext.mouseAnchorY);
+                    } else {
+                        ellipse.setCenterY(
+                                (dragContext.mouseAnchorY - y) / 2.0
+                                + y);
+                    }
+
+                    ellipse.setRadiusX(Math.abs(x - dragContext.mouseAnchorX) / 2.0);
+                    ellipse.setRadiusY(Math.abs(y - dragContext.mouseAnchorY) / 2.0);
                     break;
             }
         }

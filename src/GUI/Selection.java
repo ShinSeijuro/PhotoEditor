@@ -138,14 +138,14 @@ public class Selection {
             double offsetX = event.getX() - dragContext.mouseAnchorX;
             double offsetY = event.getY() - dragContext.mouseAnchorY;
 
-            if (offsetX > 0) {
+            if (offsetX >= 0) {
                 rect.setWidth(offsetX);
             } else {
                 rect.setX(event.getX());
                 rect.setWidth(dragContext.mouseAnchorX - rect.getX());
             }
 
-            if (offsetY > 0) {
+            if (offsetY >= 0) {
                 rect.setHeight(offsetY);
             } else {
                 rect.setY(event.getY());
