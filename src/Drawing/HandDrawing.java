@@ -68,7 +68,7 @@ public class HandDrawing extends ImageSnapshotAction {
             this.maxY -= strokeWidth - this.strokeWidth;
         } else if (this.strokeWidth > strokeWidth) {
             this.maxX += strokeWidth - this.strokeWidth;
-            this.maxY = strokeWidth - this.strokeWidth;
+            this.maxY += strokeWidth - this.strokeWidth;
         }
 
         this.strokeWidth = strokeWidth;
