@@ -90,7 +90,7 @@ public class HandDrawing extends ImageSnapshotAction {
         this.tool = tool;
     }
 
-    private Path eraserPath;
+    private final Path eraserPath = new Path();
 
     private double maxX;
     private double maxY;
@@ -98,6 +98,7 @@ public class HandDrawing extends ImageSnapshotAction {
     public HandDrawing(Image originalImage, Group node) {
         super(originalImage, node);
         setName("Hand Drawing");
+
         this.shapeList = FXCollections.observableArrayList();
         this.tool = Tool.PEN;
         this.stroke = Color.BLACK;
@@ -118,6 +119,9 @@ public class HandDrawing extends ImageSnapshotAction {
                 }
             }
         });
+
+        eraserPath.setStroke(Color.RED);
+        eraserPath.setStrokeLineCap(StrokeLineCap.ROUND);
     }
 
     public void finish() {
@@ -172,7 +176,6 @@ public class HandDrawing extends ImageSnapshotAction {
 
             switch (tool) {
                 case PEN:
-                case ERASER:
                     Path path = new Path();
                     path.setStroke(stroke);
                     path.setStrokeWidth(strokeWidth);
@@ -181,13 +184,14 @@ public class HandDrawing extends ImageSnapshotAction {
                     path.getElements().clear();
                     path.getElements().add(new MoveTo(x, y));
                     path.getElements().add(new LineTo(x, y));
+                    shapeList.add(path);
 
-                    if (tool == Tool.PEN) {
-                        shapeList.add(path);
-                    } else {
-                        eraserPath = path;
-                    }
-
+                    break;
+                case ERASER:
+                    eraserPath.setStrokeWidth(strokeWidth);
+                    eraserPath.getElements().add(new MoveTo(x, y));
+                    eraserPath.getElements().add(new LineTo(x, y));
+                    getGroup().getChildren().add(eraserPath);
                     break;
                 case LINE:
                     Line line = new Line(x, y, x, y);
@@ -253,7 +257,6 @@ public class HandDrawing extends ImageSnapshotAction {
                     break;
                 case ERASER:
                     eraserPath.getElements().add(new LineTo(x, y));
-                    erase();
                     break;
                 case LINE:
                     Line line = (Line) shapeList.get(shapeList.size() - 1);
@@ -315,6 +318,14 @@ public class HandDrawing extends ImageSnapshotAction {
 
             if (event.isSecondaryButtonDown()) {
                 return;
+            }
+
+            switch (tool) {
+                case ERASER:
+                    erase();
+                    eraserPath.getElements().clear();
+                    getGroup().getChildren().remove(eraserPath);
+                    break;
             }
         }
     };
