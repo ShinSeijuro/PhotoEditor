@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Preset;
+package ImageProcessing;
 
 import Action.ImageColorAction;
 import javafx.scene.image.Image;

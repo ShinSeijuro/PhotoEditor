@@ -3,19 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Preset;
+package ImageProcessing;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
  *
- * @author CMQ
+ * @author Admin
  */
-public class GreenFilter extends ImageBlendAction {
+public class ColdFilter extends ImageBlendAction {
 
-    public GreenFilter(Image originalImage) {
-        super(originalImage, Color.web("#19c919"), 0.25);
-        setName("Green Filter");
+    public ColdFilter(Image originalImage) {
+        super(originalImage, Color.web("#006dff"), 0.25);
+        setName("Cold Filter");
     }
+
 }

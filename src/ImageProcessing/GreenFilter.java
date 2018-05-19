@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Preset;
+package ImageProcessing;
 
-import Action.ImageColorAction;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
@@ -13,15 +12,10 @@ import javafx.scene.paint.Color;
  *
  * @author CMQ
  */
-public class Invert extends ImageColorAction {
+public class GreenFilter extends ImageBlendAction {
 
-    public Invert(Image originalImage) {
-        super(originalImage);
+    public GreenFilter(Image originalImage) {
+        super(originalImage, Color.web("#19c919"), 0.25);
+        setName("Green Filter");
     }
-
-    @Override
-    protected Color convertColor(Color color) {
-        return color.invert();
-    }
-
 }

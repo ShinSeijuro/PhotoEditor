@@ -5,10 +5,13 @@
  */
 package GUI;
 
+import ImageProcessing.Invert;
+import ImageProcessing.GreenFilter;
+import ImageProcessing.WarmFilter;
+import ImageProcessing.ColdFilter;
 import Action.AbstractImageAction;
 import Adjustment.GrayScale;
 import ImageProcessing.*;
-import Preset.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;

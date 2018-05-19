@@ -5,7 +5,6 @@
  */
 package Drawing;
 
-import Action.ImageSnapshotAction;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;

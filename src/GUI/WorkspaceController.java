@@ -6,6 +6,10 @@
 package GUI;
 
 //<editor-fold defaultstate="collapsed" desc="import">
+import ImageProcessing.Invert;
+import ImageProcessing.GreenFilter;
+import ImageProcessing.WarmFilter;
+import ImageProcessing.ColdFilter;
 import Adjustment.ImageViewEffectAction;
 import Action.*;
 import ImageProcessing.*;
@@ -16,7 +20,6 @@ import History.*;
 import PlugIn.ClipboardWrapper;
 import PlugIn.ScreenCapture;
 import PlugIn.WallpaperChanger;
-import Preset.*;
 import java.awt.print.PrinterException;
 import java.io.File;
 import java.net.URL;
