@@ -872,6 +872,16 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onDenoise(ActionEvent event) {
+        applyAction(new Denoise(getCurrentImage()));
+    }
+
+    @FXML
+    private void onAddNoise(ActionEvent event) {
+        applyAction(new Noise(getCurrentImage()));
+    }
+
+    @FXML
     public void onUndo(ActionEvent event) {
         History currentHistory = getCurrentHistory();
         currentHistory.undo();
@@ -962,11 +972,6 @@ public class WorkspaceController implements Initializable {
     @FXML
     private void onUndoAllHandDraw(ActionEvent event) {
         getHandDrawing().getShapeList().clear();
-    }
-
-    @FXML
-    private void onDenoise(ActionEvent event) {
-        applyAction(new Denoise(getCurrentImage()));
     }
 
     @FXML

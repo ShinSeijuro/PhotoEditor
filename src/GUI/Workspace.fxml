@@ -763,6 +763,7 @@
                                     <children>
                                         <Button mnemonicParsing="false" onAction="#onFixRedEye" text="Fix Red Eye" />
                                         <Button mnemonicParsing="false" onAction="#onSharpen" text="Sharpen" />
+                                        <Button mnemonicParsing="false" onAction="#onAddNoise" text="Add Noise" />
                                         <Button mnemonicParsing="false" onAction="#onDenoise" text="Denoise" />
                                     </children>
                                 </VBox>
