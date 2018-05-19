@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import javafx.scene.shape.Rectangle;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
@@ -25,6 +26,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.Pane;
 
 /**
  * FXML Controller class
@@ -58,6 +60,8 @@ public class ImageTabController extends Tab implements Initializable {
     public void setImage(Image image) {
         this.presetPreviewUpdated = false;
         imageView.setImage(image);
+        clipRectangle.setWidth(image.getWidth());
+        clipRectangle.setHeight(image.getHeight());
 
         if (isFitToView()) {
             doFitToView();
@@ -125,6 +129,8 @@ public class ImageTabController extends Tab implements Initializable {
         }
     };
 
+    private final Rectangle clipRectangle = new Rectangle();
+
     /**
      * Initializes the controller class.
      */
@@ -148,6 +154,8 @@ public class ImageTabController extends Tab implements Initializable {
                 }
             }
         });
+
+        imageView.setClip(clipRectangle);
     }
 
     public void doFitToView() {
