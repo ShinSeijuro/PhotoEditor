@@ -77,6 +77,20 @@ public class PresetPreview {
         return greenFilter;
     }
 
+    private final ObjectProperty<Image> underwater = new SimpleObjectProperty<>();
+
+    public Image getUnderwater() {
+        return underwater.get();
+    }
+
+    public void setUnderwater(Image value) {
+        underwater.set(value);
+    }
+
+    public ObjectProperty underwaterProperty() {
+        return underwater;
+    }
+
     private final ObjectProperty<Image> blackAndWhite = new SimpleObjectProperty<>();
 
     public Image getBlackAndWhite() {
@@ -132,6 +146,7 @@ public class PresetPreview {
             setColdFilter(null);
             setBlackAndWhite(null);
             setBwContrast(null);
+            setUnderwater(null);
             setInvert(null);
             return;
         }
@@ -141,6 +156,7 @@ public class PresetPreview {
         setWarmFilter(getImageFromAction(new WarmFilter(thumbnail)));
         setColdFilter(getImageFromAction(new ColdFilter(thumbnail)));
         setGreenFilter(getImageFromAction(new GreenFilter(thumbnail)));
+        setUnderwater(getImageFromAction(new Underwater(thumbnail)));
         setBlackAndWhite(getImageFromAction(new GrayScale(thumbnail)));
         setBwContrast(getImageFromAction(new GrayScaleBalance(thumbnail)));
         setInvert(getImageFromAction(new Invert(thumbnail)));

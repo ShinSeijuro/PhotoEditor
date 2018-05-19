@@ -1345,6 +1345,11 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onUnderwater(ActionEvent event) {
+        applyAction(new Underwater(getCurrentImage()));
+    }
+
+    @FXML
     public void onBlackAndWhite(ActionEvent event) {
         applyAction(new GrayScale(getCurrentImage()));
     }
