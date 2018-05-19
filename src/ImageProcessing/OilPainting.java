@@ -6,7 +6,7 @@
 package ImageProcessing;
 
 import Action.AbstractImageAction;
-import com.jhlabs.image.NoiseFilter;
+import com.jhlabs.image.OilFilter;
 import java.awt.image.BufferedImage;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
@@ -15,18 +15,18 @@ import javafx.scene.image.Image;
  *
  * @author CMQ
  */
-public class Noise extends AbstractImageAction {
+public class OilPainting extends AbstractImageAction {
 
-    private final NoiseFilter filter;
+    private final OilFilter filter;
 
-    public NoiseFilter getFilter() {
+    public OilFilter getFilter() {
         return filter;
     }
 
-    public Noise(Image originalImage) {
+    public OilPainting(Image originalImage) {
         super(originalImage);
         this.filter = getDefaultFilter();
-        setName("Add Noise");
+        setName("Oil Painting Effect");
     }
 
     @Override
@@ -36,13 +36,10 @@ public class Noise extends AbstractImageAction {
         return SwingFXUtils.toFXImage(output, null);
     }
 
-    public static NoiseFilter getDefaultFilter() {
-        NoiseFilter filter = new NoiseFilter();
-        filter.setDistribution(NoiseFilter.GAUSSIAN);
-        filter.setMonochrome(true);
-        filter.setDensity(1.0f);
-        filter.setAmount(10);
+    public static OilFilter getDefaultFilter() {
+        OilFilter filter = new OilFilter();
+        filter.setLevels(3);
+        filter.setRange(7);
         return filter;
     }
-
 }

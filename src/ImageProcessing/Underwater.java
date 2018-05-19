@@ -27,6 +27,7 @@ public class Underwater extends AbstractImageAction {
     public Underwater(Image originalImage) {
         super(originalImage);
         this.filter = getDefaultFilter();
+        setName("Underwater Effect");
     }
 
     @Override

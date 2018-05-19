@@ -1370,6 +1370,11 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onOilPainting(ActionEvent event) {
+        applyAction(new OilPainting(getCurrentImage()));
+    }
+
+    @FXML
     public void onBlackAndWhite(ActionEvent event) {
         applyAction(new GrayScale(getCurrentImage()));
     }

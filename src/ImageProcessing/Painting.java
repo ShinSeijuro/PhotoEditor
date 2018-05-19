@@ -26,6 +26,7 @@ public class Painting extends AbstractImageAction {
     public Painting(Image originalImage) {
         super(originalImage);
         this.filter = getDefaultFilter();
+        setName("Painting Effect");
     }
 
     @Override

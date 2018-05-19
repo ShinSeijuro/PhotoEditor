@@ -26,6 +26,7 @@ public class Crystallize extends AbstractImageAction {
     public Crystallize(Image originalImage) {
         super(originalImage);
         this.filter = getDefaultFilter();
+        setName("Crystallize Effect");
     }
 
     @Override

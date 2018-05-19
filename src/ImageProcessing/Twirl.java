@@ -27,6 +27,7 @@ public class Twirl extends AbstractImageAction {
     public Twirl(Image originalImage) {
         super(originalImage);
         this.filter = getDefaultFilter(originalImage);
+        setName("Twirl Effect");
     }
 
     @Override

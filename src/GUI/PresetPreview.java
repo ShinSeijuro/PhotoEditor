@@ -133,6 +133,20 @@ public class PresetPreview {
         return painting;
     }
 
+    private final ObjectProperty<Image> oilPainting = new SimpleObjectProperty<>();
+
+    public Image getOilPainting() {
+        return oilPainting.get();
+    }
+
+    public void setOilPainting(Image value) {
+        oilPainting.set(value);
+    }
+
+    public ObjectProperty oilPaintingProperty() {
+        return oilPainting;
+    }
+
     private final ObjectProperty<Image> blackAndWhite = new SimpleObjectProperty<>();
 
     public Image getBlackAndWhite() {
@@ -190,6 +204,7 @@ public class PresetPreview {
             setCrystallize(null);
             setTwirl(null);
             setPainting(null);
+            setOilPainting(null);
             setBlackAndWhite(null);
             setBwContrast(null);
             setInvert(null);
@@ -205,6 +220,7 @@ public class PresetPreview {
         setCrystallize(getImageFromAction(new Crystallize(thumbnail)));
         setTwirl(getImageFromAction(new Twirl(thumbnail)));
         setPainting(getImageFromAction(new Painting(thumbnail)));
+        setOilPainting(getImageFromAction(new OilPainting(thumbnail)));
         setBlackAndWhite(getImageFromAction(new GrayScale(thumbnail)));
         setBwContrast(getImageFromAction(new GrayScaleBalance(thumbnail)));
         setInvert(getImageFromAction(new Invert(thumbnail)));
