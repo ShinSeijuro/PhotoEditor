@@ -6,7 +6,7 @@
 package ImageProcessing;
 
 import Action.AbstractImageAction;
-import com.jhlabs.image.SwimFilter;
+import com.jhlabs.image.CrystallizeFilter;
 import com.jhlabs.math.ImageFunction2D;
 import java.awt.image.BufferedImage;
 import javafx.embed.swing.SwingFXUtils;
@@ -16,15 +16,15 @@ import javafx.scene.image.Image;
  *
  * @author CMQ
  */
-public class Underwater extends AbstractImageAction {
+public class Crystallize extends AbstractImageAction {
 
-    private final SwimFilter filter;
+    private final CrystallizeFilter filter;
 
-    public SwimFilter getFilter() {
+    public CrystallizeFilter getFilter() {
         return filter;
     }
 
-    public Underwater(Image originalImage) {
+    public Crystallize(Image originalImage) {
         super(originalImage);
         this.filter = getDefaultFilter();
     }
@@ -36,14 +36,14 @@ public class Underwater extends AbstractImageAction {
         return SwingFXUtils.toFXImage(output, null);
     }
 
-    public static SwimFilter getDefaultFilter() {
-        SwimFilter filter = new SwimFilter();
+    public static CrystallizeFilter getDefaultFilter() {
+        CrystallizeFilter filter = new CrystallizeFilter();
+        filter.setAmount(30.0f);
+        filter.setFadeEdges(false);
+        filter.setRandomness(0.5f);
         filter.setScale(30.0f);
         filter.setStretch(1.0f);
         filter.setTurbulence(1.0f);
-        filter.setAmount(30.0f);
-        filter.setTime(0.0f);
-        filter.setEdgeAction(ImageFunction2D.CLAMP);
         return filter;
     }
 

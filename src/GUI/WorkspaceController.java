@@ -1350,6 +1350,11 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onCrystallize(ActionEvent event) {
+        applyAction(new Crystallize(getCurrentImage()));
+    }
+
+    @FXML
     public void onBlackAndWhite(ActionEvent event) {
         applyAction(new GrayScale(getCurrentImage()));
     }

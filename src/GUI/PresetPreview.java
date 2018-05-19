@@ -91,6 +91,20 @@ public class PresetPreview {
         return underwater;
     }
 
+    private final ObjectProperty<Image> crystallize = new SimpleObjectProperty<>();
+
+    public Image getCrystallize() {
+        return crystallize.get();
+    }
+
+    public void setCrystallize(Image value) {
+        crystallize.set(value);
+    }
+
+    public ObjectProperty crystallizeProperty() {
+        return crystallize;
+    }
+
     private final ObjectProperty<Image> blackAndWhite = new SimpleObjectProperty<>();
 
     public Image getBlackAndWhite() {
@@ -144,9 +158,10 @@ public class PresetPreview {
             setAutoBalance(null);
             setWarmFilter(null);
             setColdFilter(null);
+            setUnderwater(null);
+            setCrystallize(null);
             setBlackAndWhite(null);
             setBwContrast(null);
-            setUnderwater(null);
             setInvert(null);
             return;
         }
@@ -157,6 +172,7 @@ public class PresetPreview {
         setColdFilter(getImageFromAction(new ColdFilter(thumbnail)));
         setGreenFilter(getImageFromAction(new GreenFilter(thumbnail)));
         setUnderwater(getImageFromAction(new Underwater(thumbnail)));
+        setCrystallize(getImageFromAction(new Crystallize(thumbnail)));
         setBlackAndWhite(getImageFromAction(new GrayScale(thumbnail)));
         setBwContrast(getImageFromAction(new GrayScaleBalance(thumbnail)));
         setInvert(getImageFromAction(new Invert(thumbnail)));

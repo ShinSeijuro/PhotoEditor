@@ -728,6 +728,11 @@
                                                 <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.underwater}" pickOnBounds="true" preserveRatio="true" />
                                             </graphic>
                                         </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onCrystallize" prefWidth="116.0" text="Crystallize">
+                                            <graphic>
+                                                <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.crystallize}" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </Button>
                                         <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onBlackAndWhite" prefWidth="116.0" text="Black &amp; White">
                                             <graphic>
                                                 <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.blackAndWhite}" pickOnBounds="true" preserveRatio="true" />
