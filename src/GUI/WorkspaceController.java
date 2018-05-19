@@ -521,8 +521,7 @@ public class WorkspaceController implements Initializable {
     private final ChangeListener<Number> gaussianBlurChangeListener = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-            currentEffect = new GaussianBlur(
-                    sliderGaussianRadius.getValue());
+            currentEffect = new GaussianBlur(sliderGaussianRadius.getValue());
             getCurrentImageView().setEffect(currentEffect);
         }
 
@@ -984,8 +983,14 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyGaussianBlur(ActionEvent event) {
-        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView(), currentEffect));
-        onResetGaussianBlur(null);
+        AbstractImageAction action
+                = new GaussianBlurAction(getCurrentImage(),
+                        sliderGaussianRadius.getValue());
+        action.getApplyTransformTask()
+                .addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
+                    onResetGaussianBlur(null);
+                });
+        applyAction(action);
     }
 
     @FXML
@@ -995,10 +1000,16 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyBoxBlur(ActionEvent event) {
-
-        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView(), currentEffect));
-        onResetBoxBlur(null);
-
+        AbstractImageAction action
+                = new BoxBlurAction(getCurrentImage(),
+                        sliderBoxBlurWidth.getValue(),
+                        sliderBoxBlurHeight.getValue(),
+                        (int) sliderBoxBlurIteration.getValue());
+        action.getApplyTransformTask()
+                .addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
+                    onResetBoxBlur(null);
+                });
+        applyAction(action);
     }
 
     @FXML
@@ -1009,10 +1020,15 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyMotionBlur(ActionEvent event) {
-
-        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView(), currentEffect));
-        onResetMotionBlur(null);
-
+        AbstractImageAction action
+                = new MotionBlurAction(getCurrentImage(),
+                        sliderMotionBlurAngle.getValue(),
+                        sliderMotionBlurRadius.getValue());
+        action.getApplyTransformTask()
+                .addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
+                    onResetMotionBlur(null);
+                });
+        applyAction(action);
     }
 
     @FXML

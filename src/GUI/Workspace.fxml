@@ -301,7 +301,7 @@
         </BorderPane>
     </bottom>
     <right>
-        <ScrollPane fx:id="scrollPaneEdit" visible="${toggleEdit.selected}" managed="${toggleEdit.selected}" BorderPane.alignment="CENTER">
+        <ScrollPane fx:id="scrollPaneEdit" managed="${toggleEdit.selected}" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
             <content>
                 <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="265.0">
                     <panes>
@@ -519,7 +519,7 @@
                                                 <VBox alignment="CENTER">
                                                     <children>
                                                         <Label text="Radius" />
-                                                        <Slider fx:id="sliderGaussianRadius" max="63.0" showTickLabels="true" />
+                                                        <Slider fx:id="sliderGaussianRadius" majorTickUnit="50.0" max="200.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" />
                                                         <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
                                                             <children>
                                                                 <Button mnemonicParsing="false" onAction="#onApplyGaussianBlur" text="Apply">
@@ -554,9 +554,9 @@
                                                 <VBox alignment="CENTER">
                                                     <children>
                                                         <Label text="Width" />
-                                                        <Slider fx:id="sliderBoxBlurWidth" majorTickUnit="50.0" max="255.0" showTickLabels="true" snapToTicks="true" />
+                                                        <Slider fx:id="sliderBoxBlurWidth" majorTickUnit="50.0" max="255.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                                                         <Label text="Height" />
-                                                        <Slider fx:id="sliderBoxBlurHeight" majorTickUnit="50.0" max="255.0" showTickLabels="true" snapToTicks="true" />
+                                                        <Slider fx:id="sliderBoxBlurHeight" majorTickUnit="50.0" max="255.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                                                         <Label text="Iteration" />
                                                         <Slider fx:id="sliderBoxBlurIteration" blockIncrement="1.0" majorTickUnit="1.0" max="3.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="3.0" />
                                                         <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
@@ -593,9 +593,9 @@
                                                 <VBox alignment="CENTER">
                                                     <children>
                                                         <Label text="Angle" />
-                                                        <Slider fx:id="sliderMotionBlurAngle" majorTickUnit="90.0" max="180.0" showTickLabels="true" />
+                                                        <Slider fx:id="sliderMotionBlurAngle" majorTickUnit="90.0" max="180.0" minorTickCount="3" showTickLabels="true" showTickMarks="true" />
                                                         <Label text="Radius" />
-                                                        <Slider fx:id="sliderMotionBlurRadius" max="63.0" showTickLabels="true" />
+                                                        <Slider fx:id="sliderMotionBlurRadius" majorTickUnit="50.0" max="200.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" />
                                                         <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
                                                             <children>
                                                                 <Button mnemonicParsing="false" onAction="#onApplyMotionBlur" text="Apply">
@@ -630,7 +630,7 @@
                                                 <VBox alignment="CENTER">
                                                     <children>
                                                         <Label text="Level" />
-                                                        <Slider fx:id="sliderGlowLevel" showTickLabels="true" />
+                                                        <Slider fx:id="sliderGlowLevel" minorTickCount="4" showTickLabels="true" showTickMarks="true" />
                                                         <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
                                                             <children>
                                                                 <Button mnemonicParsing="false" onAction="#onApplyGlow" text="Apply">
@@ -665,7 +665,7 @@
                                                 <VBox alignment="CENTER">
                                                     <children>
                                                         <Label text="Level" />
-                                                        <Slider fx:id="sliderSepiaToneLevel" showTickLabels="true" />
+                                                        <Slider fx:id="sliderSepiaToneLevel" minorTickCount="4" showTickLabels="true" showTickMarks="true" />
                                                         <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
                                                             <children>
                                                                 <Button mnemonicParsing="false" onAction="#onApplySepiaTone" text="Apply">

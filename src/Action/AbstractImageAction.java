@@ -38,6 +38,22 @@ public abstract class AbstractImageAction implements INameable {
         return modifiedImage;
     }
 
+    private Task<Image> applyTransformTask;
+
+    public Task<Image> getApplyTransformTask() {
+        if (applyTransformTask == null) {
+            applyTransformTask = new Task<Image>() {
+                @Override
+                protected Image call() throws Exception {
+                    updateMessage("Applying " + getName() + "...");
+                    return applyTransform();
+                }
+            };
+        }
+
+        return applyTransformTask;
+    }
+
     public AbstractImageAction(Image originalImage) {
         this.originalImage = originalImage;
         this.name = "";
@@ -49,16 +65,6 @@ public abstract class AbstractImageAction implements INameable {
         }
 
         return modifiedImage;
-    }
-
-    public Task<Image> getApplyTransformTask() {
-        return new Task<Image>() {
-            @Override
-            protected Image call() throws Exception {
-                updateMessage("Applying " + getName() + "...");
-                return applyTransform();
-            }
-        };
     }
 
     protected abstract Image applyTransform(Image image);
