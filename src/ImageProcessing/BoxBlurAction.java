@@ -40,6 +40,7 @@ public class BoxBlurAction extends AbstractImageAction {
         this.width = width;
         this.height = height;
         this.iteration = iteration;
+        setName("Box Blur");
     }
 
     @Override
