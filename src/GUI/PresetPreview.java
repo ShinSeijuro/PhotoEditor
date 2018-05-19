@@ -105,6 +105,20 @@ public class PresetPreview {
         return crystallize;
     }
 
+    private final ObjectProperty<Image> twirl = new SimpleObjectProperty<>();
+
+    public Image getTwirl() {
+        return twirl.get();
+    }
+
+    public void setTwirl(Image value) {
+        twirl.set(value);
+    }
+
+    public ObjectProperty twirlProperty() {
+        return twirl;
+    }
+
     private final ObjectProperty<Image> blackAndWhite = new SimpleObjectProperty<>();
 
     public Image getBlackAndWhite() {
@@ -160,6 +174,7 @@ public class PresetPreview {
             setColdFilter(null);
             setUnderwater(null);
             setCrystallize(null);
+            setTwirl(null);
             setBlackAndWhite(null);
             setBwContrast(null);
             setInvert(null);
@@ -173,6 +188,7 @@ public class PresetPreview {
         setGreenFilter(getImageFromAction(new GreenFilter(thumbnail)));
         setUnderwater(getImageFromAction(new Underwater(thumbnail)));
         setCrystallize(getImageFromAction(new Crystallize(thumbnail)));
+        setTwirl(getImageFromAction(new Twirl(thumbnail)));
         setBlackAndWhite(getImageFromAction(new GrayScale(thumbnail)));
         setBwContrast(getImageFromAction(new GrayScaleBalance(thumbnail)));
         setInvert(getImageFromAction(new Invert(thumbnail)));

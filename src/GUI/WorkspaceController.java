@@ -1355,6 +1355,11 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
+    private void onTwirl(ActionEvent event) {
+        applyAction(new Twirl(getCurrentImage()));
+    }
+
+    @FXML
     public void onBlackAndWhite(ActionEvent event) {
         applyAction(new GrayScale(getCurrentImage()));
     }

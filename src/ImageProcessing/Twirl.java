@@ -6,7 +6,8 @@
 package ImageProcessing;
 
 import Action.AbstractImageAction;
-import com.jhlabs.image.CrystallizeFilter;
+import com.jhlabs.image.TwirlFilter;
+import com.jhlabs.math.ImageFunction2D;
 import java.awt.image.BufferedImage;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
@@ -15,17 +16,17 @@ import javafx.scene.image.Image;
  *
  * @author CMQ
  */
-public class Crystallize extends AbstractImageAction {
+public class Twirl extends AbstractImageAction {
 
-    private final CrystallizeFilter filter;
+    private final TwirlFilter filter;
 
-    public CrystallizeFilter getFilter() {
+    public TwirlFilter getFilter() {
         return filter;
     }
 
-    public Crystallize(Image originalImage) {
+    public Twirl(Image originalImage) {
         super(originalImage);
-        this.filter = getDefaultFilter();
+        this.filter = getDefaultFilter(originalImage);
     }
 
     @Override
@@ -35,15 +36,15 @@ public class Crystallize extends AbstractImageAction {
         return SwingFXUtils.toFXImage(output, null);
     }
 
-    public static CrystallizeFilter getDefaultFilter() {
-        CrystallizeFilter filter = new CrystallizeFilter();
-        filter.setAmount(30.0f);
-        filter.setFadeEdges(false);
-        filter.setRandomness(0.5f);
-        filter.setScale(30.0f);
-        filter.setStretch(1.0f);
-        filter.setTurbulence(1.0f);
+    public static TwirlFilter getDefaultFilter(Image image) {
+        TwirlFilter filter = new TwirlFilter();
+        float width = (float) image.getWidth();
+        float height = (float) image.getHeight();
+        filter.setCentreX(0.5f);
+        filter.setCentreY(0.5f);
+        filter.setAngle(-3.0f);
+        filter.setRadius(width > height ? height : width);
+        filter.setEdgeAction(ImageFunction2D.CLAMP);
         return filter;
     }
-
 }
