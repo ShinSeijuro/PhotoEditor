@@ -301,7 +301,7 @@
         </BorderPane>
     </bottom>
     <right>
-        <ScrollPane fx:id="scrollPaneEdit" managed="${toggleEdit.selected}" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
+        <ScrollPane fx:id="scrollPaneEdit" visible="${toggleEdit.selected}" managed="${toggleEdit.selected}" BorderPane.alignment="CENTER">
             <content>
                 <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="265.0">
                     <panes>
@@ -699,9 +699,9 @@
                                 </Accordion>
                             </content>
                         </TitledPane>
-                        <TitledPane fx:id="titledPanePresets" animated="false" prefHeight="868.0" text="Presets">
+                        <TitledPane fx:id="titledPanePresets" animated="false" text="Presets">
                             <content>
-                                <FlowPane columnHalignment="CENTER" hgap="10.0" prefWrapLength="0.0" vgap="10.0">
+                                <FlowPane hgap="10.0" prefWrapLength="0.0" vgap="10.0">
                                     <children>
                                         <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onAutoBalance" prefWidth="116.0" text="Auto Balance">
                                             <graphic>
@@ -761,9 +761,6 @@
                                     </children>
                                 </FlowPane>
                             </content>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
                         </TitledPane>
                         <TitledPane animated="false" text="Others">
                             <content>
