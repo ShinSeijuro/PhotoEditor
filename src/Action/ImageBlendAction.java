@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ImageProcessing;
+package Action;
 
-import Action.ImageColorAction;
 import javafx.scene.paint.Color;
 
 /**
@@ -15,22 +14,8 @@ import javafx.scene.paint.Color;
 public class ImageBlendAction extends ImageColorAction {
 
     private Color blendColor;
-
-    public Color getBlendColor() {
-        return blendColor;
-    }
-
     private double blendRatio;
-
-    public double getBlendRatio() {
-        return blendRatio;
-    }
-
     private boolean useOpacity;
-
-    public boolean isUseOpacity() {
-        return useOpacity;
-    }
 
     public ImageBlendAction(Color blendColor, double blendRatio, boolean useOpacity) {
         this.blendColor = blendColor;
@@ -43,8 +28,32 @@ public class ImageBlendAction extends ImageColorAction {
         this(blendColor, blendRatio, false);
     }
 
+    public Color getBlendColor() {
+        return blendColor;
+    }
+
+    public double getBlendRatio() {
+        return blendRatio;
+    }
+
+    public boolean isUseOpacity() {
+        return useOpacity;
+    }
+
+    public void setBlendColor(Color blendColor) {
+        this.blendColor = blendColor;
+    }
+
+    public void setBlendRatio(double blendRatio) {
+        this.blendRatio = blendRatio;
+    }
+
+    public void setUseOpacity(boolean useOpacity) {
+        this.useOpacity = useOpacity;
+    }
+
     @Override
-    protected final Color convertColor(Color color) {
+    protected Color convertColor(Color color) {
         double keepRatio = 1.0 - blendRatio;
 
         double red = (color.getRed() * keepRatio + blendColor.getRed() * blendRatio);

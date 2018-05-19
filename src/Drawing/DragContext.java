@@ -9,7 +9,7 @@ package Drawing;
  *
  * @author CMQ
  */
-public final class DragContext {
+public class DragContext {
 
     public double mouseAnchorX;
     public double mouseAnchorY;

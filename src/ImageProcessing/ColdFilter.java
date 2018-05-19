@@ -5,7 +5,8 @@
  */
 package ImageProcessing;
 
-import javafx.scene.paint.Color;
+import Action.ImageBlendAction;
+import static javafx.scene.paint.Color.web;
 
 /**
  *
@@ -14,7 +15,7 @@ import javafx.scene.paint.Color;
 public class ColdFilter extends ImageBlendAction {
 
     public ColdFilter() {
-        super(Color.web("#006dff"), 0.25);
+        super(web("#006dff"), 0.25);
         setName("Cold Filter");
     }
 

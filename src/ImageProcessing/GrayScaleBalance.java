@@ -6,11 +6,17 @@
 package ImageProcessing;
 
 import Action.AbstractImageAction;
+import static ImageProcessing.Utils.toImage;
+import static ImageProcessing.Utils.toMat;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
-import org.opencv.core.Core;
+import static org.opencv.core.Core.merge;
+import static org.opencv.core.Core.split;
 import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
+import static org.opencv.imgproc.Imgproc.COLOR_BGRA2GRAY;
+import static org.opencv.imgproc.Imgproc.COLOR_GRAY2BGR;
+import static org.opencv.imgproc.Imgproc.cvtColor;
+import static org.opencv.imgproc.Imgproc.equalizeHist;
 
 /**
  *
@@ -24,31 +30,31 @@ public class GrayScaleBalance extends AbstractImageAction {
 
     @Override
     public Image applyTransform(Image image) {
-        Mat imageMat = Utils.toMat(image);
+        Mat imageMat = toMat(image);
 
         // split alpha
         ArrayList<Mat> bgra = new ArrayList<>();
-        Core.split(imageMat, bgra);
+        split(imageMat, bgra);
         Mat alpha = bgra.get(3);
 
         // convert to grayscale
         Mat grayMat = new Mat();
-        Imgproc.cvtColor(imageMat, grayMat, Imgproc.COLOR_BGRA2GRAY);
+        cvtColor(imageMat, grayMat, COLOR_BGRA2GRAY);
 
         // histogram equalisation
         Mat histeqMat = new Mat();
-        Imgproc.equalizeHist(grayMat, histeqMat);
+        equalizeHist(grayMat, histeqMat);
 
         // convert back to bgr
         Mat bgrMat = new Mat();
-        Imgproc.cvtColor(histeqMat, bgrMat, Imgproc.COLOR_GRAY2BGR);
+        cvtColor(histeqMat, bgrMat, COLOR_GRAY2BGR);
 
         // add back alpha
-        Core.split(bgrMat, bgra);
+        split(bgrMat, bgra);
         bgra.add(alpha);
-        Core.merge(bgra, imageMat);
+        merge(bgra, imageMat);
 
-        image = Utils.toImage(imageMat);
+        image = toImage(imageMat);
         return image;
     }
 }

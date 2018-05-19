@@ -6,6 +6,7 @@
 package PlugIn;
 
 import com.sun.jna.platform.FileUtils;
+import static com.sun.jna.platform.FileUtils.getInstance;
 import java.io.File;
 import java.io.IOException;
 
@@ -16,7 +17,7 @@ import java.io.IOException;
 public class RecycleBin {
 
     public static void delete(File[] files) throws IOException {
-        FileUtils fileUtils = FileUtils.getInstance();
+        FileUtils fileUtils = getInstance();
         if (fileUtils.hasTrash()) {
             try {
                 fileUtils.moveToTrash(files);

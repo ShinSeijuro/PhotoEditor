@@ -6,7 +6,8 @@
 package ImageProcessing;
 
 import Action.AbstractImageAction;
-import GUI.PhotoEditor;
+import static GUI.PhotoEditor.getStartupPath;
+import static ImageProcessing.Utils.toMat;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -24,7 +25,7 @@ import org.opencv.objdetect.CascadeClassifier;
 public class FixRedEye extends AbstractImageAction {
 
     private static final CascadeClassifier EYE_DETECTOR
-            = new CascadeClassifier(PhotoEditor.getStartupPath() + "\\lib\\haarcascade\\haarcascade_eye.xml");
+            = new CascadeClassifier(getStartupPath() + "\\lib\\haarcascade\\haarcascade_eye.xml");
 
     private static final boolean SUPPORTED = !EYE_DETECTOR.empty();
 
@@ -42,7 +43,7 @@ public class FixRedEye extends AbstractImageAction {
             return image;
         }
 
-        Mat matImage = Utils.toMat(image);
+        Mat matImage = toMat(image);
         if (matImage == null) {
             return image;
         }

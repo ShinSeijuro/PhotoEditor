@@ -18,19 +18,19 @@ public class Crop extends AbstractImageAction {
 
     private Rectangle rect;
 
+    public Crop(Rectangle rect) {
+        super();
+        this.rect = rect;
+
+        setName("Crop");
+    }
+
     public Rectangle getRect() {
         return rect;
     }
 
     public void setRect(Rectangle rect) {
         this.rect = rect;
-    }
-
-    public Crop(Rectangle rect) {
-        super();
-        this.rect = rect;
-
-        setName("Crop");
     }
 
     public boolean validateRect(Image originalImage) {

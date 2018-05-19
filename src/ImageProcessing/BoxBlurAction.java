@@ -8,7 +8,8 @@ package ImageProcessing;
 import Action.AbstractImageAction;
 import com.jhlabs.image.BoxBlurFilter;
 import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
+import static javafx.embed.swing.SwingFXUtils.fromFXImage;
+import static javafx.embed.swing.SwingFXUtils.toFXImage;
 import javafx.scene.image.Image;
 
 /**
@@ -18,6 +19,14 @@ import javafx.scene.image.Image;
 public class BoxBlurAction extends AbstractImageAction {
 
     private double width;
+    private double height;
+    private int iteration;
+    public BoxBlurAction(double width, double height, int iteration) {
+        this.width = width;
+        this.height = height;
+        this.iteration = iteration;
+        setName("Box Blur");
+    }
 
     public double getWidth() {
         return width;
@@ -27,7 +36,6 @@ public class BoxBlurAction extends AbstractImageAction {
         this.width = width;
     }
 
-    private double height;
 
     public double getHeight() {
         return height;
@@ -37,7 +45,6 @@ public class BoxBlurAction extends AbstractImageAction {
         this.height = height;
     }
 
-    private int iteration;
 
     public int getIteration() {
         return iteration;
@@ -47,22 +54,16 @@ public class BoxBlurAction extends AbstractImageAction {
         this.iteration = iteration;
     }
 
-    public BoxBlurAction(double width, double height, int iteration) {
-        this.width = width;
-        this.height = height;
-        this.iteration = iteration;
-        setName("Box Blur");
-    }
 
     @Override
     public Image applyTransform(Image image) {
-        BufferedImage output = SwingFXUtils.fromFXImage(image, null);
+        BufferedImage output = fromFXImage(image, null);
         BoxBlurFilter filter = new BoxBlurFilter();
         filter.setHRadius((int) width);
         filter.setVRadius((int) height);
         filter.setIterations(iteration);
         filter.filter(output, output);
-        return SwingFXUtils.toFXImage(output, null);
+        return toFXImage(output, null);
     }
 
 }

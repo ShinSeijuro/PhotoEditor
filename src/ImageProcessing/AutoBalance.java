@@ -6,11 +6,17 @@
 package ImageProcessing;
 
 import Action.AbstractImageAction;
+import static ImageProcessing.Utils.toImage;
+import static ImageProcessing.Utils.toMat;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
-import org.opencv.core.Core;
+import static org.opencv.core.Core.merge;
+import static org.opencv.core.Core.split;
 import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
+import static org.opencv.imgproc.Imgproc.COLOR_BGR2YCrCb;
+import static org.opencv.imgproc.Imgproc.COLOR_YCrCb2BGR;
+import static org.opencv.imgproc.Imgproc.cvtColor;
+import static org.opencv.imgproc.Imgproc.equalizeHist;
 
 /**
  *
@@ -24,38 +30,38 @@ public class AutoBalance extends AbstractImageAction {
 
     @Override
     public Image applyTransform(Image image) {
-        Mat imageMat = Utils.toMat(image);
+        Mat imageMat = toMat(image);
 
         // split alpha
         ArrayList<Mat> bgra = new ArrayList<>();
-        Core.split(imageMat, bgra);
+        split(imageMat, bgra);
         Mat alpha = bgra.get(3);
 
         // convert to YCrCb
         Mat yCrCbMat = new Mat();
-        Imgproc.cvtColor(imageMat, yCrCbMat, Imgproc.COLOR_BGR2YCrCb);
+        cvtColor(imageMat, yCrCbMat, COLOR_BGR2YCrCb);
 
         // split channel
         ArrayList<Mat> yCrCb = new ArrayList<>();
-        Core.split(yCrCbMat, yCrCb);
+        split(yCrCbMat, yCrCb);
 
         // equalize channel Y
         Mat channelY = yCrCb.get(0);
         Mat eq = new Mat();
-        Imgproc.equalizeHist(channelY, eq);
+        equalizeHist(channelY, eq);
         yCrCb.set(0, eq);
 
         // convert back to bgr
-        Core.merge(yCrCb, yCrCbMat);
+        merge(yCrCb, yCrCbMat);
         Mat bgrMat = new Mat();
-        Imgproc.cvtColor(yCrCbMat, bgrMat, Imgproc.COLOR_YCrCb2BGR);
+        cvtColor(yCrCbMat, bgrMat, COLOR_YCrCb2BGR);
 
         // add back alpha
-        Core.split(bgrMat, bgra);
+        split(bgrMat, bgra);
         bgra.add(alpha);
-        Core.merge(bgra, imageMat);
+        merge(bgra, imageMat);
 
-        image = Utils.toImage(imageMat);
+        image = toImage(imageMat);
         return image;
     }
 

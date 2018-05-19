@@ -10,14 +10,15 @@ package PlugIn;
  * @author Yuuki
  */
 import java.awt.*;
+import static java.awt.Toolkit.getDefaultToolkit;
 import java.awt.image.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Logger.getLogger;
 
 public class ScreenCapture {
 
     public static Dimension getScreenSize() {
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Toolkit toolkit = getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
         return screenSize;
     }
@@ -32,7 +33,7 @@ public class ScreenCapture {
         try {
             robot = new Robot();
         } catch (AWTException ex) {
-            Logger.getLogger(ScreenCapture.class.getName()).log(Level.SEVERE, null, ex);
+            getLogger(ScreenCapture.class.getName()).log(SEVERE, null, ex);
         }
 
         if (robot == null) {

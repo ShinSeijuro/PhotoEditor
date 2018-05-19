@@ -8,7 +8,8 @@ package ImageProcessing;
 import Action.AbstractImageAction;
 import com.jhlabs.image.GaussianFilter;
 import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
+import static javafx.embed.swing.SwingFXUtils.fromFXImage;
+import static javafx.embed.swing.SwingFXUtils.toFXImage;
 import javafx.scene.image.Image;
 
 /**
@@ -19,6 +20,11 @@ public class GaussianBlurAction extends AbstractImageAction {
 
     private double radius;
 
+    public GaussianBlurAction(double radius) {
+        this.radius = radius;
+        setName("Gaussian Blur");
+    }
+
     public double getRadius() {
         return radius;
     }
@@ -27,16 +33,11 @@ public class GaussianBlurAction extends AbstractImageAction {
         this.radius = radius;
     }
 
-    public GaussianBlurAction(double radius) {
-        this.radius = radius;
-        setName("Gaussian Blur");
-    }
-
     @Override
     public Image applyTransform(Image image) {
-        BufferedImage output = SwingFXUtils.fromFXImage(image, null);
+        BufferedImage output = fromFXImage(image, null);
         new GaussianFilter((float) radius).filter(output, output);
-        return SwingFXUtils.toFXImage(output, null);
+        return toFXImage(output, null);
     }
 
 }

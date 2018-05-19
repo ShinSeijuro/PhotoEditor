@@ -8,7 +8,8 @@ package ImageProcessing;
 import Action.AbstractImageAction;
 import com.jhlabs.image.OilFilter;
 import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
+import static javafx.embed.swing.SwingFXUtils.fromFXImage;
+import static javafx.embed.swing.SwingFXUtils.toFXImage;
 import javafx.scene.image.Image;
 
 /**
@@ -17,7 +18,19 @@ import javafx.scene.image.Image;
  */
 public class OilPainting extends AbstractImageAction {
 
+    public static OilFilter getDefaultFilter() {
+        OilFilter filter = new OilFilter();
+        filter.setLevels(3);
+        filter.setRange(7);
+        return filter;
+    }
+
     private OilFilter filter;
+
+    public OilPainting() {
+        this.filter = getDefaultFilter();
+        setName("Oil Painting Effect");
+    }
 
     public OilFilter getFilter() {
         return filter;
@@ -27,22 +40,11 @@ public class OilPainting extends AbstractImageAction {
         this.filter = filter;
     }
 
-    public OilPainting() {
-        this.filter = getDefaultFilter();
-        setName("Oil Painting Effect");
-    }
-
     @Override
     public Image applyTransform(Image image) {
-        BufferedImage output = SwingFXUtils.fromFXImage(image, null);
+        BufferedImage output = fromFXImage(image, null);
         filter.filter(output, output);
-        return SwingFXUtils.toFXImage(output, null);
+        return toFXImage(output, null);
     }
 
-    public static OilFilter getDefaultFilter() {
-        OilFilter filter = new OilFilter();
-        filter.setLevels(3);
-        filter.setRange(7);
-        return filter;
-    }
 }

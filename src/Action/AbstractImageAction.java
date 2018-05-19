@@ -16,9 +16,13 @@ import javafx.scene.image.Image;
 public abstract class AbstractImageAction implements INameable, ITransformable<Image> {
 
     private String name = "";
+    private Task<Image> applyTransformTask;
+
+    public AbstractImageAction() {
+    }
 
     @Override
-    public final String getName() {
+    public String getName() {
         return this.name;
     }
 
@@ -26,8 +30,6 @@ public abstract class AbstractImageAction implements INameable, ITransformable<I
     public final void setName(String newName) {
         this.name = newName;
     }
-
-    private Task<Image> applyTransformTask;
 
     public Task<Image> getApplyTransformTask(Image image) {
         if (applyTransformTask == null) {
@@ -41,8 +43,5 @@ public abstract class AbstractImageAction implements INameable, ITransformable<I
         }
 
         return applyTransformTask;
-    }
-
-    public AbstractImageAction() {
     }
 }

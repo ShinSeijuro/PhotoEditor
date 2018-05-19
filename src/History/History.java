@@ -5,9 +5,10 @@
  */
 package History;
 
-import javafx.event.EventHandler;
 import java.util.ArrayDeque;
 import javafx.event.Event;
+import static javafx.event.Event.ANY;
+import javafx.event.EventHandler;
 import javafx.event.EventType;
 
 /**
@@ -17,20 +18,26 @@ import javafx.event.EventType;
 public class History<T> {
 
     public static final int MAXIMUM_ACTION_COUNT = 20;
+    public static final EventType<Event> ON_UNDONE_EVENT = new EventType<Event>(ANY, "ON_UNDONE_EVENT");
+    public static final EventType<Event> ON_REDONE_EVENT = new EventType<Event>(ANY, "ON_REDONE_EVENT");
 
-    private T original;
+    private final T original;
+    private final ArrayDeque<Item<ITransformable<T>>> undoDeque = new ArrayDeque<>();
+    private final ArrayDeque<Item<ITransformable<T>>> redoDeque = new ArrayDeque<>();
+    private EventHandler<Event> onUndone;
+    private EventHandler<Event> onRedone;
+
+    public History(T original) {
+        this.original = original;
+    }
 
     public T getOriginal() {
         return original;
     }
 
-    private final ArrayDeque<Item<ITransformable<T>>> undoDeque = new ArrayDeque<>();
-
     public ArrayDeque<Item<ITransformable<T>>> getUndoDeque() {
         return undoDeque;
     }
-
-    private final ArrayDeque<Item<ITransformable<T>>> redoDeque = new ArrayDeque<>();
 
     public ArrayDeque<Item<ITransformable<T>>> getRedoDeque() {
         return redoDeque;
@@ -54,11 +61,6 @@ public class History<T> {
         return undoDeque.size() + redoDeque.size();
     }
 
-    public static final EventType<Event> ON_UNDONE_EVENT
-            = new EventType<Event>(Event.ANY, "ON_UNDONE_EVENT");
-
-    private EventHandler<Event> onUndone;
-
     public EventHandler<Event> getOnUndone() {
         return onUndone;
     }
@@ -67,21 +69,12 @@ public class History<T> {
         this.onUndone = onUndone;
     }
 
-    public static final EventType<Event> ON_REDONE_EVENT
-            = new EventType<Event>(Event.ANY, "ON_REDONE_EVENT");
-
-    private EventHandler<Event> onRedone;
-
     public EventHandler<Event> getOnRedone() {
         return onRedone;
     }
 
     public void setOnRedone(EventHandler<Event> onRedone) {
         this.onRedone = onRedone;
-    }
-
-    public History(T original) {
-        this.original = original;
     }
 
     public void add(ITransformable<T> action, T result) {
@@ -143,17 +136,17 @@ public class History<T> {
         private F object;
         private T result;
 
+        public Item(F object, T result) {
+            this.object = object;
+            this.result = result;
+        }
+
         public F getObject() {
             return object;
         }
 
         public T getResult() {
             return result;
-        }
-
-        public Item(F object, T result) {
-            this.object = object;
-            this.result = result;
         }
     }
 }

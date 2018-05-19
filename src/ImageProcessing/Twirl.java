@@ -7,9 +7,10 @@ package ImageProcessing;
 
 import Action.AbstractImageAction;
 import com.jhlabs.image.TwirlFilter;
-import com.jhlabs.math.ImageFunction2D;
+import static com.jhlabs.math.ImageFunction2D.CLAMP;
 import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
+import static javafx.embed.swing.SwingFXUtils.fromFXImage;
+import static javafx.embed.swing.SwingFXUtils.toFXImage;
 import javafx.scene.image.Image;
 
 /**
@@ -17,31 +18,6 @@ import javafx.scene.image.Image;
  * @author CMQ
  */
 public class Twirl extends AbstractImageAction {
-
-    private TwirlFilter filter;
-
-    public TwirlFilter getFilter() {
-        return filter;
-    }
-
-    public void setFilter(TwirlFilter filter) {
-        this.filter = filter;
-    }
-
-    public Twirl() {
-        setName("Twirl Effect");
-    }
-
-    @Override
-    public Image applyTransform(Image image) {
-        if (filter == null) {
-            filter = getDefaultFilter(image);
-        }
-
-        BufferedImage output = SwingFXUtils.fromFXImage(image, null);
-        filter.filter(output, output);
-        return SwingFXUtils.toFXImage(output, null);
-    }
 
     public static TwirlFilter getDefaultFilter(Image image) {
         TwirlFilter filter = new TwirlFilter();
@@ -51,7 +27,33 @@ public class Twirl extends AbstractImageAction {
         filter.setCentreY(0.5f);
         filter.setAngle(-3.0f);
         filter.setRadius(width > height ? height : width);
-        filter.setEdgeAction(ImageFunction2D.CLAMP);
+        filter.setEdgeAction(CLAMP);
         return filter;
     }
+
+    private TwirlFilter filter;
+
+    public Twirl() {
+        setName("Twirl Effect");
+    }
+
+    public TwirlFilter getFilter() {
+        return filter;
+    }
+
+    public void setFilter(TwirlFilter filter) {
+        this.filter = filter;
+    }
+
+    @Override
+    public Image applyTransform(Image image) {
+        if (filter == null) {
+            filter = getDefaultFilter(image);
+        }
+
+        BufferedImage output = fromFXImage(image, null);
+        filter.filter(output, output);
+        return toFXImage(output, null);
+    }
+
 }

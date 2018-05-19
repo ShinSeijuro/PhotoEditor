@@ -7,9 +7,10 @@ package ImageProcessing;
 
 import Action.AbstractImageAction;
 import com.jhlabs.image.SwimFilter;
-import com.jhlabs.math.ImageFunction2D;
+import static com.jhlabs.math.ImageFunction2D.CLAMP;
 import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
+import static javafx.embed.swing.SwingFXUtils.fromFXImage;
+import static javafx.embed.swing.SwingFXUtils.toFXImage;
 import javafx.scene.image.Image;
 
 /**
@@ -18,7 +19,23 @@ import javafx.scene.image.Image;
  */
 public class Underwater extends AbstractImageAction {
 
+    public static SwimFilter getDefaultFilter() {
+        SwimFilter filter = new SwimFilter();
+        filter.setScale(30.0f);
+        filter.setStretch(1.0f);
+        filter.setTurbulence(1.0f);
+        filter.setAmount(30.0f);
+        filter.setTime(0.0f);
+        filter.setEdgeAction(CLAMP);
+        return filter;
+    }
+
     private SwimFilter filter;
+
+    public Underwater() {
+        this.filter = getDefaultFilter();
+        setName("Underwater Effect");
+    }
 
     public SwimFilter getFilter() {
         return filter;
@@ -28,27 +45,11 @@ public class Underwater extends AbstractImageAction {
         this.filter = filter;
     }
 
-    public Underwater() {
-        this.filter = getDefaultFilter();
-        setName("Underwater Effect");
-    }
-
     @Override
     public Image applyTransform(Image image) {
-        BufferedImage output = SwingFXUtils.fromFXImage(image, null);
+        BufferedImage output = fromFXImage(image, null);
         filter.filter(output, output);
-        return SwingFXUtils.toFXImage(output, null);
-    }
-
-    public static SwimFilter getDefaultFilter() {
-        SwimFilter filter = new SwimFilter();
-        filter.setScale(30.0f);
-        filter.setStretch(1.0f);
-        filter.setTurbulence(1.0f);
-        filter.setAmount(30.0f);
-        filter.setTime(0.0f);
-        filter.setEdgeAction(ImageFunction2D.CLAMP);
-        return filter;
+        return toFXImage(output, null);
     }
 
 }

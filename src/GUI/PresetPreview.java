@@ -5,12 +5,7 @@
  */
 package GUI;
 
-import ImageProcessing.Invert;
-import ImageProcessing.GreenFilter;
-import ImageProcessing.WarmFilter;
-import ImageProcessing.ColdFilter;
 import Action.AbstractImageAction;
-import ImageProcessing.GrayScale;
 import ImageProcessing.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -23,6 +18,21 @@ import javafx.scene.image.Image;
 public class PresetPreview {
 
     private final ObjectProperty<Image> autoBalance = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> warmFilter = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> coldFilter = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> greenFilter = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> underwater = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> crystallize = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> twirl = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> painting = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> oilPainting = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> blackAndWhite = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> bwContrast = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> invert = new SimpleObjectProperty<>();
+    private Image thumbnail;
+
+    public PresetPreview() {
+    }
 
     public Image getAutoBalance() {
         return autoBalance.get();
@@ -36,8 +46,6 @@ public class PresetPreview {
         return autoBalance;
     }
 
-    private final ObjectProperty<Image> warmFilter = new SimpleObjectProperty<>();
-
     public Image getWarmFilter() {
         return warmFilter.get();
     }
@@ -49,7 +57,6 @@ public class PresetPreview {
     public ObjectProperty warmFilterProperty() {
         return warmFilter;
     }
-    private final ObjectProperty<Image> coldFilter = new SimpleObjectProperty<>();
 
     public Image getColdFilter() {
         return coldFilter.get();
@@ -63,8 +70,6 @@ public class PresetPreview {
         return coldFilter;
     }
 
-    private final ObjectProperty<Image> greenFilter = new SimpleObjectProperty<>();
-
     public Image getGreenFilter() {
         return greenFilter.get();
     }
@@ -76,8 +81,6 @@ public class PresetPreview {
     public ObjectProperty greenFilterProperty() {
         return greenFilter;
     }
-
-    private final ObjectProperty<Image> underwater = new SimpleObjectProperty<>();
 
     public Image getUnderwater() {
         return underwater.get();
@@ -91,8 +94,6 @@ public class PresetPreview {
         return underwater;
     }
 
-    private final ObjectProperty<Image> crystallize = new SimpleObjectProperty<>();
-
     public Image getCrystallize() {
         return crystallize.get();
     }
@@ -104,8 +105,6 @@ public class PresetPreview {
     public ObjectProperty crystallizeProperty() {
         return crystallize;
     }
-
-    private final ObjectProperty<Image> twirl = new SimpleObjectProperty<>();
 
     public Image getTwirl() {
         return twirl.get();
@@ -119,8 +118,6 @@ public class PresetPreview {
         return twirl;
     }
 
-    private final ObjectProperty<Image> painting = new SimpleObjectProperty<>();
-
     public Image getPainting() {
         return painting.get();
     }
@@ -132,8 +129,6 @@ public class PresetPreview {
     public ObjectProperty paintingProperty() {
         return painting;
     }
-
-    private final ObjectProperty<Image> oilPainting = new SimpleObjectProperty<>();
 
     public Image getOilPainting() {
         return oilPainting.get();
@@ -147,8 +142,6 @@ public class PresetPreview {
         return oilPainting;
     }
 
-    private final ObjectProperty<Image> blackAndWhite = new SimpleObjectProperty<>();
-
     public Image getBlackAndWhite() {
         return blackAndWhite.get();
     }
@@ -160,7 +153,6 @@ public class PresetPreview {
     public ObjectProperty blackAndWhiteProperty() {
         return blackAndWhite;
     }
-    private final ObjectProperty<Image> bwContrast = new SimpleObjectProperty<>();
 
     public Image getBwContrast() {
         return bwContrast.get();
@@ -174,8 +166,6 @@ public class PresetPreview {
         return bwContrast;
     }
 
-    private final ObjectProperty<Image> invert = new SimpleObjectProperty<>();
-
     public Image getInvert() {
         return invert.get();
     }
@@ -187,8 +177,6 @@ public class PresetPreview {
     public ObjectProperty invertProperty() {
         return invert;
     }
-
-    private Image thumbnail;
 
     public Image getThumbnail() {
         return thumbnail;
@@ -224,9 +212,6 @@ public class PresetPreview {
         setBlackAndWhite(getImageFromAction(new GrayScale()));
         setBwContrast(getImageFromAction(new GrayScaleBalance()));
         setInvert(getImageFromAction(new Invert()));
-    }
-
-    public PresetPreview() {
     }
 
     private Image getImageFromAction(AbstractImageAction action) {

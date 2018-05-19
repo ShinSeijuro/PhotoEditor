@@ -8,7 +8,8 @@ package ImageProcessing;
 import Action.AbstractImageAction;
 import com.jhlabs.image.PointillizeFilter;
 import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
+import static javafx.embed.swing.SwingFXUtils.fromFXImage;
+import static javafx.embed.swing.SwingFXUtils.toFXImage;
 import javafx.scene.image.Image;
 
 /**
@@ -17,7 +18,20 @@ import javafx.scene.image.Image;
  */
 public class Painting extends AbstractImageAction {
 
+    public static PointillizeFilter getDefaultFilter() {
+        PointillizeFilter filter = new PointillizeFilter();
+        filter.setFuzziness(5.0f);
+        filter.setRandomness(0.5f);
+        filter.setFadeEdges(true);
+        return filter;
+    }
+
     private PointillizeFilter filter;
+
+    public Painting() {
+        this.filter = getDefaultFilter();
+        setName("Painting Effect");
+    }
 
     public PointillizeFilter getFilter() {
         return filter;
@@ -27,23 +41,11 @@ public class Painting extends AbstractImageAction {
         this.filter = filter;
     }
 
-    public Painting() {
-        this.filter = getDefaultFilter();
-        setName("Painting Effect");
-    }
-
     @Override
     public Image applyTransform(Image image) {
-        BufferedImage output = SwingFXUtils.fromFXImage(image, null);
+        BufferedImage output = fromFXImage(image, null);
         filter.filter(output, output);
-        return SwingFXUtils.toFXImage(output, null);
+        return toFXImage(output, null);
     }
 
-    public static PointillizeFilter getDefaultFilter() {
-        PointillizeFilter filter = new PointillizeFilter();
-        filter.setFuzziness(5.0f);
-        filter.setRandomness(0.5f);
-        filter.setFadeEdges(true);
-        return filter;
-    }
 }

@@ -8,7 +8,9 @@ package ImageProcessing;
 import Action.AbstractImageAction;
 import com.jhlabs.image.MotionBlurFilter;
 import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
+import static java.lang.Math.toRadians;
+import static javafx.embed.swing.SwingFXUtils.fromFXImage;
+import static javafx.embed.swing.SwingFXUtils.toFXImage;
 import javafx.scene.image.Image;
 
 /**
@@ -18,6 +20,13 @@ import javafx.scene.image.Image;
 public class MotionBlurAction extends AbstractImageAction {
 
     private double angle;
+    private double radius;
+
+    public MotionBlurAction(double angle, double radius) {
+        this.angle = angle;
+        this.radius = radius;
+        setName("Motion Blur");
+    }
 
     public double getAngle() {
         return angle;
@@ -27,8 +36,6 @@ public class MotionBlurAction extends AbstractImageAction {
         this.angle = angle;
     }
 
-    private double radius;
-
     public double getRadius() {
         return radius;
     }
@@ -37,21 +44,14 @@ public class MotionBlurAction extends AbstractImageAction {
         this.radius = radius;
     }
 
-    public MotionBlurAction(double angle, double radius) {
-        this.angle = angle;
-        this.radius = radius;
-        setName("Motion Blur");
-    }
-
     @Override
     public Image applyTransform(Image image) {
-        BufferedImage output = SwingFXUtils.fromFXImage(image, null);
+        BufferedImage output = fromFXImage(image, null);
         MotionBlurFilter filter = new MotionBlurFilter();
-        filter.setAngle((float) Math.toRadians(angle));
+        filter.setAngle((float) toRadians(angle));
         filter.setDistance((float) radius);
         filter.setWrapEdges(false);
         filter.filter(output, output);
-        return SwingFXUtils.toFXImage(output, null);
+        return toFXImage(output, null);
     }
-
 }

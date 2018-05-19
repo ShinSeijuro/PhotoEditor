@@ -22,7 +22,7 @@ public abstract class ImageColorAction extends AbstractImageAction {
     }
 
     @Override
-    public final Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         WritableImage newImage = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
         PixelWriter pixelWriter = newImage.getPixelWriter();
         PixelReader pixelReader = newImage.getPixelReader();

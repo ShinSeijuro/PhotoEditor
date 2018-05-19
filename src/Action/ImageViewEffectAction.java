@@ -5,8 +5,8 @@
  */
 package Action;
 
-import javafx.scene.image.Image;
 import javafx.scene.effect.Effect;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
@@ -16,6 +16,17 @@ import javafx.scene.image.ImageView;
 public class ImageViewEffectAction extends ImageSnapshotAction {
 
     private Effect effect;
+
+    public ImageViewEffectAction() {
+        super();
+    }
+
+    public ImageViewEffectAction(ImageView node) {
+        super(node);
+        if (node.getEffect() != null) {
+            setActionName(node.getEffect());
+        }
+    }
 
     public Effect getEffect() {
         return effect;
@@ -34,17 +45,6 @@ public class ImageViewEffectAction extends ImageSnapshotAction {
         setNode(imageView);
         if (effect == null && imageView.getEffect() != null) {
             setEffect(imageView.getEffect());
-        }
-    }
-
-    public ImageViewEffectAction() {
-        super();
-    }
-
-    public ImageViewEffectAction(ImageView node) {
-        super(node);
-        if (node.getEffect() != null) {
-            setActionName(node.getEffect());
         }
     }
 
