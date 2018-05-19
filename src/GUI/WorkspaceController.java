@@ -6,14 +6,14 @@
 package GUI;
 
 //<editor-fold defaultstate="collapsed" desc="import">
+import ImageProcessing.GrayScale;
 import ImageProcessing.Invert;
 import ImageProcessing.GreenFilter;
 import ImageProcessing.WarmFilter;
 import ImageProcessing.ColdFilter;
-import Adjustment.ImageViewEffectAction;
+import Action.ImageViewEffectAction;
 import Action.*;
 import ImageProcessing.*;
-import Adjustment.*;
 import Drawing.*;
 import Transformation.*;
 import History.*;
@@ -568,7 +568,7 @@ public class WorkspaceController implements Initializable {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Functions">
-    public History getCurrentHistory() {
+    public History<Image> getCurrentHistory() {
         if (getCurrentController() == null) {
             return null;
         }
@@ -648,15 +648,20 @@ public class WorkspaceController implements Initializable {
 
     public void applyAction(AbstractImageAction action) {
         if (action instanceof ImageSnapshotAction) {
-            Image image = action.applyTransform();
+            if (action instanceof ImageViewEffectAction) {
+                ((ImageViewEffectAction) action).setImageView(getCurrentImageView());
+                ((ImageViewEffectAction) action).setEffect(currentEffect);
+            }
+
+            Image image = action.applyTransform(getCurrentImage());
             updateImage(image);
-            getCurrentHistory().add(action);
+            getCurrentHistory().add(action, image);
         } else {
-            Task task = action.getApplyTransformTask();
+            Task task = action.getApplyTransformTask(getCurrentImage());
             task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
-                Image image = action.getModifiedImage();
+                Image image = (Image) task.getValue();
                 updateImage(image);
-                getCurrentHistory().add(action);
+                getCurrentHistory().add(action, image);
 
             });
             runTask(task);
@@ -826,31 +831,31 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onRotateRight90(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), getCurrentImageView(), 90.0));
+        applyAction(new Rotation(getCurrentImageView(), 90.0));
     }
 
     @FXML
     public void onRotateLeft90(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), getCurrentImageView(), -90));
+        applyAction(new Rotation(getCurrentImageView(), -90));
     }
 
     @FXML
     public void onRotateRight180(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), getCurrentImageView(), 180));
+        applyAction(new Rotation(getCurrentImageView(), 180));
     }
 
     @FXML
     public void onRotateLeft180(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), getCurrentImageView(), -180));
+        applyAction(new Rotation(getCurrentImageView(), -180));
     }
 
     @FXML
     public void onFlipHorizontal(ActionEvent event) {
-        applyAction(new Flip(getCurrentImage(), getCurrentImageView(), Flip.Orientation.Horizontal));
+        applyAction(new Flip(getCurrentImageView(), Flip.Orientation.Horizontal));
     }
 
     public void onFlipVertical(ActionEvent event) {
-        applyAction(new Flip(getCurrentImage(), getCurrentImageView(), Flip.Orientation.Vertical));
+        applyAction(new Flip(getCurrentImageView(), Flip.Orientation.Vertical));
     }
 
     @FXML
@@ -867,24 +872,24 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onSharpen(ActionEvent event) {
-        applyAction(new Sharpen(getCurrentImage()));
+        applyAction(new Sharpen());
     }
 
     @FXML
     private void onDenoise(ActionEvent event) {
-        applyAction(new Denoise(getCurrentImage()));
+        applyAction(new Denoise());
     }
 
     @FXML
     private void onAddNoise(ActionEvent event) {
-        applyAction(new Noise(getCurrentImage()));
+        applyAction(new Noise());
     }
 
     @FXML
     public void onUndo(ActionEvent event) {
-        History currentHistory = getCurrentHistory();
+        History<Image> currentHistory = getCurrentHistory();
         currentHistory.undo();
-        Image image = currentHistory.getCurrentImage();
+        Image image = currentHistory.getCurrentResult();
 
         if (image != null) {
             updateImage(image);
@@ -893,9 +898,9 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onRedo(ActionEvent event) {
-        History currentHistory = getCurrentHistory();
+        History<Image> currentHistory = getCurrentHistory();
         currentHistory.redo();
-        Image image = currentHistory.getCurrentImage();
+        Image image = currentHistory.getCurrentResult();
 
         if (image != null) {
             updateImage(image);
@@ -948,13 +953,13 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyColorAdjust(ActionEvent event) {
-        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView(), currentEffect));
+        applyAction(new ImageViewEffectAction());
         onResetColorAdjust(null);
     }
 
     @FXML
     private void onApplyHandDraw(ActionEvent event) {
-        ImageSnapshotAction action = new ImageSnapshotAction(getCurrentImage(), getHandDrawing().getGroup());
+        ImageSnapshotAction action = new ImageSnapshotAction(getHandDrawing().getGroup());
         action.setName("Hand Draw");
         applyAction(action);
         getHandDrawing().getShapeList().clear();
@@ -984,9 +989,9 @@ public class WorkspaceController implements Initializable {
     @FXML
     private void onApplyGaussianBlur(ActionEvent event) {
         AbstractImageAction action
-                = new GaussianBlurAction(getCurrentImage(),
+                = new GaussianBlurAction(
                         sliderGaussianRadius.getValue());
-        action.getApplyTransformTask()
+        action.getApplyTransformTask(getCurrentImage())
                 .addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
                     onResetGaussianBlur(null);
                 });
@@ -1001,11 +1006,11 @@ public class WorkspaceController implements Initializable {
     @FXML
     private void onApplyBoxBlur(ActionEvent event) {
         AbstractImageAction action
-                = new BoxBlurAction(getCurrentImage(),
+                = new BoxBlurAction(
                         sliderBoxBlurWidth.getValue(),
                         sliderBoxBlurHeight.getValue(),
                         (int) sliderBoxBlurIteration.getValue());
-        action.getApplyTransformTask()
+        action.getApplyTransformTask(getCurrentImage())
                 .addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
                     onResetBoxBlur(null);
                 });
@@ -1021,10 +1026,10 @@ public class WorkspaceController implements Initializable {
     @FXML
     private void onApplyMotionBlur(ActionEvent event) {
         AbstractImageAction action
-                = new MotionBlurAction(getCurrentImage(),
+                = new MotionBlurAction(
                         sliderMotionBlurAngle.getValue(),
                         sliderMotionBlurRadius.getValue());
-        action.getApplyTransformTask()
+        action.getApplyTransformTask(getCurrentImage())
                 .addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
                     onResetMotionBlur(null);
                 });
@@ -1039,7 +1044,7 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyGlow(ActionEvent event) {
-        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView(), currentEffect));
+        applyAction(new ImageViewEffectAction());
         onResetGlow(null);
     }
 
@@ -1050,7 +1055,7 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplySepiaTone(ActionEvent event) {
-        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView(), currentEffect));
+        applyAction(new ImageViewEffectAction());
         onResetSepiaTone(null);
     }
 
@@ -1070,8 +1075,8 @@ public class WorkspaceController implements Initializable {
         }
 
         if (!selection.isNothing()) {
-            Crop crop = new Crop(getCurrentImage(), selection.getRect());
-            if (!crop.isInvalid()) {
+            Crop crop = new Crop(selection.getRect());
+            if (crop.validateRect(getCurrentImage())) {
                 applyAction(crop);
                 selection.setDisabled(true);
                 if (toggleFitToView.isSelected()) {
@@ -1083,15 +1088,16 @@ public class WorkspaceController implements Initializable {
 
         // Selection failed
         makeDialog("Crop", null, "No pixels were selected.", AlertType.ERROR).show();
+        selection.setDisabled(true);
     }
 
     @FXML
     private void onMenuEditShowing(Event event) {
-        History currentHistory = getCurrentHistory();
+        History<Image> currentHistory = getCurrentHistory();
 
         if (currentHistory.isUndoable()) {
             menuUndo.setDisable(false);
-            menuUndo.setText("Undo " + currentHistory.getUndoDeque().getFirst().getName());
+            menuUndo.setText("Undo " + currentHistory.getUndoDeque().getFirst().getObject().getName());
         } else {
             menuUndo.setDisable(true);
             menuUndo.setText("Undo");
@@ -1099,7 +1105,7 @@ public class WorkspaceController implements Initializable {
 
         if (currentHistory.isRedoable()) {
             menuRedo.setDisable(false);
-            menuRedo.setText("Redo " + currentHistory.getRedoDeque().getFirst().getName());
+            menuRedo.setText("Redo " + currentHistory.getRedoDeque().getFirst().getObject().getName());
         } else {
             menuRedo.setDisable(true);
             menuRedo.setText("Redo");
@@ -1162,7 +1168,7 @@ public class WorkspaceController implements Initializable {
             return;
         }
 
-        applyAction(new FixRedEye(getCurrentImage()));
+        applyAction(new FixRedEye());
     }
 
     @FXML
@@ -1347,62 +1353,62 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onAutoBalance(ActionEvent event) {
-        applyAction(new AutoBalance(getCurrentImage()));
+        applyAction(new AutoBalance());
     }
 
     @FXML
     private void onWarmFilter(ActionEvent event) {
-        applyAction(new WarmFilter(getCurrentImage()));
+        applyAction(new WarmFilter());
     }
 
     @FXML
     private void onColdFilter(ActionEvent event) {
-        applyAction(new ColdFilter(getCurrentImage()));
+        applyAction(new ColdFilter());
     }
 
     @FXML
     private void onGreenFilter(ActionEvent event) {
-        applyAction(new GreenFilter(getCurrentImage()));
+        applyAction(new GreenFilter());
     }
 
     @FXML
     private void onUnderwater(ActionEvent event) {
-        applyAction(new Underwater(getCurrentImage()));
+        applyAction(new Underwater());
     }
 
     @FXML
     private void onCrystallize(ActionEvent event) {
-        applyAction(new Crystallize(getCurrentImage()));
+        applyAction(new Crystallize());
     }
 
     @FXML
     private void onTwirl(ActionEvent event) {
-        applyAction(new Twirl(getCurrentImage()));
+        applyAction(new Twirl());
     }
 
     @FXML
     private void onPainting(ActionEvent event) {
-        applyAction(new Painting(getCurrentImage()));
+        applyAction(new Painting());
     }
 
     @FXML
     private void onOilPainting(ActionEvent event) {
-        applyAction(new OilPainting(getCurrentImage()));
+        applyAction(new OilPainting());
     }
 
     @FXML
     public void onBlackAndWhite(ActionEvent event) {
-        applyAction(new GrayScale(getCurrentImage()));
+        applyAction(new GrayScale());
     }
 
     @FXML
     public void onBWContrast(ActionEvent event) {
-        applyAction(new GrayScaleBalance(getCurrentImage()));
+        applyAction(new GrayScaleBalance());
     }
 
     @FXML
     private void onInvert(ActionEvent event) {
-        applyAction(new Invert(getCurrentImage()));
+        applyAction(new Invert());
     }
     //</editor-fold>
 

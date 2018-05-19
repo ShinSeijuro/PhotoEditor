@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Adjustment;
+package Action;
 
-import Action.ImageSnapshotAction;
 import javafx.scene.image.Image;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.ImageView;
@@ -22,31 +21,46 @@ public class ImageViewEffectAction extends ImageSnapshotAction {
         return effect;
     }
 
+    public void setEffect(Effect effect) {
+        this.effect = effect;
+        setActionName(effect);
+    }
+
     public ImageView getImageView() {
         return (ImageView) getNode();
     }
 
-    public ImageViewEffectAction(Image originalImage, ImageView node) {
-        super(originalImage, node);
-        this.effect = node.getEffect();
-        setActionName();
+    public void setImageView(ImageView imageView) {
+        setNode(imageView);
+        if (effect == null && imageView.getEffect() != null) {
+            setEffect(imageView.getEffect());
+        }
     }
 
-    public ImageViewEffectAction(Image originalImage, ImageView node, Effect effect) {
-        super(originalImage, node);
-        this.effect = effect;
-        node.setEffect(effect);
-        setActionName();
+    public ImageViewEffectAction() {
+        super();
+    }
+
+    public ImageViewEffectAction(ImageView node) {
+        super(node);
+        if (node.getEffect() != null) {
+            setActionName(node.getEffect());
+        }
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
+        Effect originalEffect = getImageView().getEffect();
+        if (effect != null) {
+            getImageView().setEffect(effect);
+        }
         Image output = takeSnapShot();
-        getImageView().setEffect(null);
+        getImageView().setEffect(originalEffect);
+
         return output;
     }
 
-    private void setActionName() {
+    private void setActionName(Effect effect) {
         if (effect != null) {
             setName(effect.getClass().getSimpleName().replaceAll("(.)([A-Z])", "$1 $2"));
         } else {

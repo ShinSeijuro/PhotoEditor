@@ -5,7 +5,6 @@
  */
 package Action;
 
-import ImageProcessing.Utils;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -18,12 +17,12 @@ import javafx.scene.paint.Color;
  */
 public abstract class ImageColorAction extends AbstractImageAction {
 
-    public ImageColorAction(Image originalImage) {
-        super(originalImage);
+    public ImageColorAction() {
+        setName("Color Filter");
     }
 
     @Override
-    protected final Image applyTransform(Image image) {
+    public final Image applyTransform(Image image) {
         WritableImage newImage = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
         PixelWriter pixelWriter = newImage.getPixelWriter();
         PixelReader pixelReader = newImage.getPixelReader();

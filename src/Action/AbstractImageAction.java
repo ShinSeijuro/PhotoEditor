@@ -5,6 +5,7 @@
  */
 package Action;
 
+import History.ITransformable;
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 
@@ -12,9 +13,9 @@ import javafx.scene.image.Image;
  *
  * @author CMQ
  */
-public abstract class AbstractImageAction implements INameable {
+public abstract class AbstractImageAction implements INameable, ITransformable<Image> {
 
-    private String name;
+    private String name = "";
 
     @Override
     public final String getName() {
@@ -26,27 +27,15 @@ public abstract class AbstractImageAction implements INameable {
         this.name = newName;
     }
 
-    private Image originalImage;
-
-    public Image getOriginalImage() {
-        return originalImage;
-    }
-
-    private Image modifiedImage;
-
-    public Image getModifiedImage() {
-        return modifiedImage;
-    }
-
     private Task<Image> applyTransformTask;
 
-    public Task<Image> getApplyTransformTask() {
+    public Task<Image> getApplyTransformTask(Image image) {
         if (applyTransformTask == null) {
             applyTransformTask = new Task<Image>() {
                 @Override
                 protected Image call() throws Exception {
                     updateMessage("Applying " + getName() + "...");
-                    return applyTransform();
+                    return applyTransform(image);
                 }
             };
         }
@@ -54,19 +43,6 @@ public abstract class AbstractImageAction implements INameable {
         return applyTransformTask;
     }
 
-    public AbstractImageAction(Image originalImage) {
-        this.originalImage = originalImage;
-        this.name = "";
+    public AbstractImageAction() {
     }
-
-    public final Image applyTransform() {
-        if (modifiedImage == null) {
-            modifiedImage = applyTransform(originalImage);
-        }
-
-        return modifiedImage;
-    }
-
-    protected abstract Image applyTransform(Image image);
-
 }

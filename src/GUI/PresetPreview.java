@@ -10,7 +10,7 @@ import ImageProcessing.GreenFilter;
 import ImageProcessing.WarmFilter;
 import ImageProcessing.ColdFilter;
 import Action.AbstractImageAction;
-import Adjustment.GrayScale;
+import ImageProcessing.GrayScale;
 import ImageProcessing.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -212,24 +212,24 @@ public class PresetPreview {
         }
 
         this.thumbnail = Utils.getThumbnail(originalImage, 100, -1);
-        setAutoBalance(getImageFromAction(new AutoBalance(thumbnail)));
-        setWarmFilter(getImageFromAction(new WarmFilter(thumbnail)));
-        setColdFilter(getImageFromAction(new ColdFilter(thumbnail)));
-        setGreenFilter(getImageFromAction(new GreenFilter(thumbnail)));
-        setUnderwater(getImageFromAction(new Underwater(thumbnail)));
-        setCrystallize(getImageFromAction(new Crystallize(thumbnail)));
-        setTwirl(getImageFromAction(new Twirl(thumbnail)));
-        setPainting(getImageFromAction(new Painting(thumbnail)));
-        setOilPainting(getImageFromAction(new OilPainting(thumbnail)));
-        setBlackAndWhite(getImageFromAction(new GrayScale(thumbnail)));
-        setBwContrast(getImageFromAction(new GrayScaleBalance(thumbnail)));
-        setInvert(getImageFromAction(new Invert(thumbnail)));
+        setAutoBalance(getImageFromAction(new AutoBalance()));
+        setWarmFilter(getImageFromAction(new WarmFilter()));
+        setColdFilter(getImageFromAction(new ColdFilter()));
+        setGreenFilter(getImageFromAction(new GreenFilter()));
+        setUnderwater(getImageFromAction(new Underwater()));
+        setCrystallize(getImageFromAction(new Crystallize()));
+        setTwirl(getImageFromAction(new Twirl()));
+        setPainting(getImageFromAction(new Painting()));
+        setOilPainting(getImageFromAction(new OilPainting()));
+        setBlackAndWhite(getImageFromAction(new GrayScale()));
+        setBwContrast(getImageFromAction(new GrayScaleBalance()));
+        setInvert(getImageFromAction(new Invert()));
     }
 
     public PresetPreview() {
     }
 
     private Image getImageFromAction(AbstractImageAction action) {
-        return action.applyTransform();
+        return action.applyTransform(thumbnail);
     }
 }

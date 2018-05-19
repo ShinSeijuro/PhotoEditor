@@ -22,23 +22,24 @@ public class Crop extends AbstractImageAction {
         return rect;
     }
 
-    private boolean invalid;
-
-    public boolean isInvalid() {
-        return invalid;
+    public void setRect(Rectangle rect) {
+        this.rect = rect;
     }
 
-    public Crop(Image originalImage, Rectangle rect) {
-        super(originalImage);
+    public Crop(Rectangle rect) {
+        super();
         this.rect = rect;
-        this.invalid = !validateRect();
 
         setName("Crop");
     }
 
-    private boolean validateRect() {
-        double imageWidth = getOriginalImage().getWidth();
-        double imageHeight = getOriginalImage().getHeight();
+    public boolean validateRect(Image originalImage) {
+        if (rect == null) {
+            return false;
+        }
+
+        double imageWidth = originalImage.getWidth();
+        double imageHeight = originalImage.getHeight();
 
         if (!rect.intersects(0, 0, imageWidth, imageHeight)) {
             return false;
@@ -46,7 +47,7 @@ public class Crop extends AbstractImageAction {
 
         if (rect.getX() < 0) {
             rect.setWidth(rect.getWidth() + rect.getX());
-            if (rect.getWidth() <= 0) {
+            if (rect.getWidth() <= 1) {
                 return false;
             }
             rect.setX(0);
@@ -55,14 +56,14 @@ public class Crop extends AbstractImageAction {
         if (rect.getX() + rect.getWidth() > imageWidth) {
             rect.setWidth(imageWidth - rect.getX());
 
-            if (rect.getWidth() <= 0) {
+            if (rect.getWidth() <= 1) {
                 return false;
             }
         }
 
         if (rect.getY() < 0) {
             rect.setHeight(rect.getHeight() + rect.getY());
-            if (rect.getHeight() <= 0) {
+            if (rect.getHeight() <= 1) {
                 return false;
             }
             rect.setY(0);
@@ -71,7 +72,7 @@ public class Crop extends AbstractImageAction {
         if (rect.getY() + rect.getHeight() > imageHeight) {
             rect.setHeight(imageHeight - rect.getY());
 
-            if (rect.getHeight() <= 0) {
+            if (rect.getHeight() <= 1) {
                 return false;
             }
         }
@@ -80,9 +81,9 @@ public class Crop extends AbstractImageAction {
     }
 
     @Override
-    protected Image applyTransform(Image image) {
-        if (isInvalid()) {
-            return getOriginalImage();
+    public Image applyTransform(Image image) {
+        if (!validateRect(image)) {
+            return image;
         }
 
         WritableImage output = new WritableImage(

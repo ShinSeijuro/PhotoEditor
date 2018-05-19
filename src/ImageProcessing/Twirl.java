@@ -18,20 +18,26 @@ import javafx.scene.image.Image;
  */
 public class Twirl extends AbstractImageAction {
 
-    private final TwirlFilter filter;
+    private TwirlFilter filter;
 
     public TwirlFilter getFilter() {
         return filter;
     }
 
-    public Twirl(Image originalImage) {
-        super(originalImage);
-        this.filter = getDefaultFilter(originalImage);
+    public void setFilter(TwirlFilter filter) {
+        this.filter = filter;
+    }
+
+    public Twirl() {
         setName("Twirl Effect");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
+        if (filter == null) {
+            filter = getDefaultFilter(image);
+        }
+
         BufferedImage output = SwingFXUtils.fromFXImage(image, null);
         filter.filter(output, output);
         return SwingFXUtils.toFXImage(output, null);

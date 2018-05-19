@@ -49,14 +49,19 @@ public class Flip extends ImageSnapshotAction {
         return orientation;
     }
 
-    public Flip(Image originalImage, ImageView node, Orientation orientation) {
-        super(originalImage, node);
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
+        setName("Flip " + orientation.getName());
+    }
+
+    public Flip(ImageView node, Orientation orientation) {
+        super(node);
         this.orientation = orientation;
         setName("Flip " + orientation.getName());
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         Image output = null;
         switch (orientation) {
             case Horizontal:

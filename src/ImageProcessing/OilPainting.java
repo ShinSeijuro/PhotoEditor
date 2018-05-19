@@ -17,20 +17,23 @@ import javafx.scene.image.Image;
  */
 public class OilPainting extends AbstractImageAction {
 
-    private final OilFilter filter;
+    private OilFilter filter;
 
     public OilFilter getFilter() {
         return filter;
     }
 
-    public OilPainting(Image originalImage) {
-        super(originalImage);
+    public void setFilter(OilFilter filter) {
+        this.filter = filter;
+    }
+
+    public OilPainting() {
         this.filter = getDefaultFilter();
         setName("Oil Painting Effect");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         BufferedImage output = SwingFXUtils.fromFXImage(image, null);
         filter.filter(output, output);
         return SwingFXUtils.toFXImage(output, null);

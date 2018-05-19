@@ -21,8 +21,13 @@ public class Rotation extends ImageSnapshotAction {
         return angle;
     }
 
-    public Rotation(Image originalImage, ImageView node, double angle) {
-        super(originalImage, node);
+    public void setAngle(double angle) {
+        this.angle = angle;
+        setName("Rotate " + (angle < 0 ? "left" : "right") + " " + Math.abs(angle) + "°");
+    }
+
+    public Rotation(ImageView node, double angle) {
+        super(node);
         this.angle = angle;
 
         setName("Rotate " + (angle < 0 ? "left" : "right") + " " + Math.abs(angle) + "°");

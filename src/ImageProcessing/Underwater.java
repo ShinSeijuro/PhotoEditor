@@ -18,20 +18,23 @@ import javafx.scene.image.Image;
  */
 public class Underwater extends AbstractImageAction {
 
-    private final SwimFilter filter;
+    private SwimFilter filter;
 
     public SwimFilter getFilter() {
         return filter;
     }
 
-    public Underwater(Image originalImage) {
-        super(originalImage);
+    public void setFilter(SwimFilter filter) {
+        this.filter = filter;
+    }
+
+    public Underwater() {
         this.filter = getDefaultFilter();
         setName("Underwater Effect");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         BufferedImage output = SwingFXUtils.fromFXImage(image, null);
         filter.filter(output, output);
         return SwingFXUtils.toFXImage(output, null);

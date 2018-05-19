@@ -5,7 +5,6 @@
  */
 package ImageProcessing;
 
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
@@ -14,8 +13,8 @@ import javafx.scene.paint.Color;
  */
 public class WarmFilter extends ImageBlendAction {
 
-    public WarmFilter(Image originalImage) {
-        super(originalImage, Color.web("#ec8a00"), 0.25);
+    public WarmFilter() {
+        super(Color.web("#ec8a00"), 0.25);
         setName("Warm Filter");
     }
 }

@@ -44,9 +44,9 @@ public class ImageTab extends Tab {
         return controller;
     }
 
-    private History history;
+    private History<Image> history;
 
-    public History getHistory() {
+    public History<Image> getHistory() {
         return history;
     }
 
@@ -106,10 +106,6 @@ public class ImageTab extends Tab {
             throw ex;
         }
 
-        history = new History();
-        history.setOnUndone(e -> addPivot(-1));
-        history.setOnRedone(e -> addPivot(1));
-
         savePivot = 0;
     }
 
@@ -119,6 +115,10 @@ public class ImageTab extends Tab {
         if (image == null) {
             throw new IllegalArgumentException("Unsupported file type.");
         }
+
+        history = new History<>(image);
+        history.setOnUndone(e -> addPivot(-1));
+        history.setOnRedone(e -> addPivot(1));
 
         this.name = name;
         originalDimension2D = new Dimension2D(image.getWidth(), image.getHeight());

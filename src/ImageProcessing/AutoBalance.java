@@ -18,13 +18,12 @@ import org.opencv.imgproc.Imgproc;
  */
 public class AutoBalance extends AbstractImageAction {
 
-    public AutoBalance(Image originalImage) {
-        super(originalImage);
+    public AutoBalance() {
         setName("Auto Balance");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         Mat imageMat = Utils.toMat(image);
 
         // split alpha

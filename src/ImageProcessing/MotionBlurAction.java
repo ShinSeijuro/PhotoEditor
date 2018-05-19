@@ -23,21 +23,28 @@ public class MotionBlurAction extends AbstractImageAction {
         return angle;
     }
 
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+
     private double radius;
 
     public double getRadius() {
         return radius;
     }
 
-    public MotionBlurAction(Image originalImage, double angle, double radius) {
-        super(originalImage);
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
+
+    public MotionBlurAction(double angle, double radius) {
         this.angle = angle;
         this.radius = radius;
         setName("Motion Blur");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         BufferedImage output = SwingFXUtils.fromFXImage(image, null);
         MotionBlurFilter filter = new MotionBlurFilter();
         filter.setAngle((float) Math.toRadians(angle));

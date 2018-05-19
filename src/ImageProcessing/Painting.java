@@ -17,20 +17,23 @@ import javafx.scene.image.Image;
  */
 public class Painting extends AbstractImageAction {
 
-    private final PointillizeFilter filter;
+    private PointillizeFilter filter;
 
     public PointillizeFilter getFilter() {
         return filter;
     }
 
-    public Painting(Image originalImage) {
-        super(originalImage);
+    public void setFilter(PointillizeFilter filter) {
+        this.filter = filter;
+    }
+
+    public Painting() {
         this.filter = getDefaultFilter();
         setName("Painting Effect");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         BufferedImage output = SwingFXUtils.fromFXImage(image, null);
         filter.filter(output, output);
         return SwingFXUtils.toFXImage(output, null);

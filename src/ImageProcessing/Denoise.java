@@ -19,13 +19,12 @@ import org.opencv.photo.Photo;
  */
 public class Denoise extends AbstractImageAction {
 
-    public Denoise(Image originalImage) {
-        super(originalImage);
+    public Denoise() {
         setName("Denoise");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         Mat rgb = Utils.toMat(SwingFXUtils.fromFXImage(image, null));
         Mat gray = new Mat(rgb.size(), CvType.CV_8U);
         Imgproc.cvtColor(rgb, gray, Imgproc.COLOR_BGR2GRAY);

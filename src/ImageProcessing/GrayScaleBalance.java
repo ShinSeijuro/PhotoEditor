@@ -18,13 +18,12 @@ import org.opencv.imgproc.Imgproc;
  */
 public class GrayScaleBalance extends AbstractImageAction {
 
-    public GrayScaleBalance(Image originalImage) {
-        super(originalImage);
+    public GrayScaleBalance() {
         setName("BW Contrast");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         Mat imageMat = Utils.toMat(image);
 
         // split alpha

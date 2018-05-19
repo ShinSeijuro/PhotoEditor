@@ -17,20 +17,23 @@ import javafx.scene.image.Image;
  */
 public class Noise extends AbstractImageAction {
 
-    private final NoiseFilter filter;
+    private NoiseFilter filter;
 
     public NoiseFilter getFilter() {
         return filter;
     }
 
-    public Noise(Image originalImage) {
-        super(originalImage);
+    public void setFilter(NoiseFilter filter) {
+        this.filter = filter;
+    }
+
+    public Noise() {
         this.filter = getDefaultFilter();
         setName("Add Noise");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         BufferedImage output = SwingFXUtils.fromFXImage(image, null);
         filter.filter(output, output);
         return SwingFXUtils.toFXImage(output, null);

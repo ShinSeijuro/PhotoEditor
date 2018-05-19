@@ -19,13 +19,12 @@ import javafx.embed.swing.SwingFXUtils;
  */
 public class Sharpen extends AbstractImageAction {
 
-    public Sharpen(Image originalImage) {
-        super(originalImage);
-        this.setName("Sharpen");
+    public Sharpen() {
+        setName("Sharpen");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         BufferedImage output = SwingFXUtils.fromFXImage(image, null);
         float[] sharpenKernel = {
             0, -1, 0,

@@ -23,10 +23,18 @@ public class BoxBlurAction extends AbstractImageAction {
         return width;
     }
 
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
     private double height;
 
     public double getHeight() {
         return height;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
     }
 
     private int iteration;
@@ -35,8 +43,11 @@ public class BoxBlurAction extends AbstractImageAction {
         return iteration;
     }
 
-    public BoxBlurAction(Image originalImage, double width, double height, int iteration) {
-        super(originalImage);
+    public void setIteration(int iteration) {
+        this.iteration = iteration;
+    }
+
+    public BoxBlurAction(double width, double height, int iteration) {
         this.width = width;
         this.height = height;
         this.iteration = iteration;
@@ -44,7 +55,7 @@ public class BoxBlurAction extends AbstractImageAction {
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         BufferedImage output = SwingFXUtils.fromFXImage(image, null);
         BoxBlurFilter filter = new BoxBlurFilter();
         filter.setHRadius((int) width);

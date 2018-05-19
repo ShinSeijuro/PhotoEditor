@@ -17,20 +17,23 @@ import javafx.scene.image.Image;
  */
 public class GaussianBlurAction extends AbstractImageAction {
 
-    private final double radius;
+    private double radius;
 
     public double getRadius() {
         return radius;
     }
 
-    public GaussianBlurAction(Image originalImage, double radius) {
-        super(originalImage);
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
+
+    public GaussianBlurAction(double radius) {
         this.radius = radius;
         setName("Gaussian Blur");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         BufferedImage output = SwingFXUtils.fromFXImage(image, null);
         new GaussianFilter((float) radius).filter(output, output);
         return SwingFXUtils.toFXImage(output, null);

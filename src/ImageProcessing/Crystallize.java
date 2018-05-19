@@ -17,20 +17,23 @@ import javafx.scene.image.Image;
  */
 public class Crystallize extends AbstractImageAction {
 
-    private final CrystallizeFilter filter;
+    private CrystallizeFilter filter;
 
     public CrystallizeFilter getFilter() {
         return filter;
     }
 
-    public Crystallize(Image originalImage) {
-        super(originalImage);
+    public void setFilter(CrystallizeFilter filter) {
+        this.filter = filter;
+    }
+
+    public Crystallize() {
         this.filter = getDefaultFilter();
         setName("Crystallize Effect");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         BufferedImage output = SwingFXUtils.fromFXImage(image, null);
         filter.filter(output, output);
         return SwingFXUtils.toFXImage(output, null);

@@ -22,17 +22,29 @@ public class ImageSnapshotAction extends AbstractImageAction {
         return node;
     }
 
-    public ImageSnapshotAction(Image originalImage, Node node) {
-        super(originalImage);
+    public void setNode(Node node) {
         this.node = node;
     }
 
+    public ImageSnapshotAction() {
+        setName("Image Effect");
+    }
+
+    public ImageSnapshotAction(Node node) {
+        this.node = node;
+        setName("Image Effect");
+    }
+
     @Override
-    protected Image applyTransform(Image image) {
+    public Image applyTransform(Image image) {
         return takeSnapShot();
     }
 
     protected final Image takeSnapShot() {
+        if (node == null) {
+            throw new NullPointerException("Node is null.");
+        }
+
         SnapshotParameters sp = new SnapshotParameters();
         sp.setFill(Color.TRANSPARENT);
         return node.snapshot(sp, null);

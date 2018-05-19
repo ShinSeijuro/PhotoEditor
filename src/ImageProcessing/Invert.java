@@ -6,7 +6,6 @@
 package ImageProcessing;
 
 import Action.ImageColorAction;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
@@ -15,8 +14,8 @@ import javafx.scene.paint.Color;
  */
 public class Invert extends ImageColorAction {
 
-    public Invert(Image originalImage) {
-        super(originalImage);
+    public Invert() {
+        setName("Invert Color");
     }
 
     @Override
