@@ -14,7 +14,6 @@
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Drawing/HandDrawing.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Action/INameable.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Adjustment/GrayScale.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Drawing/DragContext.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/GUI/WorkspaceController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/GUI/Selection.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Preset/ColdFilter.java</file>
@@ -23,6 +22,7 @@
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/GUI/FullScreenController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/GUI/ImageTab.fxml</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/PlugIn/DisplayImage.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/GUI/PresetPreview.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Transformation/Rotation.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Transformation/Crop.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/PhotoEditor/src/Action/AbstractImageAction.java</file>
