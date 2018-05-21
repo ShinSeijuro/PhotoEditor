@@ -112,6 +112,7 @@ public class WebcamController implements Initializable {
 
     public void initStage(Stage stage) {
         stage.setTitle("PhotoEditor - Take a picture");
+        stage.getIcons().add(PhotoEditor.ICON_IMAGE);
         stage.setMinWidth(300.0);
         stage.setMinHeight(300.0);
         stage.setMaximized(true);

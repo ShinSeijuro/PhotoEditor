@@ -69,6 +69,7 @@ public class FullScreenController implements Initializable {
 
     public void initStage(Stage stage) {
         stage.setTitle("PhotoEditor - Fullscreen");
+        stage.getIcons().add(PhotoEditor.ICON_IMAGE);
         stage.setFullScreen(true);
         stage.fullScreenProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (newValue == false) {

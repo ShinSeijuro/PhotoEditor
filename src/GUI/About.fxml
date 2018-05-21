@@ -10,50 +10,50 @@
 <?import javafx.scene.text.Font?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <top>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" text="Photo Editor">
-               <font>
-                  <Font name=".VnSouthern Bold" size="37.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@icon.png" />
-               </image>
-            </ImageView>
-         </children>
-      </HBox>
-   </top>
-   <center>
-      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label text="Developer">
-               <font>
-                  <Font size="29.0" />
-               </font>
-            </Label>
-            <Label text="Chung Mạnh Quỳnh">
-               <font>
-                  <Font size="25.0" />
-               </font>
-            </Label>
-            <Label text="Huỳnh Trương Nhựt">
-               <font>
-                  <Font size="25.0" />
-               </font>
-            </Label>
-            <Label text="Nguyễn Cường Phát">
-               <font>
-                  <Font size="25.0" />
-               </font>
-            </Label>
-         </children>
-      </VBox>
-   </center>
-   <bottom>
-      <Button mnemonicParsing="false" text="OK" BorderPane.alignment="CENTER" />
-   </bottom>
+<BorderPane fx:controller="GUI.AboutController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" text="Photo Editor">
+                    <font>
+                        <Font name=".VnSouthern Bold" size="37.0" />
+                    </font>
+                </Label>
+                <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@icon.png" />
+                    </image>
+                </ImageView>
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label text="Developer">
+                    <font>
+                        <Font size="29.0" />
+                    </font>
+                </Label>
+                <Label text="Chung Mạnh Quỳnh">
+                    <font>
+                        <Font size="25.0" />
+                    </font>
+                </Label>
+                <Label text="Huỳnh Trương Nhựt">
+                    <font>
+                        <Font size="25.0" />
+                    </font>
+                </Label>
+                <Label text="Nguyễn Cường Phát">
+                    <font>
+                        <Font size="25.0" />
+                    </font>
+                </Label>
+            </children>
+        </VBox>
+    </center>
+    <bottom>
+        <Button mnemonicParsing="false" text="OK" BorderPane.alignment="CENTER" />
+    </bottom>
 </BorderPane>

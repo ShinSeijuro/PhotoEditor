@@ -5,7 +5,6 @@
  */
 package GUI;
 
-import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -21,6 +20,8 @@ import org.opencv.core.Core;
  * @author Yuuki
  */
 public class PhotoEditor extends Application {
+
+    public static final Image ICON_IMAGE = new Image("/Resources/appIcon.png");
 
     private static Stage primaryStage;
 
@@ -41,11 +42,6 @@ public class PhotoEditor extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         setPrimaryStage(stage);
-        try {
-            primaryStage.getIcons().add(new Image("/Resources/appIcon.png"));
-        } catch (Exception ex) {
-
-        }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Workspace.fxml"));
         Parent root = loader.load();
@@ -56,6 +52,7 @@ public class PhotoEditor extends Application {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.setTitle("PhotoEditor");
+        stage.getIcons().add(ICON_IMAGE);
         stage.setMinWidth(500.0);
         stage.setMinHeight(400.0);
         stage.show();

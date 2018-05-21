@@ -217,6 +217,7 @@ public class ImageTab extends Tab {
                 throw new IOException("No appropriate writer.");
             }
         }
+        originalDimension2D = new Dimension2D(output.getWidth(), output.getHeight());
     }
 
     public void print() throws PrinterException {

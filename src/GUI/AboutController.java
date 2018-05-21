@@ -8,14 +8,22 @@ package GUI;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Tab;
+import javafx.stage.Stage;
 
 /**
  *
  * @author Admin
  */
-public class AboutController extends Tab {
+public class AboutController implements Initializable {
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
+
+    public void initStage(Stage stage) {
+        stage.setTitle("About");
+        stage.getIcons().add(PhotoEditor.ICON_IMAGE);
+    }
 
 }
-//    @FXML
-//    private Button closeButton;
