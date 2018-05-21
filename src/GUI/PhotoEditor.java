@@ -12,6 +12,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.opencv.core.Core;
 
@@ -40,6 +41,11 @@ public class PhotoEditor extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         setPrimaryStage(stage);
+        try {
+            primaryStage.getIcons().add(new Image("/Resources/appIcon.png"));
+        } catch (Exception ex) {
+
+        }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Workspace.fxml"));
         Parent root = loader.load();
