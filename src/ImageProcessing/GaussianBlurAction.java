@@ -6,33 +6,37 @@
 package ImageProcessing;
 
 import Action.AbstractImageAction;
+import com.jhlabs.image.GaussianFilter;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import static javafx.embed.swing.SwingFXUtils.fromFXImage;
 import static javafx.embed.swing.SwingFXUtils.toFXImage;
 import javafx.scene.image.Image;
 
 /**
  *
- * @author Yuuki
+ * @author CMQ
  */
-public class Sharpen extends AbstractImageAction {
+public class GaussianBlurAction extends AbstractImageAction {
 
-    public Sharpen() {
-        setName("Sharpen");
+    private double radius;
+
+    public GaussianBlurAction(double radius) {
+        this.radius = radius;
+        setName("Gaussian Blur");
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
     }
 
     @Override
     public Image applyTransform(Image image) {
         BufferedImage output = fromFXImage(image, null);
-        float[] sharpenKernel = {
-            0, -1, 0,
-            -1, 5, -1,
-            0, -1, 0};
-        BufferedImageOp sharpen = new ConvolveOp(new Kernel(3, 3, sharpenKernel));
-        output = sharpen.filter(output, new BufferedImage(output.getWidth(), output.getHeight(), output.getType()));
+        new GaussianFilter((float) radius).filter(output, output);
         return toFXImage(output, null);
     }
 

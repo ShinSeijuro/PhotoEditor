@@ -7,6 +7,7 @@ package PlugIn;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
+import static javafx.scene.input.Clipboard.getSystemClipboard;
 import javafx.scene.input.ClipboardContent;
 
 /**
@@ -16,7 +17,7 @@ import javafx.scene.input.ClipboardContent;
 public class ClipboardWrapper {
 
     public static Image get() {
-        Clipboard clipboard = Clipboard.getSystemClipboard();
+        Clipboard clipboard = getSystemClipboard();
         if (clipboard.hasImage()) {
             return clipboard.getImage();
         } else if (clipboard.hasUrl()) {
@@ -28,7 +29,7 @@ public class ClipboardWrapper {
     }
 
     public static void set(Image image) {
-        Clipboard clipboard = Clipboard.getSystemClipboard();
+        Clipboard clipboard = getSystemClipboard();
         ClipboardContent content = new ClipboardContent();
         content.putImage(image);
         clipboard.setContent(content);

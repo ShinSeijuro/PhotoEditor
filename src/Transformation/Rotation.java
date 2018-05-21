@@ -6,6 +6,7 @@
 package Transformation;
 
 import Action.ImageSnapshotAction;
+import static java.lang.Math.abs;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -17,15 +18,19 @@ public class Rotation extends ImageSnapshotAction {
 
     private double angle;
 
+    public Rotation(ImageView node, double angle) {
+        super(node);
+        this.angle = angle;
+        setName("Rotate " + (angle < 0 ? "left" : "right") + " " + abs(angle) + "°");
+    }
+
     public double getAngle() {
         return angle;
     }
 
-    public Rotation(Image originalImage, ImageView node, double angle) {
-        super(originalImage, node);
+    public void setAngle(double angle) {
         this.angle = angle;
-
-        setName("Rotate " + (angle < 0 ? "left" : "right") + " " + Math.abs(angle) + "°");
+        setName("Rotate " + (angle < 0 ? "left" : "right") + " " + abs(angle) + "°");
     }
 
     @Override

@@ -5,7 +5,7 @@
  */
 package GUI;
 
-import Drawing.HandDrawing;
+import javafx.scene.shape.Rectangle;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
@@ -26,6 +26,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.Pane;
 
 /**
  * FXML Controller class
@@ -36,6 +37,10 @@ public class ImageTabController extends Tab implements Initializable {
 
     public ImageView getImageView() {
         return imageView;
+    }
+
+    public ScrollPane getScrollPane() {
+        return scrollPane;
     }
 
     public Group getGroupImage() {
@@ -55,65 +60,11 @@ public class ImageTabController extends Tab implements Initializable {
     public void setImage(Image image) {
         this.presetPreviewUpdated = false;
         imageView.setImage(image);
+        clipRectangle.setWidth(image.getWidth());
+        clipRectangle.setHeight(image.getHeight());
 
         if (isFitToView()) {
             doFitToView();
-        }
-    }
-
-    private Selection selection;
-
-    public Selection getSelection() {
-        return selection;
-    }
-
-    private boolean selecting = false;
-
-    public boolean isSelecting() {
-        return selecting;
-    }
-
-    public void setSelecting(boolean selecting) {
-        this.selecting = selecting;
-        scrollPane.setPannable(!selecting);
-
-        if (selecting) {
-            if (selection == null) {
-                selection = new Selection(groupImage);
-            }
-            selection.setDisabled(false);
-        } else {
-            if (selection != null) {
-                selection.setDisabled(true);
-            }
-        }
-    }
-
-    private HandDrawing handDrawing;
-
-    public HandDrawing getHandDrawing() {
-        return handDrawing;
-    }
-
-    private boolean drawing = false;
-
-    public boolean isDrawing() {
-        return drawing;
-    }
-
-    public void setDrawing(boolean drawing) {
-        this.drawing = drawing;
-        scrollPane.setPannable(!drawing);
-
-        if (drawing) {
-            if (handDrawing == null) {
-                handDrawing = new HandDrawing(getImage(), groupImage);
-            }
-        } else {
-            if (handDrawing != null) {
-                handDrawing.finish();
-                handDrawing = null;
-            }
         }
     }
 
@@ -178,6 +129,8 @@ public class ImageTabController extends Tab implements Initializable {
         }
     };
 
+    private final Rectangle clipRectangle = new Rectangle();
+
     /**
      * Initializes the controller class.
      */
@@ -201,6 +154,8 @@ public class ImageTabController extends Tab implements Initializable {
                 }
             }
         });
+
+        imageView.setClip(clipRectangle);
     }
 
     public void doFitToView() {

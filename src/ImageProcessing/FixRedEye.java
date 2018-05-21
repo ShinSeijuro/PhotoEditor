@@ -6,9 +6,8 @@
 package ImageProcessing;
 
 import Action.AbstractImageAction;
-import GUI.PhotoEditor;
-import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
+import static GUI.PhotoEditor.getStartupPath;
+import static ImageProcessing.Utils.toMat;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -25,29 +24,28 @@ import org.opencv.objdetect.CascadeClassifier;
  */
 public class FixRedEye extends AbstractImageAction {
 
-    private static final CascadeClassifier eyeDetector
-            = new CascadeClassifier(PhotoEditor.getStartupPath() + "\\lib\\haarcascade\\haarcascade_eye.xml");
+    private static final CascadeClassifier EYE_DETECTOR
+            = new CascadeClassifier(getStartupPath() + "\\lib\\haarcascade\\haarcascade_eye.xml");
 
-    private static final boolean supported = !eyeDetector.empty();
+    private static final boolean SUPPORTED = !EYE_DETECTOR.empty();
 
     public static boolean isSupported() {
-        return supported;
+        return SUPPORTED;
     }
 
-    public FixRedEye(Image originalImage) {
-        super(originalImage);
-        this.setName("Fix Red Eye");
+    public FixRedEye() {
+        setName("Fix Red Eye");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
-        if (!supported) {
-            return super.getOriginalImage();
+    public Image applyTransform(Image image) {
+        if (!SUPPORTED) {
+            return image;
         }
 
-        Mat matImage = Utils.toMat(image);
+        Mat matImage = toMat(image);
         if (matImage == null) {
-            return super.getOriginalImage();
+            return image;
         }
 
         WritableImage fixedImage = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
@@ -55,7 +53,7 @@ public class FixRedEye extends AbstractImageAction {
         PixelWriter pixelWriter = fixedImage.getPixelWriter();
 
         MatOfRect eyeDetections = new MatOfRect();
-        eyeDetector.detectMultiScale(matImage, eyeDetections);
+        EYE_DETECTOR.detectMultiScale(matImage, eyeDetections);
 
         for (Rect eyeRect : eyeDetections.toArray()) {
             int width = eyeRect.x + eyeRect.width;

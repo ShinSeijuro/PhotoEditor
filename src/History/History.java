@@ -5,55 +5,61 @@
  */
 package History;
 
-import Action.AbstractImageAction;
-import javafx.scene.image.Image;
-import javafx.event.EventHandler;
 import java.util.ArrayDeque;
 import javafx.event.Event;
+import static javafx.event.Event.ANY;
+import javafx.event.EventHandler;
 import javafx.event.EventType;
 
 /**
  *
  * @author CMQ
  */
-public class History {
+public class History<T> {
 
-    public static final int maximumAction = 20;
+    public static final int MAXIMUM_ACTION_COUNT = 20;
+    public static final EventType<Event> ON_UNDONE_EVENT = new EventType<Event>(ANY, "ON_UNDONE_EVENT");
+    public static final EventType<Event> ON_REDONE_EVENT = new EventType<Event>(ANY, "ON_REDONE_EVENT");
 
-    private final ArrayDeque<AbstractImageAction> undoDeque = new ArrayDeque<>();
+    private final T original;
+    private final ArrayDeque<Item<ITransformable<T>>> undoDeque = new ArrayDeque<>();
+    private final ArrayDeque<Item<ITransformable<T>>> redoDeque = new ArrayDeque<>();
+    private EventHandler<Event> onUndone;
+    private EventHandler<Event> onRedone;
 
-    public ArrayDeque<AbstractImageAction> getUndoDeque() {
+    public History(T original) {
+        this.original = original;
+    }
+
+    public T getOriginal() {
+        return original;
+    }
+
+    public ArrayDeque<Item<ITransformable<T>>> getUndoDeque() {
         return undoDeque;
     }
 
-    private final ArrayDeque<AbstractImageAction> redoDeque = new ArrayDeque<>();
-
-    public ArrayDeque<AbstractImageAction> getRedoDeque() {
+    public ArrayDeque<Item<ITransformable<T>>> getRedoDeque() {
         return redoDeque;
     }
 
-    public Image getCurrentImage() {
+    public T getCurrentResult() {
         if (undoDeque.size() > 0) {
-            return undoDeque.getFirst().getModifiedImage();
+            return undoDeque.getFirst().result;
         } else if (redoDeque.size() > 0) {
-            return redoDeque.getFirst().getOriginalImage();
+            return original;
         }
 
         return null;
     }
 
-    public AbstractImageAction getCurrentAction() {
-        return undoDeque.peekFirst();
+    public ITransformable<T> getCurrentAction() {
+        return undoDeque.peekFirst().object;
     }
 
     public int getActionCount() {
         return undoDeque.size() + redoDeque.size();
     }
-
-    public static final EventType<Event> ON_UNDONE_EVENT
-            = new EventType<Event>(Event.ANY, "ON_UNDONE_EVENT");
-
-    private EventHandler<Event> onUndone;
 
     public EventHandler<Event> getOnUndone() {
         return onUndone;
@@ -63,11 +69,6 @@ public class History {
         this.onUndone = onUndone;
     }
 
-    public static final EventType<Event> ON_REDONE_EVENT
-            = new EventType<Event>(Event.ANY, "ON_REDONE_EVENT");
-
-    private EventHandler<Event> onRedone;
-
     public EventHandler<Event> getOnRedone() {
         return onRedone;
     }
@@ -76,21 +77,19 @@ public class History {
         this.onRedone = onRedone;
     }
 
-    public History() {
-    }
-
-    public void add(AbstractImageAction action) {
+    public void add(ITransformable<T> action, T result) {
         if (redoDeque.size() > 0) {
             redoDeque.clear();
         }
 
-        undoDeque.push(action);
+        Item<ITransformable<T>> item = new Item<>(action, result);
+        undoDeque.push(item);
 
         if (onRedone != null) {
             onRedone.handle(new Event(ON_REDONE_EVENT));
         }
 
-        if (getActionCount() > maximumAction) {
+        if (getActionCount() > MAXIMUM_ACTION_COUNT) {
             undoDeque.removeLast();
         }
     }
@@ -130,5 +129,24 @@ public class History {
 
     public boolean isModified() {
         return undoDeque.size() > 0;
+    }
+
+    public class Item<F extends ITransformable<T>> {
+
+        private F object;
+        private T result;
+
+        public Item(F object, T result) {
+            this.object = object;
+            this.result = result;
+        }
+
+        public F getObject() {
+            return object;
+        }
+
+        public T getResult() {
+            return result;
+        }
     }
 }

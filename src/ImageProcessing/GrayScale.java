@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Adjustment;
+package ImageProcessing;
 
 import Action.AbstractImageAction;
-import java.awt.color.ColorSpace;
+import static java.awt.color.ColorSpace.CS_GRAY;
+import static java.awt.color.ColorSpace.getInstance;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
-import javafx.embed.swing.SwingFXUtils;
+import static javafx.embed.swing.SwingFXUtils.fromFXImage;
+import static javafx.embed.swing.SwingFXUtils.toFXImage;
 import javafx.scene.image.Image;
 
 /**
@@ -18,21 +20,19 @@ import javafx.scene.image.Image;
  */
 public class GrayScale extends AbstractImageAction {
 
-    public GrayScale(Image originalImage) {
-        super(originalImage);
-
+    public GrayScale() {
         setName("Black&White");
     }
 
     @Override
-    protected Image applyTransform(Image image) {
-        BufferedImage newImage = SwingFXUtils.fromFXImage(image, null);
+    public Image applyTransform(Image image) {
+        BufferedImage newImage = fromFXImage(image, null);
         ColorConvertOp op = new ColorConvertOp(
-                ColorSpace.getInstance(ColorSpace.CS_GRAY),
+                getInstance(CS_GRAY),
                 null);
 
         newImage = op.filter(newImage, null);
-        return SwingFXUtils.toFXImage(newImage, null);
+        return toFXImage(newImage, null);
     }
 
 }

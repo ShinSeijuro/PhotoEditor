@@ -9,24 +9,30 @@ import History.History;
 import PlugIn.RecycleBin;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 import java.awt.print.PageFormat;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import static java.awt.print.PrinterJob.getPrinterJob;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.embed.swing.SwingFXUtils;
+import static java.lang.Math.ceil;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Logger.getLogger;
+import static javafx.embed.swing.SwingFXUtils.fromFXImage;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
+import static javax.imageio.ImageIO.createImageOutputStream;
+import static javax.imageio.ImageIO.getImageWritersByFormatName;
+import static javax.imageio.ImageIO.write;
 import javax.imageio.ImageWriteParam;
+import static javax.imageio.ImageWriteParam.MODE_EXPLICIT;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
@@ -39,59 +45,13 @@ public class ImageTab extends Tab {
     private static int newFileCount = 0;
 
     private ImageTabController controller;
-
-    public ImageTabController getController() {
-        return controller;
-    }
-
-    private History history;
-
-    public History getHistory() {
-        return history;
-    }
-
+    private History<Image> history;
     private File file;
-
-    public File getFile() {
-        return file;
-    }
-
     private Dimension2D originalDimension2D;
-
-    public Dimension2D getOriginalDimension2D() {
-        return originalDimension2D;
-    }
-
     private String name;
-
-    public String getName() {
-        return name;
-    }
-
     private boolean modified;
-
-    public boolean isModified() {
-        return modified;
-    }
-
     private boolean deleteRequested;
-
-    public boolean isDeleteRequested() {
-        return deleteRequested;
-    }
-
     private int savePivot;
-
-    private void addPivot(int step) {
-        savePivot += step;
-
-        if (file == null) {
-            return;
-        }
-
-        this.modified = (savePivot != 0);
-        updateText();
-    }
 
     private ImageTab() throws IOException {
         super();
@@ -102,13 +62,9 @@ public class ImageTab extends Tab {
             super.setContent(tabPage);
             controller = loader.getController();
         } catch (IOException ex) {
-            Logger.getLogger(WorkspaceController.class.getName()).log(Level.SEVERE, null, ex);
+            getLogger(WorkspaceController.class.getName()).log(SEVERE, null, ex);
             throw ex;
         }
-
-        history = new History();
-        history.setOnUndone(e -> addPivot(-1));
-        history.setOnRedone(e -> addPivot(1));
 
         savePivot = 0;
     }
@@ -119,6 +75,10 @@ public class ImageTab extends Tab {
         if (image == null) {
             throw new IllegalArgumentException("Unsupported file type.");
         }
+
+        history = new History<>(image);
+        history.setOnUndone(e -> addPivot(-1));
+        history.setOnRedone(e -> addPivot(1));
 
         this.name = name;
         originalDimension2D = new Dimension2D(image.getWidth(), image.getHeight());
@@ -138,6 +98,45 @@ public class ImageTab extends Tab {
         this(new Image(file.toURI().toString()), file.getName());
         this.file = file;
         modified = false;
+        updateText();
+    }
+
+    public ImageTabController getController() {
+        return controller;
+    }
+
+    public History<Image> getHistory() {
+        return history;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public Dimension2D getOriginalDimension2D() {
+        return originalDimension2D;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isModified() {
+        return modified;
+    }
+
+    public boolean isDeleteRequested() {
+        return deleteRequested;
+    }
+
+    private void addPivot(int step) {
+        savePivot += step;
+
+        if (file == null) {
+            return;
+        }
+
+        this.modified = (savePivot != 0);
         updateText();
     }
 
@@ -194,39 +193,39 @@ public class ImageTab extends Tab {
 
     private void writeImage() throws IOException {
         String extension = getExtension();
-        BufferedImage output = SwingFXUtils.fromFXImage(getController().getImage(), null);
+        BufferedImage output = fromFXImage(getController().getImage(), null);
         if (extension.equals("jpg") || extension.equals("jpeg")) {
             // Eliminate bug: confusion between ARGB & CYMK
             // Create a new fixed image with only RGB channel
             int width = output.getWidth();
             int height = output.getHeight();
-            BufferedImage fixedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            BufferedImage fixedImage = new BufferedImage(width, height, TYPE_INT_RGB);
             int[] rgb = output.getRGB(0, 0, width, height, null, 0, width);
             fixedImage.setRGB(0, 0, width, height, rgb, 0, width);
 
             // maximize quality
-            ImageWriter writer = ImageIO.getImageWritersByFormatName(extension).next();
+            ImageWriter writer = getImageWritersByFormatName(extension).next();
             ImageWriteParam param = writer.getDefaultWriteParam();
-            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT); // see javadoc
+            param.setCompressionMode(MODE_EXPLICIT); // see javadoc
             param.setCompressionQuality(1.0F); // Highest quality
-            try (ImageOutputStream imageOutputStream = ImageIO.createImageOutputStream(file)) {
+            try (ImageOutputStream imageOutputStream = createImageOutputStream(file)) {
                 writer.setOutput(imageOutputStream);
                 writer.write(null, new IIOImage(fixedImage, null, null), param);
             }
         } else {
-            if (!ImageIO.write(output, extension, file)) {
+            if (!write(output, extension, file)) {
                 throw new IOException("No appropriate writer.");
             }
         }
     }
 
     public void print() throws PrinterException {
-        BufferedImage output = SwingFXUtils.fromFXImage(getController().getImage(), null);
-        PrinterJob printJob = PrinterJob.getPrinterJob();
+        BufferedImage output = fromFXImage(getController().getImage(), null);
+        PrinterJob printJob = getPrinterJob();
         printJob.setPrintable((Graphics graphics, PageFormat pageFormat, int pageIndex) -> {
             // Get the upper left corner that it printable
-            int x = (int) Math.ceil(pageFormat.getImageableX());
-            int y = (int) Math.ceil(pageFormat.getImageableY());
+            int x = (int) ceil(pageFormat.getImageableX());
+            int y = (int) ceil(pageFormat.getImageableY());
             if (pageIndex != 0) {
                 return NO_SUCH_PAGE;
             }
@@ -236,7 +235,7 @@ public class ImageTab extends Tab {
         try {
             printJob.print();
         } catch (PrinterException ex) {
-            Logger.getLogger(ImageTab.class.getName()).log(Level.SEVERE, null, ex);
+            getLogger(ImageTab.class.getName()).log(SEVERE, null, ex);
             throw ex;
         }
     }

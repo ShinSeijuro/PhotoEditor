@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Preset;
+package ImageProcessing;
 
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
+import Action.ImageBlendAction;
+import static javafx.scene.paint.Color.web;
 
 /**
  *
@@ -14,8 +14,8 @@ import javafx.scene.paint.Color;
  */
 public class WarmFilter extends ImageBlendAction {
 
-    public WarmFilter(Image originalImage) {
-        super(originalImage, Color.web("#ec8a00"), 0.25);
+    public WarmFilter() {
+        super(web("#ec8a00"), 0.25);
         setName("Warm Filter");
     }
 }

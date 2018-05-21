@@ -6,17 +6,20 @@
 package GUI;
 
 //<editor-fold defaultstate="collapsed" desc="import">
-import Adjustment.ImageViewEffectAction;
+import ImageProcessing.GrayScale;
+import ImageProcessing.Invert;
+import ImageProcessing.GreenFilter;
+import ImageProcessing.WarmFilter;
+import ImageProcessing.ColdFilter;
+import Action.ImageViewEffectAction;
 import Action.*;
 import ImageProcessing.*;
-import Adjustment.*;
 import Drawing.*;
 import Transformation.*;
 import History.*;
 import PlugIn.ClipboardWrapper;
 import PlugIn.ScreenCapture;
 import PlugIn.WallpaperChanger;
-import Preset.*;
 import java.awt.print.PrinterException;
 import java.io.File;
 import java.net.URL;
@@ -57,16 +60,12 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
@@ -116,19 +115,22 @@ public class WorkspaceController implements Initializable {
         this.currentController.set(currentController);
     }
 
-    public History getCurrentHistory() {
-        if (getCurrentController() == null) {
-            return null;
-        }
-        return getCurrentTab().getHistory();
+    private Effect currentEffect;
+
+    private Selection selection = new Selection();
+
+    private final ObjectProperty<HandDrawing> handDrawing = new SimpleObjectProperty<>(new HandDrawing());
+
+    public HandDrawing getHandDrawing() {
+        return handDrawing.get();
     }
 
-    public Image getCurrentImage() {
-        return getCurrentImageView().getImage();
+    public void setHandDrawing(HandDrawing value) {
+        handDrawing.set(value);
     }
 
-    public ImageView getCurrentImageView() {
-        return getCurrentController().getImageView();
+    public ObjectProperty handDrawingProperty() {
+        return handDrawing;
     }
 
     private BooleanProperty empty = new SimpleBooleanProperty(true);
@@ -143,6 +145,20 @@ public class WorkspaceController implements Initializable {
 
     private void setEmpty(boolean value) {
         empty.set(value);
+    }
+
+    private final BooleanProperty anchored = new SimpleBooleanProperty(false);
+
+    public boolean isAnchored() {
+        return anchored.get();
+    }
+
+    public void setAnchored(boolean value) {
+        anchored.set(value);
+    }
+
+    public BooleanProperty anchoredProperty() {
+        return anchored;
     }
 
     private final DoubleProperty actualZoomRatio = new SimpleDoubleProperty(1.0);
@@ -191,7 +207,6 @@ public class WorkspaceController implements Initializable {
             }
         });
 
-        scrollPaneEdit.setManaged(false);
         hBoxProgress.setManaged(false);
         hBoxProgress.setVisible(false);
 
@@ -201,7 +216,7 @@ public class WorkspaceController implements Initializable {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue == false) {
                     if (toggleCrop.isSelected()) {
-                        getCurrentController().setSelecting(false);
+                        selection.setDisabled(true);
                         toggleCrop.setSelected(false);
                     }
                 }
@@ -210,27 +225,50 @@ public class WorkspaceController implements Initializable {
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Draw">
-        sliderHandDrawThickness.valueProperty().addListener(new ChangeListener<Number>() {
+        toggleGroupHandDraw.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                getCurrentController().getHandDrawing().setStrokeWidth(newValue.doubleValue());
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                String text = ((ToggleButton) newValue).getText().toLowerCase();
+                switch (text) {
+                    case "pen":
+                        getHandDrawing().setTool(HandDrawing.Tool.PEN);
+                        break;
+                    case "eraser":
+                        getHandDrawing().setTool(HandDrawing.Tool.ERASER);
+                        break;
+                    case "line":
+                        getHandDrawing().setTool(HandDrawing.Tool.LINE);
+                        break;
+                    case "rectangle":
+                        getHandDrawing().setTool(HandDrawing.Tool.RECTANGLE);
+                        break;
+                    case "ellipse":
+                        getHandDrawing().setTool(HandDrawing.Tool.ELLIPSE);
+                        break;
+                    default:
+                        break;
+                }
             }
         });
-        colorPickerHandDraw.setValue(Color.BLACK);
+        sliderHandDrawThickness.valueProperty().bindBidirectional(getHandDrawing().strokeWidthProperty());
+        colorPickerHandDraw.valueProperty().bindBidirectional(getHandDrawing().strokeProperty());
 
         titledPaneDraw.expandedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 ImageTabController controller = getCurrentController();
                 if (controller != null) {
-                    if (newValue == false) {
-                        toggleHandDrawPen.setSelected(true);
-                        if (controller.getHandDrawing().getPathList().size() > 0) {
+                    HandDrawing handDrawing = getHandDrawing();
+                    if (newValue == true) {
+                        setAnchored(true);
+                        handDrawing.setGroup(controller.getGroupImage(), getCurrentImage());
+                    } else {
+                        setAnchored(false);
+                        if (handDrawing.getShapeList().size() > 0) {
                             onApplyHandDraw(null);
                         }
+                        handDrawing.setGroup(null);
                     }
-
-                    controller.setDrawing(newValue);
                 }
             }
         });
@@ -383,6 +421,14 @@ public class WorkspaceController implements Initializable {
                     if (titledPanePresets.isExpanded() && !newValue.isPresetPreviewUpdated()) {
                         runTask(newValue.getUpdatePresetPreviewTask());
                     }
+
+                    if (titledPaneCropAndRotate.isExpanded()) {
+                        selection.setGroup(newValue.getGroupImage());
+                    }
+
+                    if (titledPaneDraw.isExpanded()) {
+                        getHandDrawing().setGroup(newValue.getGroupImage(), newValue.getImage());
+                    }
                 } else {
                     setActualZoom(1.0);
                     toggleFitToView.setSelected(false);
@@ -463,21 +509,20 @@ public class WorkspaceController implements Initializable {
         @Override
         public void changed(ObservableValue<? extends Number> ov,
                 Number old_val, Number new_val) {
-            ColorAdjust colorAdjust = new ColorAdjust(
+            currentEffect = new ColorAdjust(
                     sliderHue.getValue() / 100.0,
                     sliderSaturation.getValue() / 100.0,
                     sliderBrightness.getValue() / 100.0,
                     sliderContrast.getValue() / 100.0);
-            getCurrentImageView().setEffect(colorAdjust);
+            getCurrentImageView().setEffect(currentEffect);
         }
     };
 
     private final ChangeListener<Number> gaussianBlurChangeListener = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-            GaussianBlur gaussianBlur = new GaussianBlur(
-                    sliderGaussianRadius.getValue());
-            getCurrentImageView().setEffect(gaussianBlur);
+            currentEffect = new GaussianBlur(sliderGaussianRadius.getValue());
+            getCurrentImageView().setEffect(currentEffect);
         }
 
     };
@@ -485,46 +530,60 @@ public class WorkspaceController implements Initializable {
     private final ChangeListener<Number> boxBlurChangeListener = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-            BoxBlur boxBlur = new BoxBlur(
+            currentEffect = new BoxBlur(
                     sliderBoxBlurWidth.getValue(),
                     sliderBoxBlurHeight.getValue(),
                     (int) sliderBoxBlurIteration.getValue());
-            getCurrentImageView().setEffect(boxBlur);
+            getCurrentImageView().setEffect(currentEffect);
         }
     };
 
     private final ChangeListener<Number> motionBlurChangeListener = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-            MotionBlur motionBlur = new MotionBlur(
+            currentEffect = new MotionBlur(
                     sliderMotionBlurAngle.getValue(),
                     sliderMotionBlurRadius.getValue());
-            getCurrentImageView().setEffect(motionBlur);
+            getCurrentImageView().setEffect(currentEffect);
         }
     };
 
     private final ChangeListener<Number> glowChangeListener = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-            Glow glow = new Glow(
+            currentEffect = new Glow(
                     sliderGlowLevel.getValue() / 100.0);
-            getCurrentImageView().setEffect(glow);
+            getCurrentImageView().setEffect(currentEffect);
         }
     };
 
     private final ChangeListener<Number> sepiaChangeListener = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-            SepiaTone sepiaTone = new SepiaTone(
+            currentEffect = new SepiaTone(
                     sliderSepiaToneLevel.getValue() / 100.0);
-            getCurrentImageView().setEffect(sepiaTone);
+            getCurrentImageView().setEffect(currentEffect);
         }
     };
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Functions">
-    public void initializeScene(Scene scene) {
+    public History<Image> getCurrentHistory() {
+        if (getCurrentController() == null) {
+            return null;
+        }
+        return getCurrentTab().getHistory();
+    }
 
+    public Image getCurrentImage() {
+        return getCurrentImageView().getImage();
+    }
+
+    public ImageView getCurrentImageView() {
+        return getCurrentController().getImageView();
+    }
+
+    public void initializeScene(Scene scene) {
         scene.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
@@ -589,15 +648,20 @@ public class WorkspaceController implements Initializable {
 
     public void applyAction(AbstractImageAction action) {
         if (action instanceof ImageSnapshotAction) {
-            Image image = action.applyTransform();
+            if (action instanceof ImageViewEffectAction) {
+                ((ImageViewEffectAction) action).setImageView(getCurrentImageView());
+                ((ImageViewEffectAction) action).setEffect(currentEffect);
+            }
+
+            Image image = action.applyTransform(getCurrentImage());
             updateImage(image);
-            getCurrentHistory().add(action);
+            getCurrentHistory().add(action, image);
         } else {
-            Task task = action.getApplyTransformTask();
+            Task task = action.getApplyTransformTask(getCurrentImage());
             task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
-                Image image = action.getModifiedImage();
+                Image image = (Image) task.getValue();
                 updateImage(image);
-                getCurrentHistory().add(action);
+                getCurrentHistory().add(action, image);
 
             });
             runTask(task);
@@ -618,10 +682,10 @@ public class WorkspaceController implements Initializable {
         }
 
         tab.setOnCloseRequest(onTabCloseRequest);
-
         if (tab.getActualName() != null) {
             tabs.put(tab.getActualName(), tab);
         }
+        tab.getController().getScrollPane().pannableProperty().bind(anchoredProperty().not());
 
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().selectLast();
@@ -669,11 +733,6 @@ public class WorkspaceController implements Initializable {
 
     //<editor-fold defaultstate="collapsed" desc="Events">
     private File lastDirectory;
-
-    @FXML
-    public void onCircle(ActionEvent event) {
-
-    }
 
     @FXML
     public void onFileOpen(ActionEvent event) {
@@ -772,31 +831,31 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onRotateRight90(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), getCurrentImageView(), 90.0));
+        applyAction(new Rotation(getCurrentImageView(), 90.0));
     }
 
     @FXML
     public void onRotateLeft90(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), getCurrentImageView(), -90));
+        applyAction(new Rotation(getCurrentImageView(), -90));
     }
 
     @FXML
     public void onRotateRight180(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), getCurrentImageView(), 180));
+        applyAction(new Rotation(getCurrentImageView(), 180));
     }
 
     @FXML
     public void onRotateLeft180(ActionEvent event) {
-        applyAction(new Rotation(getCurrentImage(), getCurrentImageView(), -180));
+        applyAction(new Rotation(getCurrentImageView(), -180));
     }
 
     @FXML
     public void onFlipHorizontal(ActionEvent event) {
-        applyAction(new Flip(getCurrentImage(), getCurrentImageView(), Flip.Orientation.Horizontal));
+        applyAction(new Flip(getCurrentImageView(), Flip.Orientation.Horizontal));
     }
 
     public void onFlipVertical(ActionEvent event) {
-        applyAction(new Flip(getCurrentImage(), getCurrentImageView(), Flip.Orientation.Vertical));
+        applyAction(new Flip(getCurrentImageView(), Flip.Orientation.Vertical));
     }
 
     @FXML
@@ -813,14 +872,24 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onSharpen(ActionEvent event) {
-        applyAction(new Sharpen(getCurrentImage()));
+        applyAction(new Sharpen());
+    }
+
+    @FXML
+    private void onDenoise(ActionEvent event) {
+        applyAction(new Denoise());
+    }
+
+    @FXML
+    private void onAddNoise(ActionEvent event) {
+        applyAction(new Noise());
     }
 
     @FXML
     public void onUndo(ActionEvent event) {
-        History currentHistory = getCurrentHistory();
+        History<Image> currentHistory = getCurrentHistory();
         currentHistory.undo();
-        Image image = currentHistory.getCurrentImage();
+        Image image = currentHistory.getCurrentResult();
 
         if (image != null) {
             updateImage(image);
@@ -829,9 +898,9 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     public void onRedo(ActionEvent event) {
-        History currentHistory = getCurrentHistory();
+        History<Image> currentHistory = getCurrentHistory();
         currentHistory.redo();
-        Image image = currentHistory.getCurrentImage();
+        Image image = currentHistory.getCurrentResult();
 
         if (image != null) {
             updateImage(image);
@@ -884,45 +953,29 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyColorAdjust(ActionEvent event) {
-        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
+        applyAction(new ImageViewEffectAction());
         onResetColorAdjust(null);
     }
 
     @FXML
     private void onApplyHandDraw(ActionEvent event) {
-        ImageTabController controller = getCurrentController();
-        applyAction(controller.getHandDrawing());
-        controller.getHandDrawing().getPathList().clear();
+        ImageSnapshotAction action = new ImageSnapshotAction(getHandDrawing().getGroup());
+        action.setName("Hand Draw");
+        applyAction(action);
+        getHandDrawing().getShapeList().clear();
+    }
+
+    @FXML
+    private void onUndoHandDraw(ActionEvent event) {
+        ObservableList<Shape> shapeList = getHandDrawing().getShapeList();
+        if (!shapeList.isEmpty()) {
+            shapeList.remove(shapeList.size() - 1);
+        }
     }
 
     @FXML
     private void onUndoAllHandDraw(ActionEvent event) {
-        getCurrentController().getHandDrawing().getPathList().clear();
-    }
-
-    @FXML
-    private void onToggleHandDrawPen(ActionEvent event) {
-        getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.PEN);
-    }
-
-    @FXML
-    private void onToggleHandDrawEraser(ActionEvent event) {
-        getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.ERASER);
-    }
-
-    @FXML
-    private void onToggleHandDrawRectangle(ActionEvent event) {
-        getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.RECTANGLE);
-    }
-
-    @FXML
-    private void onToggleHandDrawCircle(ActionEvent event) {
-        getCurrentController().getHandDrawing().setTool(HandDrawing.Tool.CIRCLE);
-    }
-
-    @FXML
-    private void onDenoise(ActionEvent event) {
-        applyAction(new Denoise(getCurrentImage()));
+        getHandDrawing().getShapeList().clear();
     }
 
     @FXML
@@ -935,10 +988,14 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyGaussianBlur(ActionEvent event) {
-
-        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
-        onResetGaussianBlur(null);
-
+        AbstractImageAction action
+                = new GaussianBlurAction(
+                        sliderGaussianRadius.getValue());
+        action.getApplyTransformTask(getCurrentImage())
+                .addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
+                    onResetGaussianBlur(null);
+                });
+        applyAction(action);
     }
 
     @FXML
@@ -948,10 +1005,16 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyBoxBlur(ActionEvent event) {
-
-        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
-        onResetBoxBlur(null);
-
+        AbstractImageAction action
+                = new BoxBlurAction(
+                        sliderBoxBlurWidth.getValue(),
+                        sliderBoxBlurHeight.getValue(),
+                        (int) sliderBoxBlurIteration.getValue());
+        action.getApplyTransformTask(getCurrentImage())
+                .addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
+                    onResetBoxBlur(null);
+                });
+        applyAction(action);
     }
 
     @FXML
@@ -962,10 +1025,15 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyMotionBlur(ActionEvent event) {
-
-        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
-        onResetMotionBlur(null);
-
+        AbstractImageAction action
+                = new MotionBlurAction(
+                        sliderMotionBlurAngle.getValue(),
+                        sliderMotionBlurRadius.getValue());
+        action.getApplyTransformTask(getCurrentImage())
+                .addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (e) -> {
+                    onResetMotionBlur(null);
+                });
+        applyAction(action);
     }
 
     @FXML
@@ -976,10 +1044,8 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplyGlow(ActionEvent event) {
-
-        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
+        applyAction(new ImageViewEffectAction());
         onResetGlow(null);
-
     }
 
     @FXML
@@ -989,10 +1055,8 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onApplySepiaTone(ActionEvent event) {
-
-        applyAction(new ImageViewEffectAction(getCurrentImage(), getCurrentImageView()));
+        applyAction(new ImageViewEffectAction());
         onResetSepiaTone(null);
-
     }
 
     @FXML
@@ -1001,24 +1065,20 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    private void onDrawColorPick(ActionEvent event) {
-        getCurrentController().getHandDrawing().setStroke(colorPickerHandDraw.getValue());
-    }
-
-    @FXML
     private void onToggleCrop(ActionEvent event) {
         ImageTabController currentController = getCurrentController();
         if (toggleCrop.isSelected()) {
-            currentController.setSelecting(true);
+            setAnchored(true);
+            selection.setGroup(getCurrentController().getGroupImage());
+            selection.setDisabled(false);
             return;
         }
 
-        Selection selection = getCurrentController().getSelection();
         if (!selection.isNothing()) {
-            Crop crop = new Crop(getCurrentImage(), selection.getRect());
-            if (!crop.isInvalid()) {
+            Crop crop = new Crop(selection.getRect());
+            if (crop.validateRect(getCurrentImage())) {
                 applyAction(crop);
-                currentController.setSelecting(false);
+                selection.setDisabled(true);
                 if (toggleFitToView.isSelected()) {
                     currentController.doFitToView();
                 }
@@ -1028,15 +1088,16 @@ public class WorkspaceController implements Initializable {
 
         // Selection failed
         makeDialog("Crop", null, "No pixels were selected.", AlertType.ERROR).show();
+        selection.setDisabled(true);
     }
 
     @FXML
     private void onMenuEditShowing(Event event) {
-        History currentHistory = getCurrentHistory();
+        History<Image> currentHistory = getCurrentHistory();
 
         if (currentHistory.isUndoable()) {
             menuUndo.setDisable(false);
-            menuUndo.setText("Undo " + currentHistory.getUndoDeque().getFirst().getName());
+            menuUndo.setText("Undo " + currentHistory.getUndoDeque().getFirst().getObject().getName());
         } else {
             menuUndo.setDisable(true);
             menuUndo.setText("Undo");
@@ -1044,16 +1105,11 @@ public class WorkspaceController implements Initializable {
 
         if (currentHistory.isRedoable()) {
             menuRedo.setDisable(false);
-            menuRedo.setText("Redo " + currentHistory.getRedoDeque().getFirst().getName());
+            menuRedo.setText("Redo " + currentHistory.getRedoDeque().getFirst().getObject().getName());
         } else {
             menuRedo.setDisable(true);
             menuRedo.setText("Redo");
         }
-    }
-
-    @FXML
-    private void onToggleEdit(ActionEvent event) {
-        scrollPaneEdit.setManaged(toggleEdit.isSelected());
     }
 
     @FXML
@@ -1112,7 +1168,7 @@ public class WorkspaceController implements Initializable {
             return;
         }
 
-        applyAction(new FixRedEye(getCurrentImage()));
+        applyAction(new FixRedEye());
     }
 
     @FXML
@@ -1297,37 +1353,62 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onAutoBalance(ActionEvent event) {
-        applyAction(new AutoBalance(getCurrentImage()));
+        applyAction(new AutoBalance());
     }
 
     @FXML
     private void onWarmFilter(ActionEvent event) {
-        applyAction(new WarmFilter(getCurrentImage()));
+        applyAction(new WarmFilter());
     }
 
     @FXML
     private void onColdFilter(ActionEvent event) {
-        applyAction(new ColdFilter(getCurrentImage()));
+        applyAction(new ColdFilter());
     }
 
     @FXML
     private void onGreenFilter(ActionEvent event) {
-        applyAction(new GreenFilter(getCurrentImage()));
+        applyAction(new GreenFilter());
+    }
+
+    @FXML
+    private void onUnderwater(ActionEvent event) {
+        applyAction(new Underwater());
+    }
+
+    @FXML
+    private void onCrystallize(ActionEvent event) {
+        applyAction(new Crystallize());
+    }
+
+    @FXML
+    private void onTwirl(ActionEvent event) {
+        applyAction(new Twirl());
+    }
+
+    @FXML
+    private void onPainting(ActionEvent event) {
+        applyAction(new Painting());
+    }
+
+    @FXML
+    private void onOilPainting(ActionEvent event) {
+        applyAction(new OilPainting());
     }
 
     @FXML
     public void onBlackAndWhite(ActionEvent event) {
-        applyAction(new GrayScale(getCurrentImage()));
+        applyAction(new GrayScale());
     }
 
     @FXML
     public void onBWContrast(ActionEvent event) {
-        applyAction(new GrayScaleBalance(getCurrentImage()));
+        applyAction(new GrayScaleBalance());
     }
 
     @FXML
     private void onInvert(ActionEvent event) {
-        applyAction(new Invert(getCurrentImage()));
+        applyAction(new Invert());
     }
     //</editor-fold>
 
@@ -1371,9 +1452,17 @@ public class WorkspaceController implements Initializable {
     @FXML
     private TitledPane titledPaneDraw;
     @FXML
+    private ToggleGroup toggleGroupHandDraw;
+    @FXML
     private ToggleButton toggleHandDrawPen;
     @FXML
     private ToggleButton toggleHandDrawEraser;
+    @FXML
+    private ToggleButton toggleHandDrawLine;
+    @FXML
+    private ToggleButton toggleHandDrawRectangle;
+    @FXML
+    private ToggleButton toggleHandDrawEllipse;
     @FXML
     private TitledPane titledPaneEffects;
     @FXML

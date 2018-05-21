@@ -5,7 +5,10 @@
  */
 package Drawing;
 
-import Action.ImageSnapshotAction;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -16,8 +19,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -30,101 +33,126 @@ import javafx.scene.shape.StrokeLineJoin;
  *
  * @author Admin
  */
-public class HandDrawing extends ImageSnapshotAction {
-
-    private final DragContext dragContext = new DragContext();
+public class HandDrawing {
 
     public enum Tool {
         PEN,
         ERASER,
-        CIRCLE,
+        LINE,
+        ELLIPSE,
         RECTANGLE
     }
 
+    private final DragContext dragContext = new DragContext();
+
+    private Group group;
+
     public Group getGroup() {
-        return (Group) getNode();
+        return group;
     }
 
-    private Paint stroke;
+    public void setGroup(Group group) {
+        if (this.group != null) {
+            shapeList.clear();
+            removeEventHandler();
+        }
+
+        this.group = group;
+
+        if (group != null) {
+            addEventHandler();
+        }
+    }
+
+    public void setGroup(Group group, Image image) {
+        setGroup(group);
+        maxX = image.getWidth();
+        maxY = image.getHeight();
+    }
+
+    private final ObjectProperty<Paint> stroke = new SimpleObjectProperty<>(Color.BLACK);
 
     public Paint getStroke() {
+        return stroke.get();
+    }
+
+    public void setStroke(Paint value) {
+        stroke.set(value);
+    }
+
+    public ObjectProperty strokeProperty() {
         return stroke;
     }
 
-    public void setStroke(Paint stroke) {
-        this.stroke = stroke;
-    }
-
-    private double strokeWidth;
+    private final DoubleProperty strokeWidth = new SimpleDoubleProperty(10.0);
 
     public double getStrokeWidth() {
-        return strokeWidth;
+        return strokeWidth.get();
     }
 
-    public void setStrokeWidth(double strokeWidth) {
-        if (this.strokeWidth < strokeWidth) {
-            this.maxX -= strokeWidth - this.strokeWidth;
-            this.maxY -= strokeWidth - this.strokeWidth;
-        } else if (this.strokeWidth > strokeWidth) {
-            this.maxX += strokeWidth - this.strokeWidth;
-            this.maxY = strokeWidth - this.strokeWidth;
-        }
+    public void setStrokeWidth(double value) {
+        double offset = value - getStrokeWidth();
+        this.maxX += offset;
+        this.maxY += offset;
 
-        this.strokeWidth = strokeWidth;
+        strokeWidth.set(value);
+    }
+
+    public DoubleProperty strokeWidthProperty() {
+        return strokeWidth;
     }
 
     private final ObservableList<Shape> shapeList;
 
-    public ObservableList<Shape> getPathList() {
+    public ObservableList<Shape> getShapeList() {
         return shapeList;
     }
 
-    private Tool tool;
+    private final ObjectProperty<Tool> tool = new SimpleObjectProperty<>(Tool.PEN);
 
     public Tool getTool() {
+        return tool.get();
+    }
+
+    public void setTool(Tool value) {
+        tool.set(value);
+    }
+
+    public ObjectProperty toolProperty() {
         return tool;
     }
 
-    public void setTool(Tool tool) {
-        this.tool = tool;
-    }
-
-    private Path eraserPath;
+    private final Path eraserPath = new Path();
 
     private double maxX;
-    private double maxY;
 
-    public HandDrawing(Image originalImage, Group node) {
-        super(originalImage, node);
-        setName("Hand Drawing");
-        this.shapeList = FXCollections.observableArrayList();
-        this.tool = Tool.PEN;
-        this.stroke = Color.BLACK;
-        this.strokeWidth = 10.0;
-        maxX = originalImage.getWidth();
-        maxY = originalImage.getHeight();
-        addEventHandler();
-
-        this.shapeList.addListener(new ListChangeListener<Shape>() {
-            @Override
-            public void onChanged(ListChangeListener.Change<? extends Shape> c) {
-                while (c.next()) {
-                    if (c.wasAdded()) {
-                        node.getChildren().addAll(c.getAddedSubList());
-                    } else if (c.wasRemoved()) {
-                        node.getChildren().removeAll(c.getRemoved());
-                    }
-                }
-            }
-        });
+    public double getMaxX() {
+        return maxX;
     }
 
-    public void finish() {
-        removeEventHandler();
+    public void setMaxX(double maxX) {
+        this.maxX = maxX;
+    }
+
+    private double maxY;
+
+    public double getMaxY() {
+        return maxY;
+    }
+
+    public void setMaxY(double maxY) {
+        this.maxY = maxY;
+    }
+
+    public HandDrawing() {
+        this.shapeList = FXCollections.observableArrayList();
+
+        eraserPath.setStroke(Color.RED);
+        eraserPath.setStrokeLineCap(StrokeLineCap.ROUND);
     }
 
     private void erase() {
-        if (tool == Tool.ERASER
+        if (getTool() == Tool.ERASER
                 && eraserPath != null
                 && shapeList.size() > 0) {
             for (int i = shapeList.size() - 1; i >= 0; i--) {
@@ -138,23 +166,41 @@ public class HandDrawing extends ImageSnapshotAction {
     }
 
     private void addEventHandler() {
-        Group group = getGroup();
-        group.addEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
-        group.addEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
-        group.addEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
+        if (group != null) {
+            shapeList.addListener(shapeListChangeListener);
+            group.addEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
+            group.addEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
+            group.addEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
+        }
     }
 
     private void removeEventHandler() {
-        Group group = getGroup();
-        group.removeEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
-        group.removeEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
-        group.removeEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
+        if (group != null) {
+            shapeList.removeListener(shapeListChangeListener);
+            group.removeEventHandler(MouseEvent.MOUSE_PRESSED, onMousePressedEventHandler);
+            group.removeEventHandler(MouseEvent.MOUSE_DRAGGED, onMouseDraggedEventHandler);
+            group.removeEventHandler(MouseEvent.MOUSE_RELEASED, onMouseReleasedEventHandler);
+        }
     }
+
+    private final ListChangeListener<Shape> shapeListChangeListener
+            = new ListChangeListener<Shape>() {
+        @Override
+        public void onChanged(ListChangeListener.Change<? extends Shape> c) {
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    group.getChildren().addAll(c.getAddedSubList());
+                } else if (c.wasRemoved()) {
+                    group.getChildren().removeAll(c.getRemoved());
+                }
+            }
+        }
+    };
 
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        finish();
+        removeEventHandler();
     }
 
     private final EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
@@ -165,51 +211,58 @@ public class HandDrawing extends ImageSnapshotAction {
             if (event.isSecondaryButtonDown()) {
                 return;
             }
-            dragContext.mouseAnchorX = event.getX();
-            dragContext.mouseAnchorY = event.getY();
+
             double x = event.getX();
             double y = event.getY();
 
-            switch (tool) {
+            switch (getTool()) {
                 case PEN:
-                case ERASER:
                     Path path = new Path();
-                    path.setStroke(stroke);
-                    path.setStrokeWidth(strokeWidth);
+                    path.setStroke(getStroke());
+                    path.setStrokeWidth(getStrokeWidth());
                     path.setStrokeLineCap(StrokeLineCap.ROUND);
                     path.setStrokeLineJoin(StrokeLineJoin.ROUND);
                     path.getElements().clear();
                     path.getElements().add(new MoveTo(x, y));
                     path.getElements().add(new LineTo(x, y));
-
-                    if (tool == Tool.PEN) {
-                        shapeList.add(path);
-                    } else {
-                        eraserPath = path;
-                    }
+                    shapeList.add(path);
 
                     break;
+                case ERASER:
+                    eraserPath.setStrokeWidth(getStrokeWidth());
+                    eraserPath.getElements().add(new MoveTo(x, y));
+                    eraserPath.getElements().add(new LineTo(x, y));
+                    getGroup().getChildren().add(eraserPath);
+                    break;
+                case LINE:
+                    Line line = new Line(x, y, x, y);
+                    line.setStroke(getStroke());
+                    line.setStrokeWidth(getStrokeWidth());
+                    line.setStrokeLineCap(StrokeLineCap.ROUND);
+                    line.setStrokeLineJoin(StrokeLineJoin.ROUND);
+                    shapeList.add(line);
+                    break;
                 case RECTANGLE:
+                    dragContext.mouseAnchorX = event.getX();
+                    dragContext.mouseAnchorY = event.getY();
+
                     Rectangle rect = new Rectangle(x, y, 0, 0);
-                    rect.setStroke(stroke);
-                    rect.setStrokeWidth(strokeWidth);
+                    rect.setStroke(getStroke());
+                    rect.setStrokeWidth(getStrokeWidth());
                     rect.setStrokeLineCap(StrokeLineCap.ROUND);
                     rect.setFill(Color.TRANSPARENT);
                     shapeList.add(rect);
                     break;
-                case CIRCLE:
+                case ELLIPSE:
+                    dragContext.mouseAnchorX = event.getX();
+                    dragContext.mouseAnchorY = event.getY();
 
-                    Circle circle = new Circle(x, y, 0);
-                    circle.setStroke(stroke);
-                    circle.setStrokeWidth(strokeWidth);
-                    circle.setStrokeLineCap(StrokeLineCap.ROUND);
-                    circle.setFill(Color.TRANSPARENT);
-//                    circle.setCenterX(rect.getX() + rect.getWidth() / 2);
-//                    circle.setCenterY(rect.getY() + rect.getHeight() / 2);
-                    shapeList.add(circle);
-                    //shapeList.add(rect);
-                    //Path circle = new Path();
-                    //circle.getElements().clear();
+                    Ellipse ellipse = new Ellipse(x, y, 0, 0);
+                    ellipse.setStroke(getStroke());
+                    ellipse.setStrokeWidth(getStrokeWidth());
+                    ellipse.setStrokeLineCap(StrokeLineCap.ROUND);
+                    ellipse.setFill(Color.TRANSPARENT);
+                    shapeList.add(ellipse);
                     break;
             }
         }
@@ -223,8 +276,6 @@ public class HandDrawing extends ImageSnapshotAction {
             if (event.isSecondaryButtonDown()) {
                 return;
             }
-            double offsetX = event.getX() - dragContext.mouseAnchorX;
-            double offsetY = event.getY() - dragContext.mouseAnchorY;
 
             double x = event.getX();
             double y = event.getY();
@@ -241,47 +292,61 @@ public class HandDrawing extends ImageSnapshotAction {
                 y = maxY;
             }
 
-            switch (tool) {
+            switch (getTool()) {
                 case PEN:
                     ((Path) shapeList.get(shapeList.size() - 1)).getElements().add(new LineTo(x, y));
                     break;
                 case ERASER:
                     eraserPath.getElements().add(new LineTo(x, y));
-                    erase();
+                    break;
+                case LINE:
+                    Line line = (Line) shapeList.get(shapeList.size() - 1);
+                    line.setEndX(x);
+                    line.setEndY(y);
                     break;
                 case RECTANGLE:
-                    //Circle circle = (Circle) shapeList.get(shapeList.size() - 1);
                     Rectangle rect = (Rectangle) shapeList.get(shapeList.size() - 1);
-                    rect.setWidth(Math.abs(x - rect.getX()));
-                    rect.setHeight(Math.abs(y - rect.getY()));
+
+                    if (x >= dragContext.mouseAnchorX) {
+                        rect.setWidth(x - rect.getX());
+                    } else {
+                        rect.setX(x);
+                        rect.setWidth(dragContext.mouseAnchorX - x);
+                    }
+
+                    if (y >= dragContext.mouseAnchorY) {
+                        rect.setHeight(y - rect.getY());
+                    } else {
+                        rect.setY(y);
+                        rect.setHeight(dragContext.mouseAnchorY - y);
+                    }
+
                     break;
-                case CIRCLE:
-                    Circle circle = (Circle) shapeList.get(shapeList.size() - 1);
-                    double startX = circle.getCenterX();
-                    double startY = circle.getCenterY();
-                    if (x > dragContext.mouseAnchorX) {
-                        circle.setCenterX(((x - dragContext.mouseAnchorX) / 2.0) + dragContext.mouseAnchorX);
-                    } else if (x < dragContext.mouseAnchorX) {
-                        circle.setCenterX((dragContext.mouseAnchorX - x) / 2.0 + x);
+                case ELLIPSE:
+                    Ellipse ellipse = (Ellipse) shapeList.get(shapeList.size() - 1);
+
+                    if (x >= dragContext.mouseAnchorX) {
+                        ellipse.setCenterX(
+                                ((x - dragContext.mouseAnchorX) / 2.0)
+                                + dragContext.mouseAnchorX);
+                    } else {
+                        ellipse.setCenterX(
+                                (dragContext.mouseAnchorX - x) / 2.0
+                                + x);
                     }
-                    if (y > dragContext.mouseAnchorY) {
-                        circle.setCenterY((y - dragContext.mouseAnchorY) / 2.0 + dragContext.mouseAnchorY);
-                    } else if (y < dragContext.mouseAnchorY) {
-                        circle.setCenterY((dragContext.mouseAnchorY - y) / 2.0 + y);
+
+                    if (y >= dragContext.mouseAnchorY) {
+                        ellipse.setCenterY(
+                                (y - dragContext.mouseAnchorY) / 2.0
+                                + dragContext.mouseAnchorY);
+                    } else {
+                        ellipse.setCenterY(
+                                (dragContext.mouseAnchorY - y) / 2.0
+                                + y);
                     }
-//                    if (offsetX > 0) {
-//                        circle.setRadius(offsetX / 2);
-//                    } else {
-//                        circle.setCenterX(event.getX());
-//                        circle.setRadius((dragContext.mouseAnchorX - circle.getCenterX()) / 2);
-//                    }
-//                    if (offsetY > 0) {
-//                        circle.setRadius(offsetY / 2);
-//                    } else {
-//                        circle.setCenterX(event.getY());
-//                        circle.setRadius((dragContext.mouseAnchorX - circle.getCenterY()) / 2);
-//                    }
-                    circle.setRadius(Math.abs(dragContext.mouseAnchorX - startX) / 2);
+
+                    ellipse.setRadiusX(Math.abs(x - dragContext.mouseAnchorX) / 2.0);
+                    ellipse.setRadiusY(Math.abs(y - dragContext.mouseAnchorY) / 2.0);
                     break;
             }
         }
@@ -294,6 +359,14 @@ public class HandDrawing extends ImageSnapshotAction {
 
             if (event.isSecondaryButtonDown()) {
                 return;
+            }
+
+            switch (getTool()) {
+                case ERASER:
+                    erase();
+                    eraserPath.getElements().clear();
+                    getGroup().getChildren().remove(eraserPath);
+                    break;
             }
         }
     };

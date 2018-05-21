@@ -38,6 +38,13 @@ public class Selection {
         return group;
     }
 
+    public void setGroup(Group group) {
+        boolean oldState = isDisabled();
+        setDisabled(true);
+        this.group = group;
+        setDisabled(oldState);
+    }
+
     public Bounds getBounds() {
         return rect.getBoundsInParent();
     }
@@ -51,25 +58,24 @@ public class Selection {
     public final void setDisabled(boolean disabled) {
         this.disabled = disabled;
 
-        if (disabled) {
-            removeEventHandler();
-            removeRect();
-        } else {
-            addEventHandler();
+        if (group != null) {
+            if (disabled) {
+                removeEventHandler();
+                removeRect();
+            } else {
+                addEventHandler();
+            }
         }
     }
 
-    public Selection(Group group) {
-
-        this.group = group;
-
+    public Selection() {
         rect = new Rectangle(0, 0, 0, 0);
         rect.setStroke(Color.BLUE);
         rect.setStrokeWidth(1);
         rect.setStrokeLineCap(StrokeLineCap.ROUND);
         rect.setFill(Color.LIGHTBLUE.deriveColor(0, 1.2, 1, 0.6));
 
-        setDisabled(false);
+        disabled = false;
     }
 
     private void removeRect() {
@@ -138,14 +144,14 @@ public class Selection {
             double offsetX = event.getX() - dragContext.mouseAnchorX;
             double offsetY = event.getY() - dragContext.mouseAnchorY;
 
-            if (offsetX > 0) {
+            if (offsetX >= 0) {
                 rect.setWidth(offsetX);
             } else {
                 rect.setX(event.getX());
                 rect.setWidth(dragContext.mouseAnchorX - rect.getX());
             }
 
-            if (offsetY > 0) {
+            if (offsetY >= 0) {
                 rect.setHeight(offsetY);
             } else {
                 rect.setY(event.getY());

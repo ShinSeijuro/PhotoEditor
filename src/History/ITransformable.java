@@ -5,13 +5,13 @@
  */
 package History;
 
-import java.awt.event.ActionEvent;
+import Action.INameable;
 
 /**
  *
  * @author CMQ
  */
-public interface IUndoable {
+public interface ITransformable<T> extends INameable {
 
-    void Undo();
+    T applyTransform(T value);
 }

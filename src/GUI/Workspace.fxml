@@ -30,9 +30,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Ellipse?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.WorkspaceController">
     <center>
         <TabPane fx:id="tabPane" prefHeight="575.0" prefWidth="600.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
     </center>
@@ -126,14 +129,14 @@
                                     </accelerator>
                                 </MenuItem>
                                 <CheckMenuItem fx:id="menuFitToView" mnemonicParsing="false" onAction="#onToggleFitToView" text="Fit to View" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="10%" />
-                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="50%" />
-                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="100%" />
-                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="200%" />
-                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="400%" />
-                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="800%" />
-                        <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="1600%" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="10%" />
+                                <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="50%" />
+                                <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="100%" />
+                                <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="200%" />
+                                <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="400%" />
+                                <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="800%" />
+                                <MenuItem mnemonicParsing="false" onAction="#onMenuZoom" text="1600%" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Extras">
@@ -163,7 +166,7 @@
                 </MenuBar>
                 <HBox alignment="CENTER" disable="${controller.empty}" spacing="5.0" style="-fx-background-color: lightgray;">
                     <children>
-                        <ToggleButton fx:id="toggleEdit" mnemonicParsing="false" onAction="#onToggleEdit" text="Edit...">
+                        <ToggleButton fx:id="toggleEdit" mnemonicParsing="false" text="Edit...">
                             <graphic>
                                 <Label text="">
                                     <font>
@@ -298,7 +301,7 @@
         </BorderPane>
     </bottom>
     <right>
-        <ScrollPane fx:id="scrollPaneEdit" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
+        <ScrollPane fx:id="scrollPaneEdit" managed="${toggleEdit.selected}" visible="${toggleEdit.selected}" BorderPane.alignment="CENTER">
             <content>
                 <Accordion fx:id="accordionEdit" disable="${controller.empty}" prefWidth="265.0">
                     <panes>
@@ -410,53 +413,79 @@
                             <content>
                                 <VBox alignment="CENTER">
                                     <children>
-                                        <HBox alignment="CENTER" spacing="5.0">
-                                            <padding>
-                                                <Insets bottom="10.0" />
-                                            </padding>
-                                        </HBox>
+                                        <VBox spacing="5.0">
+                                            <children>
+                                                <HBox alignment="CENTER" spacing="5.0">
+                                                    <children>
+                                                        <ToggleButton fx:id="toggleHandDrawPen" mnemonicParsing="false" selected="true" text="Pen">
+                                                            <toggleGroup>
+                                                                <ToggleGroup fx:id="toggleGroupHandDraw" />
+                                                            </toggleGroup>
+                                                            <graphic>
+                                                                <Label text="">
+                                                                    <font>
+                                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                    </font>
+                                                                </Label>
+                                                            </graphic>
+                                                        </ToggleButton>
+                                                        <ToggleButton fx:id="toggleHandDrawEraser" mnemonicParsing="false" text="Eraser" toggleGroup="$toggleGroupHandDraw">
+                                                            <graphic>
+                                                                <Label text="">
+                                                                    <font>
+                                                                        <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                                    </font>
+                                                                </Label>
+                                                            </graphic>
+                                                        </ToggleButton>
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER" spacing="5.0">
+                                                    <children>
+                                                        <ToggleButton fx:id="toggleHandDrawLine" contentDisplay="GRAPHIC_ONLY" layoutX="93.0" layoutY="10.0" mnemonicParsing="false" text="Line" toggleGroup="$toggleGroupHandDraw">
+                                                            <graphic>
+                                                                <Line endX="20.0" endY="15.0" />
+                                                            </graphic>
+                                                        </ToggleButton>
+                                                        <ToggleButton fx:id="toggleHandDrawRectangle" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Rectangle" toggleGroup="$toggleGroupHandDraw">
+                                                            <graphic>
+                                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="15.0" stroke="BLACK" strokeType="INSIDE" width="20.0" />
+                                                            </graphic>
+                                                        </ToggleButton>
+                                                        <ToggleButton fx:id="toggleHandDrawEllipse" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="Ellipse" toggleGroup="$toggleGroupHandDraw">
+                                                            <graphic>
+                                                                <Ellipse fill="TRANSPARENT" radiusX="10.0" radiusY="7.5" stroke="BLACK" strokeType="INSIDE" />
+                                                            </graphic>
+                                                        </ToggleButton>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                        <FlowPane columnHalignment="CENTER" hgap="5.0" vgap="5.0" />
+                                        <Label alignment="CENTER" layoutX="116.0" layoutY="55.0" text="Preview" />
                                         <StackPane maxHeight="20.0" maxWidth="20.0" prefHeight="20.0" prefWidth="20.0">
                                             <children>
                                                 <Circle fill="${colorPickerHandDraw.value}" radius="${sliderHandDrawThickness.value}" stroke="${colorPickerHandDraw.value}" strokeType="INSIDE" />
-                                    <FlowPane>
-                                       <children>
-                                                      <ToggleButton fx:id="toggleHandDrawPen" mnemonicParsing="false" onAction="#onToggleHandDrawPen" selected="true" text="Pen">
-                                                          <toggleGroup>
-                                                              <ToggleGroup fx:id="handDrawTool" />
-                                                          </toggleGroup>
-                                                          <graphic>
-                                                              <Label text="">
-                                                                  <font>
-                                                                      <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                                  </font>
-                                                              </Label>
-                                                          </graphic>
-                                                      </ToggleButton>
-                                                      <ToggleButton fx:id="toggleHandDrawEraser" mnemonicParsing="false" onAction="#onToggleHandDrawEraser" text="Eraser" toggleGroup="$handDrawTool">
-                                                          <graphic>
-                                                              <Label text="">
-                                                                  <font>
-                                                                      <Font name="Segoe MDL2 Assets" size="12.0" />
-                                                                  </font>
-                                                              </Label>
-                                                          </graphic>
-                                                      </ToggleButton>
-                                          <ToggleButton mnemonicParsing="false" onAction="#onToggleHandDrawCircle" text="Circle" toggleGroup="$handDrawTool" />
-                                          <ToggleButton mnemonicParsing="false" onAction="#onToggleHandDrawRectangle" text="Rectangle" toggleGroup="$handDrawTool" />
-                                       </children>
-                                    </FlowPane>
                                             </children>
                                         </StackPane>
-                                        <Label alignment="CENTER" layoutX="116.0" layoutY="55.0" text="Preview" />
                                         <Label alignment="CENTER" text="Thickness" />
                                         <Slider fx:id="sliderHandDrawThickness" blockIncrement="1.0" majorTickUnit="5.0" max="15.0" min="1.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" value="10.0" />
                                         <Label text="Color" />
-                                        <ColorPicker fx:id="colorPickerHandDraw" editable="true" onAction="#onDrawColorPick" />
+                                        <ColorPicker fx:id="colorPickerHandDraw" editable="true" />
                                         <HBox alignment="CENTER" spacing="5.0">
                                             <children>
                                                 <Button mnemonicParsing="false" onAction="#onApplyHandDraw" text="Apply">
                                                     <graphic>
                                                         <Label text="">
+                                                            <font>
+                                                                <Font name="Segoe MDL2 Assets" size="12.0" />
+                                                            </font>
+                                                        </Label>
+                                                    </graphic>
+                                                </Button>
+                                                <Button layoutX="127.0" layoutY="20.0" mnemonicParsing="false" onAction="#onUndoHandDraw" text="Undo">
+                                                    <graphic>
+                                                        <Label text="">
                                                             <font>
                                                                 <Font name="Segoe MDL2 Assets" size="12.0" />
                                                             </font>
@@ -490,7 +519,7 @@
                                                 <VBox alignment="CENTER">
                                                     <children>
                                                         <Label text="Radius" />
-                                                        <Slider fx:id="sliderGaussianRadius" max="63.0" showTickLabels="true" />
+                                                        <Slider fx:id="sliderGaussianRadius" majorTickUnit="50.0" max="200.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" />
                                                         <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
                                                             <children>
                                                                 <Button mnemonicParsing="false" onAction="#onApplyGaussianBlur" text="Apply">
@@ -525,9 +554,9 @@
                                                 <VBox alignment="CENTER">
                                                     <children>
                                                         <Label text="Width" />
-                                                        <Slider fx:id="sliderBoxBlurWidth" majorTickUnit="50.0" max="255.0" showTickLabels="true" snapToTicks="true" />
+                                                        <Slider fx:id="sliderBoxBlurWidth" majorTickUnit="50.0" max="255.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                                                         <Label text="Height" />
-                                                        <Slider fx:id="sliderBoxBlurHeight" majorTickUnit="50.0" max="255.0" showTickLabels="true" snapToTicks="true" />
+                                                        <Slider fx:id="sliderBoxBlurHeight" majorTickUnit="50.0" max="255.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                                                         <Label text="Iteration" />
                                                         <Slider fx:id="sliderBoxBlurIteration" blockIncrement="1.0" majorTickUnit="1.0" max="3.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="3.0" />
                                                         <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
@@ -564,9 +593,9 @@
                                                 <VBox alignment="CENTER">
                                                     <children>
                                                         <Label text="Angle" />
-                                                        <Slider fx:id="sliderMotionBlurAngle" majorTickUnit="90.0" max="180.0" showTickLabels="true" />
+                                                        <Slider fx:id="sliderMotionBlurAngle" majorTickUnit="90.0" max="180.0" minorTickCount="3" showTickLabels="true" showTickMarks="true" />
                                                         <Label text="Radius" />
-                                                        <Slider fx:id="sliderMotionBlurRadius" max="63.0" showTickLabels="true" />
+                                                        <Slider fx:id="sliderMotionBlurRadius" majorTickUnit="50.0" max="200.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" />
                                                         <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
                                                             <children>
                                                                 <Button mnemonicParsing="false" onAction="#onApplyMotionBlur" text="Apply">
@@ -601,7 +630,7 @@
                                                 <VBox alignment="CENTER">
                                                     <children>
                                                         <Label text="Level" />
-                                                        <Slider fx:id="sliderGlowLevel" showTickLabels="true" />
+                                                        <Slider fx:id="sliderGlowLevel" minorTickCount="4" showTickLabels="true" showTickMarks="true" />
                                                         <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
                                                             <children>
                                                                 <Button mnemonicParsing="false" onAction="#onApplyGlow" text="Apply">
@@ -636,7 +665,7 @@
                                                 <VBox alignment="CENTER">
                                                     <children>
                                                         <Label text="Level" />
-                                                        <Slider fx:id="sliderSepiaToneLevel" showTickLabels="true" />
+                                                        <Slider fx:id="sliderSepiaToneLevel" minorTickCount="4" showTickLabels="true" showTickMarks="true" />
                                                         <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
                                                             <children>
                                                                 <Button mnemonicParsing="false" onAction="#onApplySepiaTone" text="Apply">
@@ -694,6 +723,31 @@
                                                 <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.greenFilter}" pickOnBounds="true" preserveRatio="true" />
                                             </graphic>
                                         </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onUnderwater" prefWidth="116.0" text="Underwater">
+                                            <graphic>
+                                                <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.underwater}" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onCrystallize" prefWidth="116.0" text="Crystallize">
+                                            <graphic>
+                                                <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.crystallize}" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onTwirl" prefWidth="116.0" text="Twirl">
+                                            <graphic>
+                                                <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.twirl}" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onPainting" prefWidth="116.0" text="Painting">
+                                            <graphic>
+                                                <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.painting}" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </Button>
+                                        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onOilPainting" prefWidth="116.0" text="Oil Painting">
+                                            <graphic>
+                                                <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.oilPainting}" pickOnBounds="true" preserveRatio="true" />
+                                            </graphic>
+                                        </Button>
                                         <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onBlackAndWhite" prefWidth="116.0" text="Black &amp; White">
                                             <graphic>
                                                 <ImageView fitHeight="100.0" fitWidth="100.0" image="${controller.currentController.presetPreview.blackAndWhite}" pickOnBounds="true" preserveRatio="true" />
@@ -719,6 +773,7 @@
                                     <children>
                                         <Button mnemonicParsing="false" onAction="#onFixRedEye" text="Fix Red Eye" />
                                         <Button mnemonicParsing="false" onAction="#onSharpen" text="Sharpen" />
+                                        <Button mnemonicParsing="false" onAction="#onAddNoise" text="Add Noise" />
                                         <Button mnemonicParsing="false" onAction="#onDenoise" text="Denoise" />
                                     </children>
                                 </VBox>

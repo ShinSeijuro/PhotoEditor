@@ -17,6 +17,42 @@ import javafx.scene.image.ImageView;
  */
 public class Flip extends ImageSnapshotAction {
 
+    private Orientation orientation;
+
+    public Flip(ImageView node, Orientation orientation) {
+        super(node);
+        this.orientation = orientation;
+        setName("Flip " + orientation.getName());
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
+        setName("Flip " + orientation.getName());
+    }
+
+    @Override
+    public Image applyTransform(Image image) {
+        Image output = null;
+        switch (orientation) {
+            case Horizontal:
+                getNode().setScaleX(-1.0);
+                output = takeSnapShot();
+                getNode().setScaleX(1.0);
+                break;
+            case Vertical:
+                getNode().setScaleY(-1.0);
+                output = takeSnapShot();
+                getNode().setScaleY(1.0);
+                break;
+        }
+
+        return output;
+    }
+
     public enum Orientation implements INameable {
         Horizontal {
             @Override
@@ -41,37 +77,6 @@ public class Flip extends ImageSnapshotAction {
             }
 
         }
-    }
-
-    private Orientation orientation;
-
-    public Orientation getOrientation() {
-        return orientation;
-    }
-
-    public Flip(Image originalImage, ImageView node, Orientation orientation) {
-        super(originalImage, node);
-        this.orientation = orientation;
-        setName("Flip " + orientation.getName());
-    }
-
-    @Override
-    protected Image applyTransform(Image image) {
-        Image output = null;
-        switch (orientation) {
-            case Horizontal:
-                getNode().setScaleX(-1.0);
-                output = takeSnapShot();
-                getNode().setScaleX(1.0);
-                break;
-            case Vertical:
-                getNode().setScaleY(-1.0);
-                output = takeSnapShot();
-                getNode().setScaleY(1.0);
-                break;
-        }
-
-        return output;
     }
 
 }
