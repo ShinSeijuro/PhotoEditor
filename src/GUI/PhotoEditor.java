@@ -42,7 +42,7 @@ public class PhotoEditor extends Application {
     public void start(Stage stage) throws Exception {
         setPrimaryStage(stage);
         try {
-            primaryStage.getIcons().add(new Image("/Resources/appIcon.png"));
+            primaryStage.getIcons().add(new Image("/Resources/icon.png"));
         } catch (Exception ex) {
 
         }
