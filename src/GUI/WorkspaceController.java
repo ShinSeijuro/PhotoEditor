@@ -54,6 +54,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
@@ -1410,9 +1411,31 @@ public class WorkspaceController implements Initializable {
     private void onInvert(ActionEvent event) {
         applyAction(new Invert());
     }
+
+    @FXML
+    private void onHelp(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("About.fxml"));
+            Scene scene = new Scene(loader.load(), 600, 400);
+            Stage stage = new Stage();
+            stage.setTitle("About");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onCloseAbout(ActionEvent event) {
+//        Stage stage = (Stage) closeButton.getScene().getWindow();
+//        stage.close();
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Controls">
+//    @FXML
+//    private Button closeButton;
     @FXML
     private TabPane tabPane;
     @FXML
