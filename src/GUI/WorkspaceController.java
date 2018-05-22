@@ -1419,9 +1419,6 @@ public class WorkspaceController implements Initializable {
             Scene scene = new Scene(loader.load(), 600, 400);
             Stage stage = new Stage();
             stage.setTitle("About");
-
-            stage.getIcons().add(new Image("/Resources/icon.png"));
-
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
@@ -1430,8 +1427,7 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    private void onCloseAbout(ActionEvent event
-    ) {
+    private void onCloseAbout(ActionEvent event) {
 //        Stage stage = (Stage) closeButton.getScene().getWindow();
 //        stage.close();
     }
