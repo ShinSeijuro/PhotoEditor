@@ -1287,9 +1287,9 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onPasteFromClipboard(ActionEvent event) {
-        Image image = ClipboardWrapper.get();
         if (image != null) {
             try {
+                Image image = ClipboardWrapper.get();
                 openNewTab(new ImageTab(image));
             } catch (IOException | IllegalArgumentException ex) {
                 makeDialog("Paste from Clipboard",
