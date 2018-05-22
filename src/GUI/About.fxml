@@ -30,7 +30,7 @@
       </HBox>
    </top>
    <center>
-      <TextArea id="textArea" editable="false" prefHeight="200.0" prefWidth="200.0" stylesheets="@about.css" text="Product Version&#10;JavaFX Scene Builder 8.4.1&#10;&#10;Build Information&#10;Version 8.4.1&#10;Date: 2017-10-17&#10;Java Version: 1.8.0_144-b01, Oracle Corporation&#10;&#10;Java&#10;1.8.0_144-b01, Oracle Corporation&#10;&#10;Operating System&#10;Windows 10, amd64, 10.0&#10;&#10;Developed by&#10;Chung Manh Quynh&#10;Huynh Truong Nhut&#10;Nguyen Cuong Phat&#10;&#10;Copyright (c) 2015-2017, Gluon." wrapText="true" BorderPane.alignment="CENTER">
+      <TextArea id="textArea" editable="false" prefHeight="200.0" prefWidth="200.0" styleClass="aboutStyle" text="Product Version&#10;JavaFX Scene Builder 8.4.1&#10;&#10;Build Information&#10;Version 8.4.1&#10;Date: 2017-10-17&#10;Java Version: 1.8.0_144-b01, Oracle Corporation&#10;&#10;Java&#10;1.8.0_144-b01, Oracle Corporation&#10;&#10;Operating System&#10;Windows 10, amd64, 10.0&#10;&#10;Developed by&#10;Chung Manh Quynh&#10;Huynh Truong Nhut&#10;Nguyen Cuong Phat&#10;&#10;Copyright (c) 2015-2017, Gluon." wrapText="true" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="25.0" left="50.0" right="50.0" />
          </BorderPane.margin>
