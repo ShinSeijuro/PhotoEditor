@@ -5,35 +5,25 @@
  */
 package GUI;
 
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Tab;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
 import javafx.stage.Stage;
 
 /**
  *
  * @author Admin
  */
-public class AboutController extends Tab {
+public class AboutController implements Initializable {
 
-    private static Stage primaryStage;
-    @FXML
-    private ImageView imageIcon;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
-    public static Stage getPrimaryStage() {
-        return primaryStage;
     }
 
-    public void start(Stage stage) throws Exception {
-        stage = primaryStage;
-        Parent root = FXMLLoader.load(getClass().getResource("About.fxml"));
-        imageIcon.setImage(new Image(PhotoEditor.class.getResource("/Resources/Icon.png").toExternalForm()));
-        primaryStage.setResizable(false);
-        stage.show();
+    public void initStage(Stage stage) {
+        stage.setTitle("About");
+        stage.getIcons().add(PhotoEditor.ICON_IMAGE);
     }
 
 }

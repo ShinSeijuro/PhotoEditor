@@ -620,6 +620,8 @@ public class WorkspaceController implements Initializable {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(PhotoEditor.ICON_IMAGE);
 
         if (buttonTypes.length > 0) {
             alert.getButtonTypes().clear();
@@ -1413,25 +1415,18 @@ public class WorkspaceController implements Initializable {
     }
 
     @FXML
-    private void onHelp(ActionEvent event) {
+    private void onAbout(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("About.fxml"));
-            Scene scene = new Scene(loader.load(), 600, 400);
+            Scene scene = new Scene(loader.load());
+            AboutController controller = loader.getController();
             Stage stage = new Stage();
-            stage.setTitle("About");
-            stage.getIcons().add(new Image(PhotoEditor.class.getResource("appIcon.png").toExternalForm()));
-
             stage.setScene(scene);
+            controller.initStage(stage);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    private void onCloseAbout(ActionEvent event) {
-//        Stage stage = (Stage) closeButton.getScene().getWindow();
-//        stage.close();
     }
     //</editor-fold>
 

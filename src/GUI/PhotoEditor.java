@@ -22,6 +22,8 @@ import org.opencv.core.Core;
  */
 public class PhotoEditor extends Application {
 
+    public static final Image ICON_IMAGE = new Image("/Resources/appIcon.png");
+
     private static Stage primaryStage;
 
     public static Stage getPrimaryStage() {
@@ -41,11 +43,6 @@ public class PhotoEditor extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         setPrimaryStage(stage);
-        try {
-            primaryStage.getIcons().add(new Image("/Resources/appIcon.png"));
-        } catch (Exception ex) {
-
-        }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Workspace.fxml"));
         Parent root = loader.load();
