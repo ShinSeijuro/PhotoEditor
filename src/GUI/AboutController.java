@@ -5,10 +5,14 @@
  */
 package GUI;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 /**
  *
@@ -16,6 +20,20 @@ import javafx.scene.control.Tab;
  */
 public class AboutController extends Tab {
 
+    private static Stage primaryStage;
+    @FXML
+    private ImageView imageIcon;
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public void start(Stage stage) throws Exception {
+        stage = primaryStage;
+        Parent root = FXMLLoader.load(getClass().getResource("About.fxml"));
+        imageIcon.setImage(new Image(PhotoEditor.class.getResource("/Resources/Icon.png").toExternalForm()));
+        primaryStage.setResizable(false);
+        stage.show();
+    }
+
 }
-//    @FXML
-//    private Button closeButton;

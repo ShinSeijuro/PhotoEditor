@@ -1419,6 +1419,8 @@ public class WorkspaceController implements Initializable {
             Scene scene = new Scene(loader.load(), 600, 400);
             Stage stage = new Stage();
             stage.setTitle("About");
+            stage.getIcons().add(new Image(PhotoEditor.class.getResource("appIcon.png").toExternalForm()));
+
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
