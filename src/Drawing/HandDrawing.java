@@ -5,8 +5,10 @@
  */
 package Drawing;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -16,6 +18,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -301,52 +304,105 @@ public class HandDrawing {
                     break;
                 case LINE:
                     Line line = (Line) shapeList.get(shapeList.size() - 1);
-                    line.setEndX(x);
-                    line.setEndY(y);
+                    if (!event.isShiftDown()) {
+                        line.setEndX(x);
+                        line.setEndY(y);
+                    } else {
+                        if (Math.abs(x - line.getStartX()) >= Math.abs(y - line.getStartY())) {
+                            line.setEndX(x);
+                            line.setEndY(line.getStartY());
+                        } else {
+                            line.setEndX(line.getStartX());
+                            line.setEndY(y);
+                        }
+                    }
                     break;
                 case RECTANGLE:
                     Rectangle rect = (Rectangle) shapeList.get(shapeList.size() - 1);
 
-                    if (x >= dragContext.mouseAnchorX) {
-                        rect.setWidth(x - rect.getX());
-                    } else {
-                        rect.setX(x);
-                        rect.setWidth(dragContext.mouseAnchorX - x);
-                    }
+                    if (!event.isShiftDown()) {
+                        if (x >= dragContext.mouseAnchorX) {
+                            rect.setWidth(x - rect.getX());
+                        } else {
+                            rect.setX(x);
+                            rect.setWidth(dragContext.mouseAnchorX - x);
+                        }
 
-                    if (y >= dragContext.mouseAnchorY) {
-                        rect.setHeight(y - rect.getY());
+                        if (y >= dragContext.mouseAnchorY) {
+                            rect.setHeight(y - rect.getY());
+                        } else {
+                            rect.setY(y);
+                            rect.setHeight(dragContext.mouseAnchorY - y);
+                        }
                     } else {
-                        rect.setY(y);
-                        rect.setHeight(dragContext.mouseAnchorY - y);
+                        // Symmetric / Square
+                        double offsetX = x - dragContext.mouseAnchorX;
+                        double offsetY = y - dragContext.mouseAnchorY;
+
+                        double edge = Math.min(Math.abs(offsetX), Math.abs(offsetY));
+
+                        rect.setWidth(edge);
+                        rect.setHeight(edge);
+
+                        if (offsetX < 0) {
+                            rect.setX(dragContext.mouseAnchorX - edge);
+                        }
+
+                        if (offsetY < 0) {
+                            rect.setY(dragContext.mouseAnchorY - edge);
+                        }
                     }
 
                     break;
                 case ELLIPSE:
                     Ellipse ellipse = (Ellipse) shapeList.get(shapeList.size() - 1);
 
-                    if (x >= dragContext.mouseAnchorX) {
-                        ellipse.setCenterX(
-                                ((x - dragContext.mouseAnchorX) / 2.0)
-                                + dragContext.mouseAnchorX);
-                    } else {
-                        ellipse.setCenterX(
-                                (dragContext.mouseAnchorX - x) / 2.0
-                                + x);
-                    }
+                    if (!event.isShiftDown()) {
+                        if (x >= dragContext.mouseAnchorX) {
+                            ellipse.setCenterX(
+                                    ((x - dragContext.mouseAnchorX) / 2.0)
+                                    + dragContext.mouseAnchorX);
+                        } else {
+                            ellipse.setCenterX(
+                                    (dragContext.mouseAnchorX - x) / 2.0
+                                    + x);
+                        }
 
-                    if (y >= dragContext.mouseAnchorY) {
-                        ellipse.setCenterY(
-                                (y - dragContext.mouseAnchorY) / 2.0
-                                + dragContext.mouseAnchorY);
-                    } else {
-                        ellipse.setCenterY(
-                                (dragContext.mouseAnchorY - y) / 2.0
-                                + y);
-                    }
+                        if (y >= dragContext.mouseAnchorY) {
+                            ellipse.setCenterY(
+                                    (y - dragContext.mouseAnchorY) / 2.0
+                                    + dragContext.mouseAnchorY);
+                        } else {
+                            ellipse.setCenterY(
+                                    (dragContext.mouseAnchorY - y) / 2.0
+                                    + y);
+                        }
 
-                    ellipse.setRadiusX(Math.abs(x - dragContext.mouseAnchorX) / 2.0);
-                    ellipse.setRadiusY(Math.abs(y - dragContext.mouseAnchorY) / 2.0);
+                        ellipse.setRadiusX(Math.abs(x - dragContext.mouseAnchorX) / 2.0);
+                        ellipse.setRadiusY(Math.abs(y - dragContext.mouseAnchorY) / 2.0);
+                    } else {
+                        // Symmetric / Square
+                        double offsetX = x - dragContext.mouseAnchorX;
+                        double offsetY = y - dragContext.mouseAnchorY;
+
+                        double edge = Math.min(Math.abs(offsetX), Math.abs(offsetY));
+                        double halfEdge = edge / 2.0;
+
+                        ellipse.setRadiusX(halfEdge);
+                        ellipse.setRadiusY(halfEdge);
+
+                        if (offsetX > 0) {
+                            ellipse.setCenterX(dragContext.mouseAnchorX + halfEdge);
+                        } else {
+                            ellipse.setCenterX(dragContext.mouseAnchorX - halfEdge);
+                        }
+
+                        if (offsetY > 0) {
+                            ellipse.setCenterY(dragContext.mouseAnchorY + halfEdge);
+                        } else {
+                            ellipse.setCenterY(dragContext.mouseAnchorY - halfEdge);
+                        }
+                    }
                     break;
             }
         }

@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -23,6 +24,7 @@ public class AboutController implements Initializable {
 
     public void initStage(Stage stage) {
         stage.setTitle("About");
+        stage.initStyle(StageStyle.UTILITY);
         stage.getIcons().add(PhotoEditor.ICON_IMAGE);
     }
 

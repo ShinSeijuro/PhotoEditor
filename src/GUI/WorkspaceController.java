@@ -1287,12 +1287,11 @@ public class WorkspaceController implements Initializable {
 
     @FXML
     private void onPasteFromClipboard(ActionEvent event) {
-        Image image;
+        Image image = null;
 
         try {
             image = ClipboardWrapper.get();
         } catch (IllegalArgumentException ex) {
-            return;
         }
 
         if (image != null) {
