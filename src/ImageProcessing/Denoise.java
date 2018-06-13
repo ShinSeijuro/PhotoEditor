@@ -11,16 +11,8 @@ import static ImageProcessing.Utils.toMat;
 import static javafx.embed.swing.SwingFXUtils.fromFXImage;
 import static javafx.embed.swing.SwingFXUtils.toFXImage;
 import javafx.scene.image.Image;
-import static org.opencv.core.CvType.CV_8U;
 import static org.opencv.core.CvType.CV_8UC3;
 import org.opencv.core.Mat;
-import static org.opencv.imgproc.Imgproc.COLOR_BGR2GRAY;
-import static org.opencv.imgproc.Imgproc.THRESH_BINARY_INV;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.threshold;
-import static org.opencv.photo.Photo.INPAINT_TELEA;
-import static org.opencv.photo.Photo.inpaint;
-import static org.opencv.photo.Photo.*;
 
 /**
  *
@@ -35,15 +27,10 @@ public class Denoise extends AbstractImageAction {
     @Override
     public Image applyTransform(Image image) {
         Mat rgb = toMat(fromFXImage(image, null));
-        //Mat gray = new Mat(rgb.size(), CV_8U);
-        //cvtColor(rgb, gray, COLOR_BGR2GRAY);
-        //Mat mask = new Mat(rgb.size(), CV_8U);
-        //threshold(gray, mask, 70, 255, THRESH_BINARY_INV);
-        Mat dn = new Mat(rgb.size(), CV_8UC3);
-        //inpaint(rgb, mask, dn, 20, INPAINT_TELEA);
+        Mat dest = new Mat(rgb.size(), CV_8UC3);
 
-        org.opencv.photo.Photo.fastNlMeansDenoisingColored(rgb, dn, 15, 10, 7, 21);
-        Image newImage = toFXImage(toBufferedImage(dn), null);
+        org.opencv.photo.Photo.fastNlMeansDenoisingColored(rgb, dest, 15, 10, 7, 21);
+        Image newImage = toFXImage(toBufferedImage(dest), null);
         return newImage;
     }
 
