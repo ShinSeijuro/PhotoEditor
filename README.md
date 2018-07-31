@@ -12,5 +12,5 @@ Photo Editor is a [school](https://www.uit.edu.vn/) project and desktop semi-adv
 - Other: zoom, fullscreen, delete file, save as (JPG, PNG, GIF), copy to/paste from clipboard, print, set wallpaper, screen capture, use camera to take picture, hotkeys (including ctrl+scroll & alt+scroll)
 ## Run
 1. Clone the repository or just download [`dist`](https://github.com/ShinSeijuro/PhotoEditor/tree/master/lib) folder.
-2. Make sure the [`lib`](https://github.com/ShinSeijuro/PhotoEditor/tree/master/dist/lib) folder has all the files it needs and is at the same level as the running [`PhotoEditor.jar`](https://github.com/ShinSeijuro/PhotoEditor/blob/master/dist/PhotoEditor.jar) because these are libraries
+2. Make sure the [`lib`](https://github.com/ShinSeijuro/PhotoEditor/tree/master/dist/lib) folder has all the files it needs and is at the same level as the running [`PhotoEditor.jar`](https://github.com/ShinSeijuro/PhotoEditor/blob/master/dist/PhotoEditor.jar) because these are the required libraries.
 3. Run `PhotoEditor.jar` in the `dist` folder.
