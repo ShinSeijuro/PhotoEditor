@@ -14,3 +14,5 @@ Photo Editor is a [school](https://www.uit.edu.vn/) project and desktop semi-adv
 1. Clone the repository or just download [`dist`](https://github.com/ShinSeijuro/PhotoEditor/tree/master/lib) folder.
 2. Make sure the [`lib`](https://github.com/ShinSeijuro/PhotoEditor/tree/master/dist/lib) folder has all the files it needs and is at the same level as the running [`PhotoEditor.jar`](https://github.com/ShinSeijuro/PhotoEditor/blob/master/dist/PhotoEditor.jar) because these are the required libraries.
 3. Run `PhotoEditor.jar` in the `dist` folder.
+
+**_Please cite this repository if you're going to use our code in your work. Thank you._**
